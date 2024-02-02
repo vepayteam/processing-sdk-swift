@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Yandex.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

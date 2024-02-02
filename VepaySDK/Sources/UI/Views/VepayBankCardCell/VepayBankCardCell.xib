@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Inter-Regular.ttf">
+            <string>Inter-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="VepayBankCardCell" id="gTV-IL-0wX" customClass="VepayBankCardCell" customModule="VepaySDKExample" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="160" height="56"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="160" height="56"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r76-rU-3me">
+                        <rect key="frame" x="4" y="4" width="48" height="48"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="r76-rU-3me" secondAttribute="height" id="PAK-hc-yL5"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="24"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Новая карта" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9XZ-s8-GA9">
+                        <rect key="frame" x="60.000000000000007" y="4" width="84.666666666666686" height="48"/>
+                        <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="r76-rU-3me" secondAttribute="bottom" constant="4" id="1M8-vX-0Uj"/>
+                <constraint firstItem="9XZ-s8-GA9" firstAttribute="centerY" secondItem="r76-rU-3me" secondAttribute="centerY" id="9FF-WH-Pyh"/>
+                <constraint firstItem="9XZ-s8-GA9" firstAttribute="leading" secondItem="r76-rU-3me" secondAttribute="trailing" constant="8" id="Fmi-wr-d5O"/>
+                <constraint firstItem="9XZ-s8-GA9" firstAttribute="top" secondItem="r76-rU-3me" secondAttribute="top" id="HTZ-Xd-23c"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="9XZ-s8-GA9" secondAttribute="trailing" constant="12" id="HTo-3e-QH3"/>
+                <constraint firstItem="9XZ-s8-GA9" firstAttribute="bottom" secondItem="r76-rU-3me" secondAttribute="bottom" id="LPU-gx-AxS"/>
+                <constraint firstItem="r76-rU-3me" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="4" id="T2q-bI-zIb"/>
+                <constraint firstItem="r76-rU-3me" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="4" id="bjA-8k-AIa"/>
+            </constraints>
+            <size key="customSize" width="160" height="56"/>
+            <connections>
+                <outlet property="icon" destination="r76-rU-3me" id="8lZ-iw-W9h"/>
+                <outlet property="name" destination="9XZ-s8-GA9" id="vte-lo-MO6"/>
+            </connections>
+            <point key="canvasLocation" x="222.90076335877862" y="21.83098591549296"/>
+        </collectionViewCell>
+    </objects>
+</document>
