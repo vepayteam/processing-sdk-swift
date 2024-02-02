@@ -5,9 +5,9 @@
 //  Created by Bohdan Hrozian on 23.01.2024.
 //
 
-import UIKit
 import WebKit
 import VepaySDK
+
 
 final class PayController: UIViewController {
 
@@ -82,7 +82,7 @@ extension PayController: VepayPaymentControllerDelegate {
     
     func paymentController(isReadyToPay: Bool) {
         UIView.animate(withDuration: 0.2, delay: .zero, options: [.curveEaseOut, .allowUserInteraction]) { [weak makeTransfer] in
-            makeTransfer?.tintColor = isReadyToPay ? .ice : .ice24
+            makeTransfer?.tintColor = isReadyToPay ? UIColor.ice : UIColor.ice24
         }
     }
 

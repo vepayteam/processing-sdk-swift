@@ -61,7 +61,7 @@ extension VepayBankCardCell {
 
         self.selectionColor = configuration.selectionColor
 
-        isNewCard = configuration.icon == .addBank
+        isNewCard = configuration.icon == UIImage(named: "addBank", in: .vepaySDK, compatibleWith: nil)
     }
 
 }
@@ -84,7 +84,7 @@ extension VepayBankCardCell {
         }
 
 
-        static let newCard: CellConfiguration = .init(icon: .addBank, name: .custom(text: "Новая карта"), text: .ice, background: .coal, border: nil, borderWidth: .zero, selectionColor: .coal)
+        static let newCard: CellConfiguration = .init(icon: UIImage(named: "addBank", in: .vepaySDK, compatibleWith: nil), name: .custom(text: "Новая карта"), text: .ice, background: .coal, border: nil, borderWidth: .zero, selectionColor: .coal)
 
         let icon: UIImage?
         let name: Name

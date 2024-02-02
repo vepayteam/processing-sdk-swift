@@ -9,7 +9,7 @@ import UIKit
 import VepaySDK
 
 
-let xUser = "376"
+let xUser = ""
 
 final class CreateController: UIViewController {
 
