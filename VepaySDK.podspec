@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name             = 'VepaySDK'
   s.version          = '0.1.0'
   s.summary          = 'Cross-border transfers'
-  s.homepage         = 'https://github.com/Bogdan/VepaySDK'
+  s.homepage         = 'https://github.com/vepayteam/processing-sdk-swift'
   s.author           = { 
     'Bogdan' => 'bgrozyan@vepay.online' 
   }
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   }
 
   s.source           = { 
-    :git => 'https://github.com/Bogdan/VepaySDK.git', 
+    :git => 'https://github.com/vepayteam/processing-sdk-swift', 
     :tag => s.version.to_s 
   }
   s.source_files = '**/*.swift', '*.swift'

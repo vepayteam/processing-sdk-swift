@@ -27,7 +27,6 @@
 		434161B32B602B43000672B2 /* GlassmorphismView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434161B22B602B43000672B2 /* GlassmorphismView.swift */; };
 		434161B52B602F83000672B2 /* PayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434161B42B602F83000672B2 /* PayController.swift */; };
 		434161B82B6038E3000672B2 /* VepayPaymentController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 434161B72B6038E3000672B2 /* VepayPaymentController.storyboard */; };
-		434161BB2B604083000672B2 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434161BA2B604083000672B2 /* Colors.swift */; };
 		439CA3252B643864000A6D63 /* VepayInvoiceRefundGet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439CA3242B643864000A6D63 /* VepayInvoiceRefundGet.swift */; };
 		43A8BE9E2B57EA88007FEED1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 430D82262B56041100BA84EC /* Assets.xcassets */; };
 		43A8BE9F2B57EAC9007FEED1 /* InterAppeer-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 430D82222B56041100BA84EC /* InterAppeer-SemiBold.ttf */; };
@@ -119,7 +118,6 @@
 		434161B22B602B43000672B2 /* GlassmorphismView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlassmorphismView.swift; sourceTree = "<group>"; };
 		434161B42B602F83000672B2 /* PayController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayController.swift; sourceTree = "<group>"; };
 		434161B72B6038E3000672B2 /* VepayPaymentController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VepayPaymentController.storyboard; sourceTree = "<group>"; };
-		434161BA2B604083000672B2 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		439CA3242B643864000A6D63 /* VepayInvoiceRefundGet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VepayInvoiceRefundGet.swift; sourceTree = "<group>"; };
 		43B46E022B639A1F00BBB247 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		43B46E032B639A1F00BBB247 /* EventSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSource.swift; sourceTree = "<group>"; };
@@ -297,7 +295,6 @@
 		43338C7F2B3D322C0063BD3F /* VepaySDKExample */ = {
 			isa = PBXGroup;
 			children = (
-				434161BA2B604083000672B2 /* Colors.swift */,
 				43338C802B3D322C0063BD3F /* AppDelegate.swift */,
 				43338C822B3D322C0063BD3F /* SceneDelegate.swift */,
 				43338C842B3D322C0063BD3F /* CreateController.swift */,
@@ -573,7 +570,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				434161B52B602F83000672B2 /* PayController.swift in Sources */,
-				434161BB2B604083000672B2 /* Colors.swift in Sources */,
 				43338C852B3D322C0063BD3F /* CreateController.swift in Sources */,
 				43338C812B3D322C0063BD3F /* AppDelegate.swift in Sources */,
 				43338C832B3D322C0063BD3F /* SceneDelegate.swift in Sources */,
