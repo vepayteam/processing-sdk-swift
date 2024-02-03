@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   }
 
   s.source           = { 
-    :git => 'https://github.com/vepayteam/processing-sdk-swift', 
+    :git => 'https://github.com/vepayteam/processing-sdk-swift.git', 
     :tag => s.version.to_s 
   }
   s.source_files = '**/*.swift', '*.swift'

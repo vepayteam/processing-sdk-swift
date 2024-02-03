@@ -170,7 +170,6 @@ extension VepayPaymentController {
         let image = "Checkbox" + (isOn ? "Filled" : "Empty")
         UIView.transition(with: remeberCheckmark, duration: 0.16, options: [.curveEaseIn, .allowUserInteraction, .transitionCrossDissolve]) { [weak remeberCheckmark] in
             remeberCheckmark?.image = UIImage(named: image, in: .vepaySDK, compatibleWith: nil)
-//            remeberCheckmark?.image = UIImage(named: image, in: .main, compatibleWith: nil)
         }
 
     }
