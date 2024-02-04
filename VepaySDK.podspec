@@ -12,6 +12,14 @@ Pod::Spec.new do |s|
     :file => 'LICENSE' 
   }
 
+  s.resources = [
+    'VepaySDK/Resources/Assets.xcassets', 
+    'VepaySDK/Resources/Fonts/Inter Appeer/InterAppeer-SemiBoldItalic.ttf',
+    'VepaySDK/Resources/Fonts/Inter Appeer/InterAppeer-SemiBold.ttf',
+    'VepaySDK/Resources/Fonts/Inter/Inter-Regular.ttf',
+    'VepaySDK/Resources/Fonts/Inter/Inter-SemiBold.ttf',
+  ]
+
   s.source           = { 
     :git => 'https://github.com/vepayteam/processing-sdk-swift.git', 
     :tag => s.version.to_s 

@@ -56,8 +56,8 @@ public final class VepayPaymentController: UIViewController {
 
     // MARK: - Propertys
 
-    lazy var savedCards: [VepayCard] = []
-    lazy var savedCardSCells: [VepayBankCardCell.CellConfiguration] = []
+    public lazy var savedCards: [VepayCard] = []
+    public lazy var savedCardSCells: [VepayBankCardCell.CellConfiguration] = []
     public var overrideSavedCards: Bool = false
     public func set(cards: [VepayCard]) {
         savedCards = cards
