@@ -13,6 +13,8 @@ public final class VepayPaymentController: UIViewController {
 
 
     // MARK: - Views
+    
+    @IBOutlet public private(set) weak var scrollView: UIScrollView!
 
     @IBOutlet private(set) weak var cardSelector: UICollectionView!
 
@@ -41,7 +43,7 @@ public final class VepayPaymentController: UIViewController {
     /// Timer is used for turning last character in • after 1 second
     var cvvTimer: Timer!
     /// cvvCode count must always be == 3
-    var cvvCode: String = "•••"
+    lazy var cvvCode: String = "•••"
 
     // Remeber Card
     @IBOutlet private weak var remeberCardHolder: UIView!
@@ -49,9 +51,24 @@ public final class VepayPaymentController: UIViewController {
 
     // Card Data Entry Progression
     let cardProgressionGradient = CAGradientLayer()
-    lazy var cardNumberReadiness: Float = .zero
-    lazy var expirationReadiness: Float = .zero
-    lazy var cvvReadiness: Float = .zero
+    // Value is normolized; in [0...1]
+    lazy var cardNumberReadiness: Float = .zero {
+        didSet {
+            delegate?.cardNumberReadinessChanged(to: cardNumberReadiness)
+        }
+    }
+    // Value is normolized; in [0...1]
+    lazy var expirationReadiness: Float = .zero {
+        didSet {
+            delegate?.expirationReadinessChanged(to: expirationReadiness)
+        }
+    }
+    // Value is normolized; in [0...1]
+    lazy var cvvReadiness: Float = .zero {
+        didSet {
+            delegate?.cvvReadinessChanged(to: cvvReadiness)
+        }
+    }
 
 
     // MARK: - Propertys
@@ -76,10 +93,10 @@ public final class VepayPaymentController: UIViewController {
 
     lazy var selectedCardIndex: IndexPath = [.zero, .zero]
 
-    lazy var currentYear = Int("\(Calendar.current.component(.year, from: Date()))".suffix(2))!
-    lazy var currentMonth = Int("\(Calendar.current.component(.month, from: Date()))")!
+    private(set) lazy var currentYear = Int("\(Calendar.current.component(.year, from: Date()))".suffix(2))!
+    private(set) lazy var currentMonth = Int("\(Calendar.current.component(.month, from: Date()))")!
 
-    public var dataEntryProgresssion = false
+    public var dataEntryProgresssionAnimation = false
 
     
     // MARK: - Private Propertys
@@ -92,18 +109,32 @@ public final class VepayPaymentController: UIViewController {
     public var isReadyToPay: Bool = false {
         didSet {
             if isReadyToPay != oldValue {
-                delegate.paymentController(isReadyToPay: isReadyToPay)
+                delegate?.paymentController(isReadyToPay: isReadyToPay)
             }
         }
     }
 
     public var selectedCard: VepayPaymentCard? {
         if isReadyToPay, savedCards.indices.contains(selectedCardIndex.row) {
-            return .init(card: savedCards[selectedCardIndex.row], 
-                         cvv: getNumbersIn(text: cvvCode))
+            return .init(card: savedCards[selectedCardIndex.row],
+                             cvv: getNumbersIn(text: cvvCode))
         } else {
             return nil
         }
+    }
+
+    public func getCardNumber(unmasked: Bool) -> String {
+        let card = cardNumber.text ?? ""
+        return unmasked ? getNumbersIn(text: card) : card
+    }
+
+    public func getExpirationDate(unmasked: Bool) -> String {
+        let expiration = validUntil.text ?? ""
+        return unmasked ? getNumbersIn(text: expiration) : expiration
+    }
+
+    public func getCVV() -> String {
+        cvv.text ?? ""
     }
 
 }
@@ -121,6 +152,7 @@ public extension VepayPaymentController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         }
@@ -183,13 +215,13 @@ extension VepayPaymentController {
     
     /// Showing error if needed
     /// - Returns: isReady
-    public func validateReadinnes() -> Bool {
+    public func validateReadinnes(useLuhnAlgorithm: Bool = true) -> Bool {
         isReadyToPay = cardNumberReadiness + expirationReadiness + cvvReadiness == 3
 
         var notReadyFields: [UITextField] = []
 
         // Card Number
-        let validByLuhnAlgorithm = luhnCheck(getNumbersIn(text: cardNumber.text ?? ""))
+        let validByLuhnAlgorithm = useLuhnAlgorithm || luhnCheck(getNumbersIn(text: cardNumber.text ?? ""))
         if cardNumberReadiness != 1 || !validByLuhnAlgorithm {
             notReadyFields.append(cardNumber)
         }
@@ -265,4 +297,17 @@ extension VepayPaymentController {
 
 public protocol VepayPaymentControllerDelegate: NSObject {
     func paymentController(isReadyToPay: Bool)
+
+    /// Normolized value: [0...1]
+    func cardNumberReadinessChanged(to value: Float)
+    /// Normolized value: [0...1]
+    func expirationReadinessChanged(to value: Float)
+    /// Normolized value: [0...1]
+    func cvvReadinessChanged(to value: Float)
+}
+
+public extension VepayPaymentControllerDelegate {
+    func cardNumberReadinessChanged(to value: Float) { }
+    func expirationReadinessChanged(to value: Float) { }
+    func cvvReadinessChanged(to value: Float) { }
 }

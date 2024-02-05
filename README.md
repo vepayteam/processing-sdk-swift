@@ -21,6 +21,9 @@
 Подключение через CocoaPods:
 <br />pod 'VepaySDK', :git => 'https://github.com/vepayteam/processing-sdk-swift'
 
+### Example
+
+Для того чтобы попробовать демо, вам нужно в CreateController файле, установить xUser, на ваш [X-User](#X-User)
 
 
 ## Запросы
@@ -171,6 +174,54 @@
 > Вы можете посмотреть пример показа, в методе [start](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/UI/Vepay3DSController/Vepay3DSController.swift#L85C5-L119C6)
 
 
+### VepayPaymentController
+
+Вы можете переключиться между прогрессивной анимацией и стандартной, присвоив переменной
+dataEntryProgresssionAnimation, по дефолту анимация отключена
+
+> Вы можете получить все значения карты (number, date, cvv) через соответсвующие методы, например getCardNumber(unmasked: Bool) -> Strin
+> 
+> Либо если карта пользователя уже зарегистрирована в системе, вы можете получить настроенную карту, через свойство selectedCard
+
+
+#### Работа со всем UI, включая VepayPaymentController, предполагается как:
+
+
+###### Получение контроллера из бандла
+<br />let payment = VepayPaymentController.loadFromXib()
+
+###### Нужно обязательно вызвать экран!
+<br />_ = payment.view
+
+###### Добавить экран как Child Controller
+<br />addChild(payment)
+<br />view.addSubview(payment.view)
+
+###### Настройка расположения экрана
+<br />payment.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+<br />payment.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+<br />payment.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+<br />payment.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+
+###### Уведомление VepayPaymentController о том что он усыновлён
+<br />payment.didMove(toParent: self)
+
+> Весь UI контроллера находиться в UIScrollView (public scrollView), что позволяет использовать этот экран на всех размерах экранов
+
+
+###### <a name="VepayPaymentControllerDelegate"></a>VepayPaymentControllerDelegate
+
+У VepayPaymentController есть свойство delegate
+
+В протоколе 4 метода,
+
+Главный метод - сообщает когда контроллер готов к оплате
+<br />func paymentController(isReadyToPay: Bool)
+
+Так же вы можете узнать готовность заполняемый данных через методы:
+<br />func cardNumberReadinessChanged(to float: Float)
+<br />func expirationReadinessChanged(to float: Float)
+<br />func cvvReadinessChanged(to float: Float)
 
 ## Запланированные улучшения
 
