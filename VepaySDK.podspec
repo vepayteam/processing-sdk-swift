@@ -13,12 +13,7 @@ Pod::Spec.new do |s|
   }
 
   s.resources = [
-    'VepaySDK/**/*.{storyboard,xcassets,ttf}
-    'VepaySDK/Resources/Assets.xcassets', 
-    'VepaySDK/Resources/Fonts/Inter Appeer/InterAppeer-SemiBoldItalic.ttf',
-    'VepaySDK/Resources/Fonts/Inter Appeer/InterAppeer-SemiBold.ttf',
-    'VepaySDK/Resources/Fonts/Inter/Inter-Regular.ttf',
-    'VepaySDK/Resources/Fonts/Inter/Inter-SemiBold.ttf'
+    "VepaySDK/**/*.{storyboard,xcassets,ttf}"
   ]
 
   s.source           = { 
