@@ -13,6 +13,7 @@ Pod::Spec.new do |s|
   }
 
   s.resources = [
+    'VepaySDK/**/*.{storyboard,xcassets,ttf}
     'VepaySDK/Resources/Assets.xcassets', 
     'VepaySDK/Resources/Fonts/Inter Appeer/InterAppeer-SemiBoldItalic.ttf',
     'VepaySDK/Resources/Fonts/Inter Appeer/InterAppeer-SemiBold.ttf',
@@ -24,7 +25,7 @@ Pod::Spec.new do |s|
     :git => 'https://github.com/vepayteam/processing-sdk-swift.git',
     :tag => s.version.to_s
   }
-  s.source_files = '**/*.swift', '*.swift'
+  s.source_files = 'VepaySDK/Sources/**/*.swift', '*.swift', 'VepaySDK/README.md'
   s.ios.deployment_target = '12.0'
   s.swift_versions = '5.0'
 end
