@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
     :git => 'https://github.com/vepayteam/processing-sdk-swift.git',
     :tag => s.version.to_s
   }
-  s.source_files = 'VepaySDK/Sources/**/*.swift', '*.swift', 'VepaySDK/README.md'
+  s.source_files = 'VepaySDK/Sources/**/*.swift', 'VepaySDK/Resources/Support.swift', 'VepaySDK/README.md'
   s.ios.deployment_target = '12.0'
   s.swift_versions = '5.0'
 end
