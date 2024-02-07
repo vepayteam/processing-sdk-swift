@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		432094172B561D500001C2CF /* VepaySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43338C2C2B3D2F130063BD3F /* VepaySDK.framework */; };
 		432094182B561D500001C2CF /* VepaySDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 43338C2C2B3D2F130063BD3F /* VepaySDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		43338C312B3D2F130063BD3F /* VepaySDK.docc in Sources */ = {isa = PBXBuildFile; fileRef = 43338C302B3D2F130063BD3F /* VepaySDK.docc */; };
 		43338C3D2B3D2F130063BD3F /* VepaySDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 43338C2F2B3D2F130063BD3F /* VepaySDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		43338C5E2B3D300F0063BD3F /* VepayError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43338C492B3D300F0063BD3F /* VepayError.swift */; };
 		43338C602B3D300F0063BD3F /* VepayBaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43338C4A2B3D300F0063BD3F /* VepayBaseRequest.swift */; };
@@ -27,7 +26,7 @@
 		434161B32B602B43000672B2 /* GlassmorphismView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434161B22B602B43000672B2 /* GlassmorphismView.swift */; };
 		434161B52B602F83000672B2 /* PayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434161B42B602F83000672B2 /* PayController.swift */; };
 		434161B82B6038E3000672B2 /* VepayPaymentController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 434161B72B6038E3000672B2 /* VepayPaymentController.storyboard */; };
-		434161BB2B604083000672B2 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434161BA2B604083000672B2 /* Colors.swift */; };
+		4374027A2B6CFC980081EDD8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 437402792B6CFC980081EDD8 /* README.md */; };
 		439CA3252B643864000A6D63 /* VepayInvoiceRefundGet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439CA3242B643864000A6D63 /* VepayInvoiceRefundGet.swift */; };
 		43A8BE9E2B57EA88007FEED1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 430D82262B56041100BA84EC /* Assets.xcassets */; };
 		43A8BE9F2B57EAC9007FEED1 /* InterAppeer-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 430D82222B56041100BA84EC /* InterAppeer-SemiBold.ttf */; };
@@ -100,7 +99,6 @@
 		430D82262B56041100BA84EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		43338C2C2B3D2F130063BD3F /* VepaySDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = VepaySDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		43338C2F2B3D2F130063BD3F /* VepaySDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VepaySDK.h; sourceTree = "<group>"; };
-		43338C302B3D2F130063BD3F /* VepaySDK.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = VepaySDK.docc; sourceTree = "<group>"; };
 		43338C492B3D300F0063BD3F /* VepayError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VepayError.swift; sourceTree = "<group>"; };
 		43338C4A2B3D300F0063BD3F /* VepayBaseRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VepayBaseRequest.swift; sourceTree = "<group>"; };
 		43338C4B2B3D300F0063BD3F /* VepayRequestBasis.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VepayRequestBasis.swift; sourceTree = "<group>"; };
@@ -119,7 +117,7 @@
 		434161B22B602B43000672B2 /* GlassmorphismView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlassmorphismView.swift; sourceTree = "<group>"; };
 		434161B42B602F83000672B2 /* PayController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayController.swift; sourceTree = "<group>"; };
 		434161B72B6038E3000672B2 /* VepayPaymentController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VepayPaymentController.storyboard; sourceTree = "<group>"; };
-		434161BA2B604083000672B2 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		437402792B6CFC980081EDD8 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		439CA3242B643864000A6D63 /* VepayInvoiceRefundGet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VepayInvoiceRefundGet.swift; sourceTree = "<group>"; };
 		43B46E022B639A1F00BBB247 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		43B46E032B639A1F00BBB247 /* EventSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSource.swift; sourceTree = "<group>"; };
@@ -237,6 +235,7 @@
 		43338C222B3D2F120063BD3F = {
 			isa = PBXGroup;
 			children = (
+				437402792B6CFC980081EDD8 /* README.md */,
 				43338C2E2B3D2F130063BD3F /* VepaySDK */,
 				43338C7F2B3D322C0063BD3F /* VepaySDKExample */,
 				43338C2D2B3D2F130063BD3F /* Products */,
@@ -259,7 +258,6 @@
 				43338C2F2B3D2F130063BD3F /* VepaySDK.h */,
 				43338C472B3D2FE60063BD3F /* Sources */,
 				43338C502B3D300F0063BD3F /* Resources */,
-				43338C302B3D2F130063BD3F /* VepaySDK.docc */,
 			);
 			path = VepaySDK;
 			sourceTree = "<group>";
@@ -297,7 +295,6 @@
 		43338C7F2B3D322C0063BD3F /* VepaySDKExample */ = {
 			isa = PBXGroup;
 			children = (
-				434161BA2B604083000672B2 /* Colors.swift */,
 				43338C802B3D322C0063BD3F /* AppDelegate.swift */,
 				43338C822B3D322C0063BD3F /* SceneDelegate.swift */,
 				43338C842B3D322C0063BD3F /* CreateController.swift */,
@@ -505,6 +502,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				43A8BEA12B57EACD007FEED1 /* Inter-SemiBold.ttf in Resources */,
+				4374027A2B6CFC980081EDD8 /* README.md in Resources */,
 				43A8BEA92B57EAE8007FEED1 /* VepayBankCardCell.xib in Resources */,
 				43A8BEA22B57EACD007FEED1 /* Inter-Regular.ttf in Resources */,
 				43A8BE9E2B57EA88007FEED1 /* Assets.xcassets in Resources */,
@@ -550,7 +548,6 @@
 				43338C6A2B3D300F0063BD3F /* Support.swift in Sources */,
 				43B46E062B639A1F00BBB247 /* Event.swift in Sources */,
 				43E106162B4CBDAD001D650B /* VepayInvoiceCreate.swift in Sources */,
-				43338C312B3D2F130063BD3F /* VepaySDK.docc in Sources */,
 				439CA3252B643864000A6D63 /* VepayInvoiceRefundGet.swift in Sources */,
 				43E1063B2B4DD1A2001D650B /* VepayCard.swift in Sources */,
 				43E106232B4CE22B001D650B /* VepayInvoiceCancel.swift in Sources */,
@@ -573,7 +570,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				434161B52B602F83000672B2 /* PayController.swift in Sources */,
-				434161BB2B604083000672B2 /* Colors.swift in Sources */,
 				43338C852B3D322C0063BD3F /* CreateController.swift in Sources */,
 				43338C812B3D322C0063BD3F /* AppDelegate.swift in Sources */,
 				43338C832B3D322C0063BD3F /* SceneDelegate.swift in Sources */,

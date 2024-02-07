@@ -325,6 +325,7 @@
                         <outlet property="paymentMethod" destination="3rq-hw-EGu" id="od1-kI-dgb"/>
                         <outlet property="remeberCardHolder" destination="bRT-95-GGY" id="JRu-Df-M9H"/>
                         <outlet property="remeberCheckmark" destination="1qE-e1-bon" id="A28-Kw-Up4"/>
+                        <outlet property="scrollView" destination="2WO-Ot-9OR" id="hjx-mC-YJr"/>
                         <outlet property="selectedCardLogo" destination="uV7-lh-1UY" id="AXc-Sa-dNK"/>
                         <outlet property="validUntil" destination="FTl-H1-Nxc" id="uNa-fp-jQB"/>
                     </connections>

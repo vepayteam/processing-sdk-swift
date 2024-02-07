@@ -55,7 +55,6 @@ extension VepayPaymentController: UICollectionViewDelegateFlowLayout {
         selectedCardIndex = indexPath
         UIView.animate(withDuration: 0.14, delay: .zero, options: [.allowUserInteraction, .curveLinear]) { [self] in
             arrowToCard.tintColor = bankColor
-//            updateArrowToSelectedCard(animated: false)
         }
         updateArrowToSelectedCard()
 
@@ -102,7 +101,6 @@ extension VepayPaymentController {
     
     func setupCollectionView() {
         cardSelector.register(UINib(nibName: VepayBankCardCell.identifier, bundle: .vepaySDK), forCellWithReuseIdentifier: VepayBankCardCell.identifier)
-//        cardSelector.register(UINib(nibName: VepayBankCardCell.identifier, bundle: .main), forCellWithReuseIdentifier: VepayBankCardCell.identifier)
         cardSelector.delegate = self
         cardSelector.dataSource = self
     }
