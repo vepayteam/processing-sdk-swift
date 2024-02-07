@@ -32,7 +32,7 @@ extension UIColor {
 extension Bundle {
     
     public class var vepaySDK: Bundle {
-        return Bundle(for: VepayBaseRequest.self)
+        Bundle(for: VepayBaseRequest.self)
     }
     
 }

@@ -9,11 +9,11 @@ import WebKit
 
 public final class Vepay3DSController: UIViewController {
 
-    private let webView = WKWebView()
+    public var webView: WKWebView { view as! WKWebView }
 
-    private var sse: EventSource!
-    private var uuid: String!
+    public private(set) var uuid: String!
 
+    public private(set) var sse: EventSource!
     public weak var delegate: Vepay3DSControllerDelegate!
 
 }
@@ -23,9 +23,14 @@ public final class Vepay3DSController: UIViewController {
 
 extension Vepay3DSController {
 
+    public override func loadView() {
+        super.loadView()
+        let webView = WKWebView()
+        view = webView
+    }
+
     public override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(webView)
         webView.allowsBackForwardNavigationGestures = true
     }
     
@@ -46,13 +51,13 @@ extension Vepay3DSController {
         webView.load(data, mimeType: mimeType, characterEncodingName: characterEncodingName, baseURL: url)
     }
 
-    public func startSSE(invoiceUUID: String, isTest: Bool = false) {
+    public func startSSE(invoiceUUID: String, delegate: EventSourceDelegate? = nil, isTest: Bool = false) {
         let url = VepayUtils.h2hURL(endpoint: "stream/sse?uuid=\(invoiceUUID)", isTest: isTest)
-        startSSE(url: URL(string: url)!)
+        startSSE(url: URL(string: url)!, delegate: delegate)
     }
 
-    public func startSSE(url: URL) {
-        sse = .init(url: url, delegate: self)
+    public func startSSE(url: URL, delegate: EventSourceDelegate? = nil) {
+        sse = .init(url: url, delegate: delegate ?? self)
 //        sse.listen(to: "status") You can use listen with newListened(event:)
         sse.connect()
     }

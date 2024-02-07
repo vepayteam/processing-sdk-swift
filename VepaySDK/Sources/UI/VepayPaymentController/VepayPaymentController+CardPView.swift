@@ -25,8 +25,10 @@ extension VepayPaymentController {
 
         isReadyToPay = cardNumberReadiness + expirationReadiness + cvvReadiness == 3
 
-        UIView.animate(withDuration: 0.1, delay: .zero, usingSpringWithDamping: 0.2, initialSpringVelocity: .zero) { [self] in
-            cardProgressionGradient.locations = [0, whiteStartLocation, 2]
+        if dataEntryProgresssionAnimation {
+            UIView.animate(withDuration: 0.1, delay: .zero, usingSpringWithDamping: 0.2, initialSpringVelocity: .zero) { [self] in
+                cardProgressionGradient.locations = [0, whiteStartLocation, 2]
+            }
         }
     }
 
@@ -40,8 +42,10 @@ extension VepayPaymentController {
         /// Start location
         /// Min: 0.5
         /// Max: 1
-        let location = NSNumber(value: cardNumberReadiness * 0.5 + 0.5)
-        cardNumberUnderlineGradient.locations = [0, location]
+        if dataEntryProgresssionAnimation {
+            let location = NSNumber(value: cardNumberReadiness * 0.5 + 0.5)
+            cardNumberUnderlineGradient.locations = [0, location]
+        }
     }
 
 }
@@ -70,9 +74,6 @@ extension VepayPaymentController {
             }
             view.layoutIfNeeded()
         }
-
-        
-//        animated ? UIView.animate(withDuration: 0.2, delay: .zero, usingSpringWithDamping: 0.2, initialSpringVelocity: .zero, animations: animation) : animation()
 
         animated ? UIView.animate(withDuration: 0.2, animations: animation) : animation()
     }
