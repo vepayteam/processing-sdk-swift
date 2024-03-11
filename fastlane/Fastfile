@@ -1,0 +1,210 @@
+require 'securerandom'
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+opt_out_usage
+default_platform(:ios)
+
+base_folder = ENV.fetch("DRONE_HOME", Dir.pwd)
+build_folder = File.absolute_path(File.join(base_folder, '..', 'build'))
+derived_data_path = File.absolute_path(File.join(build_folder, 'DerivedData'))
+
+platform :ios do
+  before_all do |lane|
+    FileUtils.mkdir_p(build_folder) unless File.directory?(build_folder)
+
+    ensure_bundle_exec()
+    clear_derived_data(derived_data_path: derived_data_path)
+    xcodes(select_for_current_build_only: true)
+  end
+
+  desc "Lint, Test and Coverage"
+  lane :lintTestCoverage do
+    initPods
+    lintAndTest
+  end
+
+  desc "SonarQube Scanner for Pull-Request Build Process"
+  lane :sonarQubePullRequest do
+    isCI
+    ensure_env_vars(env_vars: %w[SONAR_TOKEN DRONE_SOURCE_BRANCH DRONE_TARGET_BRANCH DRONE_PULL_REQUEST])
+
+    commit_sha = ENV.fetch("DRONE_COMMIT", ENV.fetch("DRONE_COMMIT_SHA", ""))
+    sonar_runner_args = "-Dsonar.scm.revision=#{commit_sha}"
+    sonar_runner_args += " -Dsonar.junit.reportPaths=#{build_folder}/report.junit"
+    sonar_runner_args += " -Dsonar.swift.swiftLint.reportPaths=#{build_folder}/swiftlint.result.json"
+
+    sonar(
+      sonar_url: "https://sonarqube.vepay.dev",
+      source_encoding: "UTF-8",
+      sonar_runner_args: sonar_runner_args,
+      pull_request_branch: ENV["DRONE_SOURCE_BRANCH"],
+      pull_request_base: ENV["DRONE_TARGET_BRANCH"],
+      pull_request_key: "PR-" + ENV["DRONE_PULL_REQUEST"]
+    )
+  end
+
+  desc "SonarQube Scanner for Regular Build Process"
+  lane :sonarQubeRegular do
+    isCI
+    ensure_env_vars(env_vars: %w[SONAR_TOKEN DRONE_BRANCH])
+
+    commit_sha = ENV.fetch("DRONE_COMMIT", ENV.fetch("DRONE_COMMIT_SHA", ""))
+    sonar_runner_args = "-Dsonar.scm.revision=#{commit_sha}"
+    sonar_runner_args += " -Dsonar.junit.reportPaths=#{build_folder}/report.junit"
+    sonar_runner_args += " -Dsonar.swift.swiftLint.reportPaths=#{build_folder}/swiftlint.result.json"
+
+    sonar(
+      sonar_url: "https://sonarqube.vepay.dev",
+      source_encoding: "UTF-8",
+      sonar_runner_args: sonar_runner_args,
+      branch_name: ENV["DRONE_BRANCH"]
+    )
+  end
+
+  desc "Build VEPAY SDK Example app"
+  lane :buildVepaySDKExample do |lane|
+    isCI
+
+    custom_id = lane.fetch(:custom_id, customID())
+    keychain_name = SecureRandom.alphanumeric(32) + '.keychain'
+    keychain_pass = SecureRandom.alphanumeric(32)
+
+    create_keychain(name: keychain_name, password: keychain_pass,
+                    default_keychain: false, unlock: false,
+                    timeout: 21600, lock_after_timeout: true,
+                    lock_when_sleeps: true, add_to_search_list: false)
+    match(readonly: is_ci, keychain_name: keychain_name, keychain_password: keychain_pass)
+
+    begin
+      ensure_env_vars(env_vars: %w[sigh_com.Vepay.VepaySDKExample_development_profile-name])
+      update_code_signing_settings(
+        use_automatic_signing: false,
+        path: "VepaySDK.xcodeproj",
+        code_sign_identity: "Apple Development",
+        profile_name: ENV['sigh_com.Vepay.VepaySDKExample_development_profile-name'],
+        targets: %w[VepaySDKExample]
+      )
+
+      keychain_path = File.expand_path(Actions.lane_context[SharedValues::KEYCHAIN_PATH]) + '-db'
+      sh("security set-key-partition-list -S apple-tool:,apple: -k #{keychain_pass} #{keychain_path}")
+      unlock_keychain(path: keychain_path, password: keychain_pass, add_to_search_list: true)
+      build_ios_app(
+        derived_data_path: derived_data_path,
+        output_directory: build_folder,
+        archive_path: "#{build_folder}/#{custom_id}.xcarchive",
+        output_name: "#{custom_id}.ipa",
+        xcargs: "OTHER_CODE_SIGN_FLAGS=--keychain=\"#{keychain_path}\"",
+        skip_profile_detection: true
+      )
+    ensure
+      delete_keychain(name: keychain_name)
+    end
+  end
+
+  desc "Upload *.ipa to BrowserStack"
+  lane :uploadToBrowserStack do |lane|
+    isCI
+    ensure_env_vars(env_vars: %w[BROWSERSTACK_USERNAME BROWSERSTACK_ACCESS_KEY])
+
+    custom_id = lane.fetch(:custom_id, customID())
+    file_path = "#{build_folder}/#{custom_id}.ipa"
+
+    upload_to_browserstack_app_automate(
+      browserstack_username: ENV["BROWSERSTACK_USERNAME"],
+      browserstack_access_key: ENV["BROWSERSTACK_ACCESS_KEY"],
+      file_path: file_path,
+      custom_id: custom_id
+    )
+    upload_to_browserstack_app_live(
+      browserstack_username: ENV["BROWSERSTACK_USERNAME"],
+      browserstack_access_key: ENV["BROWSERSTACK_ACCESS_KEY"],
+      file_path: file_path
+    )
+  end
+
+  private_lane :initPods do
+    isCI
+
+    cocoapods(
+      clean_install: true,
+      silent: false,
+      verbose: false,
+      use_bundle_exec: true,
+      try_repo_update_on_error: true
+    )
+  end
+
+  private_lane :lintAndTest do |lane|
+    isCI
+
+    test_scheme = lane.fetch(:test_scheme, "VepaySDKExample")
+    test_config = lane.fetch(:test_config, "Debug")
+    run_tests = lane.fetch(:test, false)
+
+    swiftlint(
+      mode: :lint,
+      executable: "Pods/SwiftLint/swiftlint",
+      output_file: "#{build_folder}/swiftlint.result.json",
+      config_file: ".swiftlint.yml",
+      reporter: "sonarqube",
+      raise_if_swiftlint_error: run_tests,
+      ignore_exit_status: !run_tests,
+      no_cache: true
+    )
+
+    if run_tests
+      begin
+        run_tests(
+          clean: true,
+          code_coverage: run_tests,
+          project: "VepaySDK.xcodeproj",
+          scheme: test_scheme,
+          ensure_devices_found: true,
+          output_directory: build_folder,
+          output_types: "junit",
+          derived_data_path: derived_data_path
+        )
+      rescue => ex
+        UI.error("Something went wrong: #{ex}")
+      end
+    end
+
+    if run_tests
+      begin
+        slather(
+          build_directory: build_folder,
+          proj: "VepaySDK.xcodeproj",
+          workspace: "project.xcworkspace",
+          scheme: test_scheme,
+          configuration: test_config,
+          sonarqube_xml: true,
+          source_directory: File.absolute_path(File.join(Dir.pwd, "..", "VepaySDK")),
+          output_directory: build_folder,
+          use_bundle_exec: true,
+          show: false
+        )
+      rescue => ex
+        UI.error("Something went wrong: #{ex}")
+      end
+    end
+  end
+
+  private_lane :isCI do
+    unless is_ci
+      UI.user_error!("Must be run on CI/CD only.")
+    end
+    true
+  end
+  private_lane :customID do
+    ensure_env_vars(env_vars: %w[DRONE_REPO_NAMESPACE DRONE_REPO_NAME DRONE_BRANCH DRONE_BUILD_NUMBER])
+
+    prefix = ENV['DRONE_REPO_NAMESPACE'].downcase + '-' + ENV['DRONE_REPO_NAME'].downcase
+    if ENV.fetch("DRONE_PULL_REQUEST", "0").to_i > 0
+      "#{prefix}.PR-#{ENV['DRONE_PULL_REQUEST']}.build.#{ENV["DRONE_BUILD_NUMBER"]}"
+    else
+      "#{prefix}.#{ENV['DRONE_BRANCH']}.build.#{ENV["DRONE_BUILD_NUMBER"]}"
+    end
+  end
+end

@@ -1,0 +1,93 @@
+---
+kind: pipeline
+type: exec
+name: build-deploy-development-pull-request
+
+platform:
+  os: darwin
+  arch: arm64
+
+concurrency:
+  limit: 2
+
+steps:
+- name: git-cleanup-branch
+  commands:
+  - git reset --hard origin/${DRONE_TARGET_BRANCH}
+  - git checkout -b ${DRONE_SOURCE_BRANCH} ${DRONE_COMMIT}
+
+- name: check-for-conventional-commits
+  commands:
+  - commitsar -v -s
+
+- name: notify-conventional-commits-01c85db6658ac536839478fc03869fb1
+  commands:
+  - gitea-status -t "conventional-commits" -m "${DRONE_STAGE_STATUS}" -s "${DRONE_STAGE_STATUS}" -u "https://www.conventionalcommits.org/en/v1.0.0/#why-use-conventional-commits"
+  environment:
+    GITEA_TOKEN:
+      from_secret: GITEA_TOKEN
+  when:
+    status:
+    - failure
+    - success
+
+- name: ruby-fastlane-cache-prepare
+  commands:
+  - bundle config path $$GEM_HOME
+  - bundle config set force_ruby_platform true
+  - bundle install --jobs 8 --retry 3
+  - bundle exec fastlane install_plugins
+  environment:
+    BUILD_SRC: false
+    BUNDLE_FORCE_RUBY_PLATFORM: true
+    BUNDLE_USER_CACHE: ../../../.gems/cache
+    FASTLANE_SKIP_UPDATE_CHECK: true
+    GEM_HOME: ../../../.gems
+    RUBYOPT: -W0
+
+- name: ios-lint-test-app
+  commands:
+  - bundle exec pod lib lint
+  - bundle exec fastlane ios lintTestCoverage
+  - bundle exec fastlane ios sonarQubePullRequest
+  environment:
+    BUILD_SRC: false
+    BUNDLE_FORCE_RUBY_PLATFORM: true
+    BUNDLE_USER_CACHE: ../../../.gems/cache
+    FASTLANE_SKIP_UPDATE_CHECK: true
+    GEM_HOME: ../../../.gems
+    RUBYOPT: -W0
+    SONAR_TOKEN:
+      from_secret: SONAR_TOKEN
+
+- name: build-distribute-sample-ios-app
+  commands:
+  - bundle exec fastlane ios buildVepaySDKExample
+  - bundle exec fastlane ios uploadToBrowserStack
+  environment:
+    BROWSERSTACK_ACCESS_KEY:
+      from_secret: BROWSERSTACK_ACCESS_KEY
+    BROWSERSTACK_USERNAME:
+      from_secret: BROWSERSTACK_USERNAME
+    BUILD_SRC: false
+    BUNDLE_FORCE_RUBY_PLATFORM: true
+    BUNDLE_USER_CACHE: ../../../.gems/cache
+    FASTLANE_SKIP_UPDATE_CHECK: true
+    GEM_HOME: ../../../.gems
+    MATCH_GIT_BASIC_AUTHORIZATION:
+      from_secret: MATCH_GIT_BASIC_AUTHORIZATION
+    MATCH_PASSWORD:
+      from_secret: MATCH_PASSWORD
+    RUBYOPT: -W0
+
+trigger:
+  branch:
+  - develop
+  event:
+  - pull_request
+
+---
+kind: signature
+hmac: 63b6fc6fd65f3acbdd78deb9f96af20afe5d734afec8d3d5cf09e8c401a1b45b
+
+...
