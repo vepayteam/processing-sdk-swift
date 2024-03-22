@@ -6,8 +6,7 @@ require 'securerandom'
 opt_out_usage
 default_platform(:ios)
 
-base_folder = ENV.fetch("DRONE_HOME", Dir.pwd)
-build_folder = File.absolute_path(File.join(base_folder, '..', 'build'))
+build_folder = ENV.fetch("RUNNER_TEMP", File.absolute_path(File.join(Dir.pwd, '..', 'build')))
 derived_data_path = File.absolute_path(File.join(build_folder, 'DerivedData'))
 
 platform :ios do
@@ -25,42 +24,34 @@ platform :ios do
     lintAndTest
   end
 
-  desc "SonarQube Scanner for Pull-Request Build Process"
-  lane :sonarQubePullRequest do
+  desc "SonarQube Scanner for Build Process"
+  lane :sonarQube do
     isCI
-    ensure_env_vars(env_vars: %w[SONAR_TOKEN DRONE_SOURCE_BRANCH DRONE_TARGET_BRANCH DRONE_PULL_REQUEST])
+    ensure_env_vars(env_vars: %w[SONAR_TOKEN])
 
-    commit_sha = ENV.fetch("DRONE_COMMIT", ENV.fetch("DRONE_COMMIT_SHA", ""))
-    sonar_runner_args = "-Dsonar.scm.revision=#{commit_sha}"
+    sonar_runner_args = "-Dsonar.scm.revision=#{ENV['GITHUB_SHA']}"
     sonar_runner_args += " -Dsonar.junit.reportPaths=#{build_folder}/report.junit"
     sonar_runner_args += " -Dsonar.swift.swiftLint.reportPaths=#{build_folder}/swiftlint.result.json"
 
-    sonar(
-      sonar_url: "https://sonarqube.vepay.dev",
-      source_encoding: "UTF-8",
-      sonar_runner_args: sonar_runner_args,
-      pull_request_branch: ENV["DRONE_SOURCE_BRANCH"],
-      pull_request_base: ENV["DRONE_TARGET_BRANCH"],
-      pull_request_key: "PR-" + ENV["DRONE_PULL_REQUEST"]
-    )
-  end
-
-  desc "SonarQube Scanner for Regular Build Process"
-  lane :sonarQubeRegular do
-    isCI
-    ensure_env_vars(env_vars: %w[SONAR_TOKEN DRONE_BRANCH])
-
-    commit_sha = ENV.fetch("DRONE_COMMIT", ENV.fetch("DRONE_COMMIT_SHA", ""))
-    sonar_runner_args = "-Dsonar.scm.revision=#{commit_sha}"
-    sonar_runner_args += " -Dsonar.junit.reportPaths=#{build_folder}/report.junit"
-    sonar_runner_args += " -Dsonar.swift.swiftLint.reportPaths=#{build_folder}/swiftlint.result.json"
-
-    sonar(
-      sonar_url: "https://sonarqube.vepay.dev",
-      source_encoding: "UTF-8",
-      sonar_runner_args: sonar_runner_args,
-      branch_name: ENV["DRONE_BRANCH"]
-    )
+    if ENV.fetch("PULL_REQUEST_NUMBER", "0").to_i > 0
+      ensure_env_vars(env_vars: %w[GITHUB_HEAD_REF GITHUB_BASE_REF])
+      sonar(
+        sonar_url: "https://sonarqube.vepay.dev",
+        source_encoding: "UTF-8",
+        sonar_runner_args: sonar_runner_args,
+        pull_request_branch: ENV["GITHUB_HEAD_REF"],
+        pull_request_base: ENV["GITHUB_BASE_REF"],
+        pull_request_key: "PR-" + ENV["PULL_REQUEST_NUMBER"]
+      )
+    else
+      ensure_env_vars(env_vars: %w[GITHUB_REF_NAME])
+      sonar(
+        sonar_url: sonar_url,
+        source_encoding: "UTF-8",
+        sonar_runner_args: sonar_runner_args,
+        branch_name: ENV["GITHUB_REF_NAME"]
+      )
+    end
   end
 
   desc "Build VEPAY SDK Example app"
@@ -78,7 +69,7 @@ platform :ios do
     match(readonly: is_ci, keychain_name: keychain_name, keychain_password: keychain_pass)
 
     begin
-      ensure_env_vars(env_vars: %w[sigh_com.Vepay.VepaySDKExample_development_profile-name])
+      ensure_env_vars(env_vars: %w[sigh_com.Vepay.VepaySDKExample_development_profile-name GITHUB_ENV])
       update_code_signing_settings(
         use_automatic_signing: false,
         path: "VepaySDK.xcodeproj",
@@ -98,6 +89,10 @@ platform :ios do
         xcargs: "OTHER_CODE_SIGN_FLAGS=--keychain=\"#{keychain_path}\"",
         skip_profile_detection: true
       )
+      sh("echo IPA_OUTPUT_PATH=#{Actions.lane_context[SharedValues::IPA_OUTPUT_PATH]} >> #{ENV['GITHUB_ENV']}")
+      sh("echo DSYM_OUTPUT_PATH=#{Actions.lane_context[SharedValues::DSYM_OUTPUT_PATH]} >> #{ENV['GITHUB_ENV']}")
+      sh("echo XCODEBUILD_ARCHIVE=#{Actions.lane_context[SharedValues::XCODEBUILD_ARCHIVE]} >> #{ENV['GITHUB_ENV']}")
+      sh("echo IPA_OUTPUT_NAME=#{custom_id} >> #{ENV['GITHUB_ENV']}")
     ensure
       delete_keychain(name: keychain_name)
     end
@@ -106,21 +101,18 @@ platform :ios do
   desc "Upload *.ipa to BrowserStack"
   lane :uploadToBrowserStack do |lane|
     isCI
-    ensure_env_vars(env_vars: %w[BROWSERSTACK_USERNAME BROWSERSTACK_ACCESS_KEY])
-
-    custom_id = lane.fetch(:custom_id, customID())
-    file_path = "#{build_folder}/#{custom_id}.ipa"
+    ensure_env_vars(env_vars: %w[BROWSERSTACK_USERNAME BROWSERSTACK_ACCESS_KEY IPA_OUTPUT_PATH IPA_OUTPUT_NAME])
 
     upload_to_browserstack_app_automate(
       browserstack_username: ENV["BROWSERSTACK_USERNAME"],
       browserstack_access_key: ENV["BROWSERSTACK_ACCESS_KEY"],
-      file_path: file_path,
-      custom_id: custom_id
+      file_path: ENV['IPA_OUTPUT_PATH'],
+      custom_id: ENV['IPA_OUTPUT_NAME']
     )
     upload_to_browserstack_app_live(
       browserstack_username: ENV["BROWSERSTACK_USERNAME"],
       browserstack_access_key: ENV["BROWSERSTACK_ACCESS_KEY"],
-      file_path: file_path
+      file_path: ENV['IPA_OUTPUT_PATH']
     )
   end
 
@@ -198,13 +190,13 @@ platform :ios do
     true
   end
   private_lane :customID do
-    ensure_env_vars(env_vars: %w[DRONE_REPO_NAMESPACE DRONE_REPO_NAME DRONE_BRANCH DRONE_BUILD_NUMBER])
+    ensure_env_vars(env_vars: %w[GITHUB_REPOSITORY GITHUB_REF_NAME GITHUB_RUN_ID])
 
-    prefix = ENV['DRONE_REPO_NAMESPACE'].downcase + '-' + ENV['DRONE_REPO_NAME'].downcase
-    if ENV.fetch("DRONE_PULL_REQUEST", "0").to_i > 0
-      "#{prefix}.PR-#{ENV['DRONE_PULL_REQUEST']}.build.#{ENV["DRONE_BUILD_NUMBER"]}"
+    prefix = ENV['GITHUB_REPOSITORY'].downcase.split('/').join('-')
+    if ENV.fetch("PULL_REQUEST_NUMBER", "0").to_i > 0
+      "#{prefix}.PR-#{ENV['PULL_REQUEST_NUMBER']}.build.#{ENV["GITHUB_RUN_ID"]}"
     else
-      "#{prefix}.#{ENV['DRONE_BRANCH']}.build.#{ENV["DRONE_BUILD_NUMBER"]}"
+      "#{prefix}.#{ENV['GITHUB_REF_NAME']}.build.#{ENV["GITHUB_RUN_ID"]}"
     end
   end
 end

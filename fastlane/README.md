@@ -23,21 +23,13 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Lint, Test and Coverage
 
-### ios sonarQubePullRequest
+### ios sonarQube
 
 ```sh
-[bundle exec] fastlane ios sonarQubePullRequest
+[bundle exec] fastlane ios sonarQube
 ```
 
-SonarQube Scanner for Pull-Request Build Process
-
-### ios sonarQubeRegular
-
-```sh
-[bundle exec] fastlane ios sonarQubeRegular
-```
-
-SonarQube Scanner for Regular Build Process
+SonarQube Scanner for Build Process
 
 ### ios buildVepaySDKExample
 
@@ -54,6 +46,14 @@ Build VEPAY SDK Example app
 ```
 
 Upload *.ipa to BrowserStack
+
+### ios dumpSharedValues
+
+```sh
+[bundle exec] fastlane ios dumpSharedValues
+```
+
+Dump Build Shared Values
 
 ----
 

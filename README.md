@@ -19,7 +19,12 @@
 Вы можете подключить SDK через клонирование [Git Repository](#https://github.com/vepayteam/processing-sdk-swift) или CocoaPods
 
 Подключение через CocoaPods:
-<br />pod 'VepaySDK', :git => 'https://github.com/vepayteam/processing-sdk-swift'
+> pod 'VepaySDK'
+
+или
+
+> pod 'VepaySDK', :git => 'https://github.com/vepayteam/processing-sdk-swift'
+
 
 ### Example
 

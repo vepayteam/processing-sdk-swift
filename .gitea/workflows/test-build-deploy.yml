@@ -1,0 +1,116 @@
+name: Complex Machinery Job
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+
+env:
+  BUNDLE_FORCE_RUBY_PLATFORM: true
+  BUNDLE_PATH: "${{ gitea.workspace }}/../../.bundle/${{ gitea.repository }}"
+  BUNDLE_USER_CACHE: "${{ gitea.workspace }}/../../.gems/${{ gitea.repository }}/cache"
+  FASTLANE_SKIP_UPDATE_CHECK: true
+  GEM_HOME: "${{ gitea.workspace }}/../../.gems/${{ gitea.repository }}"
+  PULL_REQUEST_NUMBER: ${{ gitea.event.number }}
+  RUBYOPT: -W0
+
+jobs:
+  prepare:
+    runs-on: macos-arm64
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install RubyGems & Fastlane Plugins
+        run: |
+          bundle config path $GEM_HOME
+          bundle config set force_ruby_platform true
+          bundle install --no-color --jobs 8 --retry 3
+          bundle exec fastlane install_plugins
+
+  lint-test-scan:
+    runs-on: macos-arm64
+    if: gitea.ref != 'refs/heads/main'
+    needs:
+      - prepare
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Pod Lint
+        id: pod-lint
+        run: |
+          bundle exec --no-color pod lib lint
+      - name: Code Lint and Coverage
+        id: code-lint
+        run: |
+          bundle exec fastlane ios lintTestCoverage
+      - name: SonarQube Scan
+        id: sonarqube-scan
+        run: |
+          bundle exec fastlane ios sonarQube
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  build-n-artifact-deploy:
+    runs-on: macos-arm64
+    needs:
+      - prepare
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: MariachiBear/get-repo-name-action@v1.2.0
+        id: repo-name
+        with:
+          string-case: 'lowercase'
+      - name: Build Sample App
+        id: build-sample-app
+        run: |
+          bundle exec fastlane ios buildVepaySDKExample
+        env:
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      - name: Deploy Sample App to BrowserStack
+        run: |
+          bundle exec fastlane ios uploadToBrowserStack
+        env:
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.IPA_OUTPUT_NAME }}
+          path: |
+            ${{ env.IPA_OUTPUT_PATH }}
+            ${{ env.DSYM_OUTPUT_PATH }}
+            ${{ env.XCODEBUILD_ARCHIVE }}
+          retention-days: 60
+      - name: Upload IPA to Generic Packages
+        run: |
+          curl -LSs \
+            -H "Authorization: token ${{ secrets.TEA_TOKEN }}" \
+            -o /dev/null \
+            --upload-file ${{ env.IPA_OUTPUT_PATH }} \
+            ${{ gitea.server_url }}/api/packages/${{ gitea.repository_owner }}/generic/${{ steps.repo-name.outputs.repository-name }}/${{ env.IPA_OUTPUT_NAME }}/${{ env.IPA_OUTPUT_NAME }}.ipa
+          curl -LSs \
+            -X POST "${{ gitea.server_url }}/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}" \
+            -H "accept: application/json" \
+            -H "Authorization: token ${{ gitea.token }}" \
+            -H "Content-Type: application/json" \
+            -o /dev/null \
+            --data-raw \
+          '
+          {
+            "context": "Build / VepaySDKExample",
+            "description": "ipa",
+            "state": "${{ steps.build-sample-app.conclusion }}",
+            "target_url": "${{ gitea.server_url }}/${{ gitea.repository_owner }}/-/packages/generic/${{ steps.repo-name.outputs.repository-name }}/${{ env.IPA_OUTPUT_NAME }}"
+          }'
