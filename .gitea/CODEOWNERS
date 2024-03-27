@@ -1,0 +1,12 @@
+\\.gitea/                                           @moneytransfer/sre
+\\.github/                                          @moneytransfer/sre
+fastlane/                                           @moneytransfer/sre
+
+VepaySDK/                                           @moneytransfer/ios-developers
+VepaySDK\\.xcodeproj/                               @moneytransfer/ios-developers
+VepaySDK\\.xcworkspace/                             @moneytransfer/ios-developers
+VepaySDKExample/                                    @moneytransfer/ios-developers
+
+README\\.md                                         @moneytransfer/ios-developers
+VepaySDK\\.podspec                                  @moneytransfer/ios-developers
+sonar-project\\.properties                          @moneytransfer/ios-developers @moneytransfer/sre

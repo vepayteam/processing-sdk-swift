@@ -29,6 +29,7 @@ platform :ios do
     isCI
     ensure_env_vars(env_vars: %w[SONAR_TOKEN])
 
+    sonar_url = "https://sonarqube.vepay.dev"
     sonar_runner_args = "-Dsonar.scm.revision=#{ENV['GITHUB_SHA']}"
     sonar_runner_args += " -Dsonar.junit.reportPaths=#{build_folder}/report.junit"
     sonar_runner_args += " -Dsonar.swift.swiftLint.reportPaths=#{build_folder}/swiftlint.result.json"
@@ -36,7 +37,7 @@ platform :ios do
     if ENV.fetch("PULL_REQUEST_NUMBER", "0").to_i > 0
       ensure_env_vars(env_vars: %w[GITHUB_HEAD_REF GITHUB_BASE_REF])
       sonar(
-        sonar_url: "https://sonarqube.vepay.dev",
+        sonar_url: sonar_url,
         source_encoding: "UTF-8",
         sonar_runner_args: sonar_runner_args,
         pull_request_branch: ENV["GITHUB_HEAD_REF"],
