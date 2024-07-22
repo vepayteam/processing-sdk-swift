@@ -24,6 +24,30 @@ extension UIColor {
     public static let coal48 = coal.withAlphaComponent(0.48)
     public static let ice24 = ice.withAlphaComponent(0.24)
     public static let ice48 = ice.withAlphaComponent(0.48)
+
+}
+
+extension UIFont {
+
+    public static func interRegular(of size: CGFloat) -> UIFont {
+        UIFont(name: "Inter-Regular", size: size)!
+    }
+    public static func interSemiBold(of size: CGFloat) -> UIFont {
+        UIFont(name: "Inter-SemiBold", size: size)!
+    }
+    public static func interAppeerSemiBold(of size: CGFloat) -> UIFont {
+        UIFont(name: "InterAppeer-SemiBold", size: size)!
+    }
+
+    /// Inter Appeer Semi Bold  20
+    public static let subHeading = interAppeerSemiBold(of: 20)
+    /// Inter-Regular 14
+    public static let bodyLarge = interRegular(of: 14)
+    /// Inter-Regular 12
+    public static let bodySmall = interRegular(of: 12)
+    /// Inter-SemiBold 12
+    public static let bodySmallSemiBold = interSemiBold(of: 12)
+
 }
 
 

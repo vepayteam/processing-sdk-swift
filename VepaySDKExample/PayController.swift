@@ -14,7 +14,7 @@ final class PayController: UIViewController {
 
     // MARK: - Views
 
-    private weak var payment: VepayPaymentController!
+    private(set) weak var payment: VepayPaymentController!
 
     @IBOutlet private weak var actionView: UIView!
     @IBOutlet private weak var makeTransfer: UIButton!
@@ -23,6 +23,12 @@ final class PayController: UIViewController {
 
 
     // MARK: - Propertys
+
+//    public var overrideSavedCards: Bool = false {
+//        didSet {
+//            payment?.overrideSavedCards = overrideSavedCards
+//        }
+//    }
 
     private var invoice: VepayInvoice!
     func configure(invoice: VepayInvoice) {
@@ -40,13 +46,14 @@ extension PayController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         payment = segue.destination as? VepayPaymentController
-        payment.delegate = self
+//        payment.overrideSavedCards = overrideSavedCards
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         actionView.layer.maskedCorners = .layerMaxXMinYCorner
         setActionView(animated: false)
+        payment.cardView.delegate = self
     }
 
     override func viewDidLayoutSubviews() {
@@ -76,13 +83,13 @@ extension PayController {
 }
 
 
-// MARK: - VepayPaymentControllerDelegate
+// MARK: - VepayCardViewDelegate
 
-extension PayController: VepayPaymentControllerDelegate {
+extension PayController: VepayCardViewDelegate {
     
-    func paymentController(isReadyToPay: Bool) {
+    func cardView(ready: Bool) {
         UIView.animate(withDuration: 0.2, delay: .zero, options: [.curveEaseOut, .allowUserInteraction]) { [weak makeTransfer] in
-            makeTransfer?.tintColor = isReadyToPay ? UIColor.ice : UIColor.ice24
+            makeTransfer?.tintColor = ready ? UIColor.ice : UIColor.ice24
         }
     }
 
@@ -94,29 +101,34 @@ extension PayController: VepayPaymentControllerDelegate {
 extension PayController {
     
     @IBAction private func pay() {
-        if payment.validateReadinnes(), let card = payment.selectedCard {
-            let loader = LoadingScreen()
-            view.addSubview(loader)
-            loader.frame = view.bounds
-            loader.startAnimating()
-            self.loader = loader
-
-            VepayInvoicePayment(invoice: invoice, card: card, size: view.bounds.size, xUser: xUser, isTest: true)?.request(success: { [weak self] response in
-                guard let self = self else { return }
-                switch response.readable {
-                case .ready(let url, let method, let postParameters):
-                    start3DS(url: url, uuid: invoice.uuid!, method: method, postParameters: postParameters)
-                case .pending:
-                    print("\nPending")
-                case .redirectingNotNeaded:
-                    print("\nReadirect Not Neaded")
-                }
-                self.loader?.stopAnimationg()
-            }, error: { [weak loader] in
-                loader?.stopAnimationg()
-                print($0)
-            })
+        if payment.cardView.ready {
+            
+        } else {
+            payment.cardView.showErrorNotReady()
         }
+//        if payment.validateReadinnes(), let card = payment.selectedCard {
+//            let loader = LoadingScreen()
+//            view.addSubview(loader)
+//            loader.frame = view.bounds
+//            loader.startAnimating()
+//            self.loader = loader
+//
+//            VepayInvoicePayment(invoice: invoice, card: card, size: view.bounds.size, xUser: xUser, isTest: true)?.request(success: { [weak self] response in
+//                guard let self = self else { return }
+//                switch response.readable {
+//                case .ready(let url, let method, let postParameters):
+//                    start3DS(url: url, uuid: invoice.uuid!, method: method, postParameters: postParameters)
+//                case .pending:
+//                    print("\nPending")
+//                case .redirectingNotNeaded:
+//                    print("\nReadirect Not Neaded")
+//                }
+//                self.loader?.stopAnimationg()
+//            }, error: { [weak loader] in
+//                loader?.stopAnimationg()
+//                print($0)
+//            })
+//        }
     }
 
     private func start3DS(url: String, uuid: String, method: String, postParameters: [String: String]?) {
