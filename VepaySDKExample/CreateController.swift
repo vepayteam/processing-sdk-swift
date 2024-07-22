@@ -9,12 +9,13 @@ import UIKit
 import VepaySDK
 
 
-let xUser = "376"
+let xUser = ""
 
 final class CreateController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        // MARK: - For Testing UI
 //        let pay = storyboard!.instantiateViewController(identifier: "PayController") as! PayController
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
 //            pay.payment.set(cards: [.init(id: 0,
@@ -34,6 +35,7 @@ final class CreateController: UIViewController {
     }
 
     @IBAction private func createInvoice() {
+        // MARK: - For Testing Flow
         let statingInvoice = VepayInvoice(
             amountFractional: 30000,
             currency: "RUB",

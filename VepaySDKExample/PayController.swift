@@ -49,11 +49,11 @@ extension PayController {
         payment.expirationDate = ("11", "24")
         payment.cardNumber = "4917610000000000"
         payment.cvv = "333"
-        payment.hideAddCardViaNFC = true
-        payment.hideAddCardViaCamera = true
-        payment.showCVV = false
-        payment.showExpirtionDate = false
-        payment.hideRemberCard = true
+//        payment.hideAddCardViaNFC = true
+//        payment.hideAddCardViaCamera = true
+//        payment.showCVV = false
+//        payment.showExpirtionDate = false
+//        payment.hideRemberCard = true
     }
 
     override func viewDidLoad() {
@@ -61,6 +61,7 @@ extension PayController {
         actionView.layer.maskedCorners = .layerMaxXMinYCorner
         setActionView(animated: false)
         payment.cardView.delegate = self
+        cardView(ready: payment.cardView.ready)
 //        payment.cardView.hideAddCardViaNFC = true
 //        payment.cardView.hideAddCardViaCamera = true
 //        payment.cardView.showCVV = false
