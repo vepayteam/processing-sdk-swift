@@ -25,6 +25,7 @@
                 <outlet property="cvvField" destination="aTx-WS-Kds" id="I5H-Y3-GOn"/>
                 <outlet property="cvvFieldHolder" destination="6us-l3-iGY" id="zWV-vp-39c"/>
                 <outlet property="expirationDateField" destination="5na-L5-BA7" id="OIP-To-72g"/>
+                <outlet property="expirationDateLabel" destination="wqW-Eg-0C8" id="XOH-WG-pMc"/>
                 <outlet property="nfc" destination="h7x-Y8-NCU" id="5qq-Rd-2LV"/>
                 <outlet property="paymentMethod" destination="bTK-Nj-WGG" id="ti6-km-Dxh"/>
             </connections>

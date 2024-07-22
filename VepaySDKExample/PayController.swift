@@ -46,7 +46,14 @@ extension PayController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         payment = segue.destination as? VepayPaymentController
-//        payment.overrideSavedCards = overrideSavedCards
+        payment.expirationDate = ("11", "24")
+        payment.cardNumber = "4917610000000000"
+        payment.cvv = "333"
+        payment.hideAddCardViaNFC = true
+        payment.hideAddCardViaCamera = true
+        payment.showCVV = false
+        payment.showExpirtionDate = false
+        payment.hideRemberCard = true
     }
 
     override func viewDidLoad() {
@@ -54,6 +61,11 @@ extension PayController {
         actionView.layer.maskedCorners = .layerMaxXMinYCorner
         setActionView(animated: false)
         payment.cardView.delegate = self
+//        payment.cardView.hideAddCardViaNFC = true
+//        payment.cardView.hideAddCardViaCamera = true
+//        payment.cardView.showCVV = false
+//        payment.cardView.showExpirtionDate = false
+//        payment.hideRemberCard = true
     }
 
     override func viewDidLayoutSubviews() {
@@ -102,33 +114,31 @@ extension PayController {
     
     @IBAction private func pay() {
         if payment.cardView.ready {
-            
+            let loader = LoadingScreen()
+            view.addSubview(loader)
+            loader.frame = view.bounds
+            loader.startAnimating()
+            self.loader = loader
+
+            VepayInvoicePayment(invoice: invoice, card: .init(cardNumber: payment.cardView.cardNumber, cardHolder: "holder", expires: payment.cardView.expirationDateRow, cvc: payment.cardView.cvv), size: view.bounds.size, xUser: xUser, isTest: true)?.request(success: { [weak self] response in
+                guard let self = self else { return }
+                switch response.readable {
+                case .ready(let url, let method, let postParameters):
+                    start3DS(url: url, uuid: invoice.uuid!, method: method, postParameters: postParameters)
+                case .pending:
+                    print("\nPending")
+                case .redirectingNotNeaded:
+                    print("\nReadirect Not Neaded")
+                }
+                self.loader?.stopAnimationg()
+            }, error: { [weak loader] in
+                loader?.stopAnimationg()
+                print($0)
+            })
+
         } else {
             payment.cardView.showErrorNotReady()
         }
-//        if payment.validateReadinnes(), let card = payment.selectedCard {
-//            let loader = LoadingScreen()
-//            view.addSubview(loader)
-//            loader.frame = view.bounds
-//            loader.startAnimating()
-//            self.loader = loader
-//
-//            VepayInvoicePayment(invoice: invoice, card: card, size: view.bounds.size, xUser: xUser, isTest: true)?.request(success: { [weak self] response in
-//                guard let self = self else { return }
-//                switch response.readable {
-//                case .ready(let url, let method, let postParameters):
-//                    start3DS(url: url, uuid: invoice.uuid!, method: method, postParameters: postParameters)
-//                case .pending:
-//                    print("\nPending")
-//                case .redirectingNotNeaded:
-//                    print("\nReadirect Not Neaded")
-//                }
-//                self.loader?.stopAnimationg()
-//            }, error: { [weak loader] in
-//                loader?.stopAnimationg()
-//                print($0)
-//            })
-//        }
     }
 
     private func start3DS(url: String, uuid: String, method: String, postParameters: [String: String]?) {
@@ -141,3 +151,7 @@ extension PayController {
     }
 
 }
+
+//#Preview {
+//    storyboard!.instantiateViewController(identifier: "PayController") as! PayController
+//}

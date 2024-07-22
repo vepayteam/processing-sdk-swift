@@ -27,17 +27,18 @@ public final class VepayPaymentController: UIViewController {
     // Remeber Card
     @IBOutlet private weak var remeberCardHolder: UIView!
     @IBOutlet private weak var remeberCheckmark: UIImageView!
-    private var rememberCard = true
+    /// You can set this property using setCard(remembered:)
+    public private(set) var cardRemembered = true
 
     /// Hides option to save card
     public var hideRemberCard: Bool = false {
         didSet {
-            remeberCardHolder.isHidden = hideRemberCard
+            remeberCardHolder?.isHidden = hideRemberCard
         }
     }
+    
 
-
-    // MARK: - Propertys
+    // MARK: - Saved Cards
 
     /// Use set(cards:)
     public private(set) var savedCards: [VepayCard] = []
@@ -65,6 +66,87 @@ public final class VepayPaymentController: UIViewController {
         }
     }
 
+    
+    // MARK: - Card View Quick Acess Public Propertys
+
+    private var _cardNumber: String?
+    /// This property just reference to VepayPaymentController.cardView.\$0.
+    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+    public var cardNumber: String {
+        get {
+            _cardNumber ?? cardView?.cardNumber ?? ""
+        }
+        set {
+            if cardView == nil {
+                _cardNumber = newValue
+            } else {
+                cardView.cardNumber = newValue
+            }
+        }
+    }
+
+
+    private var _expirationDate: (String, String)?
+    /// This property just reference to VepayPaymentController.cardView.\$0.
+    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+    public var expirationDate: (String, String)? {
+        get {
+            _expirationDate ?? cardView?.expirationDate
+        }
+        set {
+            if cardView == nil {
+                _expirationDate = newValue
+            } else {
+                cardView.expirationDate = newValue
+            }
+        }
+    }
+    private var _cvv: String?
+    /// This property just reference to VepayPaymentController.cardView.\$0.
+    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+    public var cvv: String {
+        get {
+            _cvv ?? cardView?.cvv ?? ""
+        }
+        set {
+            if cardView == nil {
+                _cvv = newValue
+            } else {
+                cardView.cvv = newValue
+            }
+        }
+    }
+
+
+    // MARK: - Card View Setup Propertys
+
+    /// This property just reference to VepayPaymentController.cardView.\$0.
+    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+    /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
+    public var showExpirtionDate: Bool?
+
+    /// This property just reference to VepayPaymentController.cardView.\$0.
+    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+    /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
+    public var showCVV: Bool?
+    /// This property just reference to VepayPaymentController.cardView.\$0.
+    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+    /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
+    public var overrideAddCardViaNFC: Bool?
+    /// This property just reference to VepayPaymentController.cardView.\$0.
+    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+    /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
+    public var overrideAddCardViaCamera: Bool?
+
+    /// This property just reference to VepayPaymentController.cardView.\$0.
+    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+    /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
+    public var hideAddCardViaNFC: Bool?
+    /// This property just reference to VepayPaymentController.cardView.\$0.
+    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+    /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
+    public var hideAddCardViaCamera: Bool?
+
 }
 
 
@@ -89,13 +171,54 @@ public extension VepayPaymentController {
         tapToDismiss.cancelsTouchesInView = false
         view.addGestureRecognizer(tapToDismiss)
 
-        setRememberCheckmarkState(isOn: false)
+        if hideRemberCard {
+            remeberCardHolder?.isHidden = hideRemberCard
+        }
+        setCard(remembered: cardRemembered)
+
+        if _cardNumber != nil {
+            cardView.cardNumber = _cardNumber!
+            _cardNumber = nil
+        }
+        if _expirationDate != nil {
+            cardView.expirationDate = _expirationDate!
+            _expirationDate = nil
+        }
+        if _cvv != nil {
+            cardView.cvv = _cvv!
+            _cvv = nil
+        }
+
+        if showExpirtionDate != nil {
+            cardView.showExpirtionDate = showExpirtionDate!
+            showExpirtionDate = nil
+        }
+        if showCVV != nil {
+            cardView.showCVV = showCVV!
+            showCVV = nil
+        }
+        if overrideAddCardViaNFC != nil {
+            cardView.overrideAddCardViaNFC = overrideAddCardViaNFC!
+            overrideAddCardViaNFC = nil
+        }
+        if overrideAddCardViaCamera != nil {
+            cardView.overrideAddCardViaCamera = overrideAddCardViaCamera!
+            overrideAddCardViaCamera = nil
+        }
+        if hideAddCardViaNFC != nil {
+            cardView.hideAddCardViaNFC = hideAddCardViaNFC!
+            hideAddCardViaNFC = nil
+        }
+        if hideAddCardViaCamera != nil {
+            cardView.hideAddCardViaCamera = hideAddCardViaCamera!
+            hideAddCardViaCamera = nil
+        }
     }
 
 }
 
 
-// MARK: - Tap Gesture
+// MARK: - Remember Card
 
 extension VepayPaymentController {
     
@@ -104,14 +227,14 @@ extension VepayPaymentController {
 
         let location = gesture.location(in: remeberCardHolder)
         if remeberCardHolder.bounds.contains(location) {
-            setRememberCheckmarkState(isOn: !rememberCard)
+            setCard(remembered: !cardRemembered)
         }
         
     }
 
-    private func setRememberCheckmarkState(isOn: Bool) {
-        rememberCard = isOn
-        let image = "Checkbox" + (isOn ? "Filled" : "Empty")
+    public func setCard(remembered: Bool) {
+        cardRemembered = remembered
+        let image = "Checkbox" + (remembered ? "Filled" : "Empty")
         UIView.transition(with: remeberCheckmark, duration: 0.16, options: [.curveEaseIn, .allowUserInteraction, .transitionCrossDissolve]) { [weak remeberCheckmark] in
             remeberCheckmark?.image = UIImage(named: image, in: .vepaySDK, compatibleWith: nil)
         }

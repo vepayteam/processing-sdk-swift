@@ -48,8 +48,8 @@ extension VepayPaymentController: UICollectionViewDelegateFlowLayout {
         cardView.cardNumber = cardNumber
         cardView.expirationDate = (String(expirationDate.prefix(2)), String(expirationDate.suffix(2)))
         cardView.cvv = ""
-        cardView.paymentMethod.image = paymentIcon
-        cardView.bankLogo.image = bankLogo
+        cardView.paymentMethod?.image = paymentIcon
+        cardView.bankLogo?.image = bankLogo
 
         selectedCardIndex = indexPath
 //        UIView.animate(withDuration: 0.14, delay: .zero, options: [.allowUserInteraction, .curveLinear]) { [self] in

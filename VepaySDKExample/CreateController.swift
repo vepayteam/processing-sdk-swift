@@ -9,28 +9,28 @@ import UIKit
 import VepaySDK
 
 
-let xUser = ""
+let xUser = "376"
 
 final class CreateController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let pay = storyboard!.instantiateViewController(identifier: "PayController") as! PayController
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            pay.payment.set(cards: [.init(id: 0,
-                                          number: "4917000000000000",
-                                          expire: "1130",
-                                          holder: "Cezary Stypulkowski",
-                                          paymentSystem: "VISA",
-                                          bank: VepayBank(
-                                            name: "PEKAO",
-                                            icon: UIImage(named: "PekaoIconExample", in: .vepaySDK, compatibleWith: nil)!,
-                                            logo: UIImage(named: "PekaoLogoExample", in: .vepaySDK, compatibleWith: nil)!,
-                                            color: .red)),])
-        }
-        self.navigationController?.pushViewController(
-            pay,
-            animated: true)
+//        let pay = storyboard!.instantiateViewController(identifier: "PayController") as! PayController
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//            pay.payment.set(cards: [.init(id: 0,
+//                                          number: "4917610000000000",
+//                                          expire: "1130",
+//                                          holder: "Cezary Stypulkowski",
+//                                          paymentSystem: "VISA",
+//                                          bank: VepayBank(
+//                                            name: "PEKAO",
+//                                            icon: UIImage(named: "PekaoIconExample", in: .vepaySDK, compatibleWith: nil)!,
+//                                            logo: UIImage(named: "PekaoLogoExample", in: .vepaySDK, compatibleWith: nil)!,
+//                                            color: .red)),])
+//        }
+//        self.navigationController?.pushViewController(
+//            pay,
+//            animated: true)
     }
 
     @IBAction private func createInvoice() {
@@ -49,8 +49,8 @@ final class CreateController: UIViewController {
 
         VepayInvoiceCreate(invoice: statingInvoice, xUser: xUser, isTest: true).request(success: { [weak self] invoice in
             if let self = self {
+                print(invoice)
                 let pay = storyboard!.instantiateViewController(identifier: "PayController") as! PayController
-//                pay.overrideSavedCards = true
                 pay.configure(invoice: invoice)
                 self.navigationController?.pushViewController(
                     pay,

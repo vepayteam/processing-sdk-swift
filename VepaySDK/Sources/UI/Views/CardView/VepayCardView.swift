@@ -20,6 +20,7 @@ public final class VepayCardView: UIView {
 
     // MARK: - Valid Until
 
+    @IBOutlet public private(set) weak var expirationDateLabel: UILabel?
     @IBOutlet public private(set) weak var expirationDateField: UITextField?
     /// MM / YY
     private let expirationDateMask = Substring("XX / XX")
@@ -110,7 +111,7 @@ public final class VepayCardView: UIView {
     /// For masked expiration use  expirationDateMasked
     public var expirationDate: (String, String)? {
         get {
-            let numbers = getNumbersIn(text: expirationDateMasked)
+            let numbers = expirationDateRow
             return numbers.count == 4 ? (String(numbers.prefix(2)), String(numbers.suffix(2))) : nil
         }
         set {
@@ -128,6 +129,12 @@ public final class VepayCardView: UIView {
         }
     }
 
+    /// MMYY
+    /// # Example: 1130
+    public var expirationDateRow: String {
+        getNumbersIn(text: expirationDateMasked)
+    }
+
     /// MM/YY.
     /// For unmasked use expirationDate
     public var expirationDateMasked: String {
@@ -142,6 +149,7 @@ public final class VepayCardView: UIView {
         set {
             if !newValue {
                 expirationDateField?.superview?.removeFromSuperview()
+                expirationDateLabel?.isHidden = true
                 updateTotalProgress()
             }
         }
