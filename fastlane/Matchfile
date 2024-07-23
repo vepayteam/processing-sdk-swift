@@ -1,0 +1,9 @@
+platform('ios')
+storage_mode("git")
+
+clone_branch_directly(true)
+git_branch("development")
+git_url("https://git.vepay.dev/service/moneytransfer-ios-keys.git")
+
+type("development")
+app_identifier(["com.Vepay.VepaySDKExample"])

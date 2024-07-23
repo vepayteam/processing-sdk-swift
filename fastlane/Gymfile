@@ -1,0 +1,25 @@
+# For more information about this configuration visit
+# https://docs.fastlane.tools/actions/gym/#gymfile
+
+# In general, you can use the options available
+# fastlane gym --help
+
+# Remove the # in front of the line to enable the option
+
+clean(true)
+use_system_scm(true)
+export_method("development")
+
+scheme("VepaySDKExample")
+sdk("iphoneos")
+configuration("Release")
+destination("generic/platform=iOS")
+include_bitcode(false)
+include_symbols(false)
+
+export_options({
+    signingStyle: "manual",
+    compileBitcode: false,
+    stripSwiftSymbols: true,
+    thinning: "<none>"
+})
