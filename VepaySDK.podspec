@@ -3,16 +3,21 @@ local_run = true if ENV.fetch("GITEA_ACTIONS", "false") == "true"
 
 Pod::Spec.new do |s|
   s.name = 'VepaySDK'
-  s.version = ENV["GITHUB_REF_NAME"] || "0.1.3"
   s.summary = 'Cross-border transfers'
   s.homepage = 'https://github.com/vepayteam/processing-sdk-swift'
   s.author = {
     'Богдан Грозян' => 'bgrozyan@vepay.online'
   }
 
+  begin
+    s.version = Gem::Version.new(ENV["GITHUB_REF_NAME"]).release.to_s
+  rescue
+    s.version = "0.1.4"
+  end
+
   s.license = {
     :type => 'MIT',
-    :file => "#{src_dir}/LICENSE"
+    :file => "LICENSE"
   }
 
   s.ios.deployment_target = '12.0'
