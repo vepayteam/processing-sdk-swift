@@ -7,28 +7,47 @@
 
 import WebKit.WKWebView
 
-public final class VepayUtils {
-    
+public struct VepayUtils {
+
     private init() { }
     
-    // MARK: - H2H URL
-    
-    /// For URL Creation
-    /// * "https://\(isTest ? "test" : "api").vepay.online/h2hapi/v1/\(endpoint)"
+    // MARK: - H2H
+
+    /// "https://test.vepay.online/h2hapi/v1"
+    public static var testH2H: String = "https://test.vepay.online/h2hapi/v1"
+    /// "https://api.vepay.online/h2hapi/v1"
+    public static var releaseH2H: String = "https://api.vepay.online/h2hapi/v1"
+
+    /// * "\(h2hURLBase)/\(endpoint)"
     /// - Parameter endpoint: Endpoint without first slash
     public static func h2hURL(endpoint: String, isTest: Bool = false) -> String {
-        "https://\(isTest ? "test" : "api").vepay.online/h2hapi/v1/\(endpoint)"
+        "\(h2hURLBase(isTest: isTest))/\(endpoint)"
+    }
+
+    public static func h2hURLBase(isTest: Bool = false) -> String {
+        isTest ? testH2H : releaseH2H
     }
     
     
-    // MARK: - MFO URL
-    /// * "https://\(isTest ? "test" : "api").vepay.online/mfo/\(endpoint)"
+    // MARK: - MFO
+
+    /// https://test.vepay.online/mfo
+    public static var testMFO: String = "https://test.vepay.online/mfo"
+    /// https://api.vepay.online/mfo
+    public static var releaseMFO: String = "https://api.vepay.online/mfo"
+
+    /// * "\(mfoURLBase)/\(endpoint)"
     public static func mfoURL(endpoint: String, isTest: Bool = false) -> String {
-        "https://\(isTest ? "test" : "api").vepay.online/mfo/\(endpoint)"
+        "\(mfoURLBase(isTest: isTest))/\(endpoint)"
+    }
+
+    public static func mfoURLBase(isTest: Bool = false) -> String {
+        isTest ? testMFO : releaseMFO
     }
     
     
     // MARK: - User Agent
+
     /// # Example: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
     public static func userAgent() -> String {
         WKWebView().value(forKey: "userAgent") as! String
@@ -51,6 +70,38 @@ public final class VepayUtils {
             acceptLanguage += ", \(language.element);q=0.\(9 - language.offset)"
         }
         return acceptLanguage
+    }
+
+}
+
+
+// MARK: - Luhn Check
+
+extension VepayUtils {
+
+    /// Card Validation
+    /// https://gist.github.com/Edudjr/1f90b75b13017b5b0aec2be57187d119
+    public static func luhnCheck(_ number: String) -> Bool {
+        var sum = 0
+        let digitStrings = number.reversed().map { String($0) }
+
+        for tuple in digitStrings.enumerated() {
+            if let digit = Int(tuple.element) {
+                let odd = tuple.offset % 2 == 1
+
+                switch (odd, digit) {
+                case (true, 9):
+                    sum += 9
+                case (true, 0...8):
+                    sum += (digit * 2) % 9
+                default:
+                    sum += digit
+                }
+            } else {
+                return false
+            }
+        }
+        return sum % 10 == 0
     }
 
 }

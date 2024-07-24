@@ -13,9 +13,31 @@ let xUser = ""
 
 final class CreateController: UIViewController {
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // MARK: - For Testing UI
+//        let pay = storyboard!.instantiateViewController(identifier: "PayController") as! PayController
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//            pay.payment.set(cards: [.init(id: 0,
+//                                          number: "4917610000000000",
+//                                          expire: "1130",
+//                                          holder: "Cezary Stypulkowski",
+//                                          paymentSystem: "VISA",
+//                                          bank: VepayBank(
+//                                            name: "PEKAO",
+//                                            icon: UIImage(named: "PekaoIconExample", in: .vepaySDK, compatibleWith: nil)!,
+//                                            logo: UIImage(named: "PekaoLogoExample", in: .vepaySDK, compatibleWith: nil)!,
+//                                            color: .red)),])
+//        }
+//        self.navigationController?.pushViewController(
+//            pay,
+//            animated: true)
+    }
+
     @IBAction private func createInvoice() {
+        // MARK: - For Testing Flow
         let statingInvoice = VepayInvoice(
-            amountFractional: 50000,
+            amountFractional: 30000,
             currency: "RUB",
             client: .init(
                 fullName: "Терентьев Михаил Павлович",
@@ -29,6 +51,7 @@ final class CreateController: UIViewController {
 
         VepayInvoiceCreate(invoice: statingInvoice, xUser: xUser, isTest: true).request(success: { [weak self] invoice in
             if let self = self {
+                print(invoice)
                 let pay = storyboard!.instantiateViewController(identifier: "PayController") as! PayController
                 pay.configure(invoice: invoice)
                 self.navigationController?.pushViewController(
@@ -38,6 +61,21 @@ final class CreateController: UIViewController {
         }, error: {
             print("\nCreation Request Error\($0)")
         })
+    }
+
+
+    /// Производит создание счёта
+    /// https://test.vepay.online/h2hapi/v1#/default/post_invoices
+    private final class VepayInvoiceCreate: VepayBaseRequest, VepayRequest {
+
+        typealias ResponseType = VepayInvoice
+
+        init(invoice: VepayInvoice, xUser: String, isTest: Bool = false) {
+            super.init(method: .post,
+                       path: VepayUtils.h2hURL(endpoint: "invoices", isTest: isTest),
+                       headers: ["X-User": xUser],
+                       bodyEncodable: invoice)
+        }
 
     }
 

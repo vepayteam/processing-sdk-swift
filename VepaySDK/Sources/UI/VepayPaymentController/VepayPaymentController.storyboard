@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -21,7 +21,7 @@
         <!--Vepay Payment Controller-->
         <scene sceneID="s0d-6b-0kx">
             <objects>
-                <viewController storyboardIdentifier="VepayPaymentController" id="Y6W-OH-hqX" customClass="VepayPaymentController" customModule="VepaySDK" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="VepayPaymentControllerOld" id="Y6W-OH-hqX" customClass="VepayPaymentController" customModule="VepaySDK" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -114,8 +114,8 @@
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vDf-mu-XeR">
                                                                         <rect key="frame" x="0.0" y="0.0" width="293" height="32"/>
                                                                         <subviews>
-                                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AlfaBankLogo" translatesAutoresizingMaskIntoConstraints="NO" id="uV7-lh-1UY">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="165" height="32"/>
+                                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AddBank" translatesAutoresizingMaskIntoConstraints="NO" id="uV7-lh-1UY">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="48" height="32"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="32" id="JgG-0c-aQY"/>
                                                                                 </constraints>
@@ -334,9 +334,170 @@
             </objects>
             <point key="canvasLocation" x="45" y="4"/>
         </scene>
+        <!--Vepay Payment Controller-->
+        <scene sceneID="LA0-Gs-hCT">
+            <objects>
+                <viewController storyboardIdentifier="VepayPaymentController" id="LMn-w0-ESQ" customClass="VepayPaymentController" customModule="VepaySDK" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="vqc-aG-LlI">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kYe-Ke-yXI">
+                                <rect key="frame" x="0.0" y="59" width="393" height="759"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xs2-rT-c99">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="571"/>
+                                        <subviews>
+                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="mRE-wX-RTM" userLabel="Card Selector">
+                                                <rect key="frame" x="0.0" y="24" width="393" height="56"/>
+                                                <color key="backgroundColor" name="Ice"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="56" id="fjb-ve-SnF"/>
+                                                </constraints>
+                                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="8" id="AIV-Oj-dhQ">
+                                                    <size key="itemSize" width="160" height="56"/>
+                                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                    <inset key="sectionInset" minX="24" minY="0.0" maxX="24" maxY="0.0"/>
+                                                </collectionViewFlowLayout>
+                                            </collectionView>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cardTopArrow" translatesAutoresizingMaskIntoConstraints="NO" id="Nlk-9m-tgi">
+                                                <rect key="frame" x="76" y="89" width="56" height="18"/>
+                                                <color key="tintColor" name="Coal24"/>
+                                            </imageView>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dUu-2c-MIv" customClass="VepayCardView" customModule="VepaySDK" customModuleProvider="target">
+                                                <rect key="frame" x="24" y="104" width="345" height="355"/>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="355" placeholder="YES" id="yjK-3m-TWl"/>
+                                                </constraints>
+                                            </view>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cardTopArrow" translatesAutoresizingMaskIntoConstraints="NO" id="z1d-Vp-3R4" userLabel="arrowOnTopOfTheArrow">
+                                                <rect key="frame" x="75" y="91" width="58" height="18"/>
+                                                <color key="tintColor" name="Ice"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="58" id="3Og-fZ-7Av"/>
+                                                </constraints>
+                                            </imageView>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w0m-4r-P5g" userLabel="stick">
+                                                <rect key="frame" x="89.666666666666671" y="104" width="29" height="5"/>
+                                                <color key="backgroundColor" name="Ice"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="5" id="5m3-Af-Yit"/>
+                                                    <constraint firstAttribute="width" constant="29" id="w6I-uF-fhP"/>
+                                                </constraints>
+                                            </view>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="ABQ-Hm-I86">
+                                                <rect key="frame" x="24" y="475" width="345" height="72"/>
+                                                <subviews>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ti6-h3-CGl" userLabel="Remeber Card Holder">
+                                                        <rect key="frame" x="0.0" y="0.0" width="345" height="24"/>
+                                                        <subviews>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CheckboxEmpty" translatesAutoresizingMaskIntoConstraints="NO" id="fEH-6A-2Dh">
+                                                                <rect key="frame" x="0.0" y="0.0" width="24" height="24"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="width" secondItem="fEH-6A-2Dh" secondAttribute="height" id="StK-cf-kiy"/>
+                                                                </constraints>
+                                                            </imageView>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Запомнить карту" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f4O-4f-UAb">
+                                                                <rect key="frame" x="36" y="3.6666666666666288" width="309" height="17"/>
+                                                                <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="14"/>
+                                                                <color key="textColor" name="Coal"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                        <color key="backgroundColor" name="Ice"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="bottom" secondItem="fEH-6A-2Dh" secondAttribute="bottom" id="B6d-Y3-2OL"/>
+                                                            <constraint firstItem="fEH-6A-2Dh" firstAttribute="leading" secondItem="ti6-h3-CGl" secondAttribute="leading" id="Fcr-eq-BT3"/>
+                                                            <constraint firstItem="f4O-4f-UAb" firstAttribute="leading" secondItem="fEH-6A-2Dh" secondAttribute="trailing" constant="12" id="Mrk-P8-cDC"/>
+                                                            <constraint firstItem="f4O-4f-UAb" firstAttribute="centerY" secondItem="fEH-6A-2Dh" secondAttribute="centerY" id="X7N-TW-7D5"/>
+                                                            <constraint firstItem="fEH-6A-2Dh" firstAttribute="top" secondItem="ti6-h3-CGl" secondAttribute="top" id="acg-oq-XS3"/>
+                                                            <constraint firstAttribute="trailing" secondItem="f4O-4f-UAb" secondAttribute="trailing" id="ptU-AO-0vn"/>
+                                                            <constraint firstAttribute="height" constant="24" id="rLZ-Sj-GEo"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="ia6-nq-60I" userLabel="Pay Methods">
+                                                        <rect key="frame" x="0.0" y="48" width="218" height="24"/>
+                                                        <subviews>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MastercardSCB" translatesAutoresizingMaskIntoConstraints="NO" id="V2V-al-bQU">
+                                                                <rect key="frame" x="0.0" y="0.0" width="46" height="24"/>
+                                                            </imageView>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="VerifiedVisaB" translatesAutoresizingMaskIntoConstraints="NO" id="WZa-29-jXj">
+                                                                <rect key="frame" x="62" y="0.0" width="36" height="24"/>
+                                                            </imageView>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MIRB" translatesAutoresizingMaskIntoConstraints="NO" id="AUd-j7-6xh">
+                                                                <rect key="frame" x="114" y="0.0" width="40" height="24"/>
+                                                            </imageView>
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PciDSSB" translatesAutoresizingMaskIntoConstraints="NO" id="Ldf-ar-nfv">
+                                                                <rect key="frame" x="170" y="0.0" width="48" height="24"/>
+                                                            </imageView>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="24" id="iX0-fL-IzG"/>
+                                                        </constraints>
+                                                    </stackView>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstItem="dUu-2c-MIv" firstAttribute="leading" secondItem="xs2-rT-c99" secondAttribute="leading" constant="24" id="0UR-uW-ygf"/>
+                                            <constraint firstItem="ABQ-Hm-I86" firstAttribute="top" secondItem="dUu-2c-MIv" secondAttribute="bottom" constant="16" id="6Yf-Dg-TMU"/>
+                                            <constraint firstItem="ABQ-Hm-I86" firstAttribute="leading" secondItem="xs2-rT-c99" secondAttribute="leading" constant="24" id="9VC-4u-Mfr"/>
+                                            <constraint firstAttribute="bottom" secondItem="ABQ-Hm-I86" secondAttribute="bottom" constant="24" id="HW6-6f-Lau"/>
+                                            <constraint firstItem="z1d-Vp-3R4" firstAttribute="centerX" secondItem="Nlk-9m-tgi" secondAttribute="centerX" id="K14-iX-Mjq"/>
+                                            <constraint firstItem="mRE-wX-RTM" firstAttribute="top" secondItem="xs2-rT-c99" secondAttribute="top" constant="24" id="KIY-P4-XiZ"/>
+                                            <constraint firstAttribute="trailing" secondItem="mRE-wX-RTM" secondAttribute="trailing" id="MMV-nA-8zT"/>
+                                            <constraint firstItem="Nlk-9m-tgi" firstAttribute="top" secondItem="mRE-wX-RTM" secondAttribute="bottom" constant="9" id="WAc-HR-QtK"/>
+                                            <constraint firstAttribute="trailing" secondItem="dUu-2c-MIv" secondAttribute="trailing" constant="24" id="aLt-SZ-Yl7"/>
+                                            <constraint firstItem="w0m-4r-P5g" firstAttribute="bottom" secondItem="z1d-Vp-3R4" secondAttribute="bottom" id="hDx-0V-L8h"/>
+                                            <constraint firstAttribute="trailing" secondItem="ABQ-Hm-I86" secondAttribute="trailing" constant="24" id="lxm-H0-V9g"/>
+                                            <constraint firstItem="w0m-4r-P5g" firstAttribute="centerX" secondItem="z1d-Vp-3R4" secondAttribute="centerX" id="pLg-J1-5DB"/>
+                                            <constraint firstItem="z1d-Vp-3R4" firstAttribute="top" secondItem="Nlk-9m-tgi" secondAttribute="top" constant="2" id="rwn-sD-Qrn"/>
+                                            <constraint firstItem="mRE-wX-RTM" firstAttribute="leading" secondItem="xs2-rT-c99" secondAttribute="leading" id="ypN-5J-DJ6"/>
+                                            <constraint firstItem="Nlk-9m-tgi" firstAttribute="centerX" secondItem="mRE-wX-RTM" secondAttribute="leading" constant="104" id="zc3-LT-rpH"/>
+                                            <constraint firstItem="dUu-2c-MIv" firstAttribute="top" secondItem="mRE-wX-RTM" secondAttribute="bottom" constant="24" id="zoS-W8-tkJ"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="xs2-rT-c99" firstAttribute="trailing" secondItem="Eaf-Tk-MrY" secondAttribute="trailing" id="LT2-2l-mb9"/>
+                                    <constraint firstItem="xs2-rT-c99" firstAttribute="top" secondItem="Eaf-Tk-MrY" secondAttribute="top" id="TTE-Vi-eRQ"/>
+                                    <constraint firstItem="xs2-rT-c99" firstAttribute="leading" secondItem="Eaf-Tk-MrY" secondAttribute="leading" id="UMf-pF-DZh"/>
+                                    <constraint firstItem="xs2-rT-c99" firstAttribute="bottom" secondItem="Eaf-Tk-MrY" secondAttribute="bottom" id="msT-rK-Oyn"/>
+                                    <constraint firstItem="xs2-rT-c99" firstAttribute="width" secondItem="P5b-tq-S6x" secondAttribute="width" id="xEw-K6-yaY"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="Eaf-Tk-MrY"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="P5b-tq-S6x"/>
+                            </scrollView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="O5e-B7-Mtq"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="kYe-Ke-yXI" firstAttribute="leading" secondItem="O5e-B7-Mtq" secondAttribute="leading" id="0FU-xT-nKA"/>
+                            <constraint firstItem="kYe-Ke-yXI" firstAttribute="top" secondItem="O5e-B7-Mtq" secondAttribute="top" id="Hsw-07-zT7"/>
+                            <constraint firstItem="O5e-B7-Mtq" firstAttribute="trailing" secondItem="kYe-Ke-yXI" secondAttribute="trailing" id="kpG-vz-PGf"/>
+                            <constraint firstItem="O5e-B7-Mtq" firstAttribute="bottom" secondItem="kYe-Ke-yXI" secondAttribute="bottom" id="nGZ-v1-L80"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="arrowToCard" destination="Nlk-9m-tgi" id="fOQ-am-cDn"/>
+                        <outlet property="arrowToCardCenter" destination="zc3-LT-rpH" id="ovr-WM-DuJ"/>
+                        <outlet property="cardSelector" destination="mRE-wX-RTM" id="wrX-dT-j1q"/>
+                        <outlet property="cardView" destination="dUu-2c-MIv" id="tmd-I0-hgo"/>
+                        <outlet property="remeberCardHolder" destination="ti6-h3-CGl" id="y1h-Aw-Itm"/>
+                        <outlet property="remeberCheckmark" destination="fEH-6A-2Dh" id="s9s-xN-1Kd"/>
+                        <outlet property="scrollView" destination="kYe-Ke-yXI" id="aPn-Z2-Kdt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pZ5-ho-ocz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="851.14503816793888" y="-2.1126760563380285"/>
+        </scene>
     </scenes>
     <resources>
-        <image name="AlfaBankLogo" width="165" height="34"/>
+        <image name="AddBank" width="48" height="48"/>
         <image name="CheckboxEmpty" width="24" height="24"/>
         <image name="MIRB" width="40" height="24"/>
         <image name="Mastercard" width="37" height="24"/>
@@ -346,6 +507,9 @@
         <image name="cardTopArrow" width="56" height="18"/>
         <namedColor name="Coal">
             <color red="0.13300000131130219" green="0.13300000131130219" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Coal24">
+            <color red="0.13300000131130219" green="0.13300000131130219" blue="0.13300000131130219" alpha="0.23999999463558197" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Ice">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
