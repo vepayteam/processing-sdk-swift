@@ -36,7 +36,7 @@ Pod::Spec.new do |s|
   else
     s.source = {
       :git => 'https://github.com/vepayteam/processing-sdk-swift.git',
-      :tag => ENV["GITHUB_REF_NAME"] || s.version
+      :tag => s.version
     }
   end
 
