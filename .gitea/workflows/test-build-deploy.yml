@@ -103,12 +103,20 @@ jobs:
         uses: VAllens/gitea-publish-generic-packages@v1
         with:
           token: ${{ secrets.TEA_TOKEN }}
-          package_name: ${{ env.IPA_OUTPUT_NAME }}
-          package_version: development
+          package_name: ${{ steps.repo-name.outputs.repository-name }}
+          package_version: ${{ env.IPA_OUTPUT_NAME }}
           files: |-
             ${{ env.IPA_OUTPUT_PATH }}
             ${{ env.DSYM_OUTPUT_PATH }}
             ${{ env.XCODEBUILD_ARCHIVE }}
+      - name: Notify Package URL
+        id: package-gitea-notify
+        uses: ./.gitea/actions/gitea-notify
+        with:
+          context: "Build / VepaySDKExample"
+          description: "ipa"
+          state: "${{ steps.build-sample-app.conclusion }}"
+          target_url: "${{ gitea.server_url }}/${{ gitea.repository_owner }}/-/packages/generic/${{ steps.repo-name.outputs.repository-name }}/${{ env.IPA_OUTPUT_NAME }}"
 
   build-n-artifact-deploy:
     if: gitea.ref != 'refs/heads/main'
