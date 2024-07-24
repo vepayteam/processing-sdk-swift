@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   }
 
   begin
-    s.version = Gem::Version.new(ENV["GITHUB_REF_NAME"]).release.to_s
+    s.version = Gem::Version.new(ENV["GITHUB_REF_NAME"]).to_s
   rescue
     s.version = "0.1.4"
   end
