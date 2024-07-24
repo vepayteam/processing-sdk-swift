@@ -1,6 +1,9 @@
 name: Conventions
 run-name: Conventions Checks on pushed code by ${{ gitea.actor }}
-on: [pull_request]
+on:
+  pull_request:
+    branches-ignore:
+      - main
 
 jobs:
   commits:
@@ -13,42 +16,13 @@ jobs:
           fetch-depth: 0
       - name: Check for Conventional Commits
         id: commitsar
-        run: |
-          if ! command -v commitsar &> /dev/null
-          then
-            COMMITSAR_VERSION=0.20.2
-            _tempdir=$(mktemp -d)
-
-            curl -LSs -o $_tempdir/commitsar_${COMMITSAR_VERSION}_darwin_arm64.tar.gz \
-              https://github.com/aevea/commitsar/releases/download/v${COMMITSAR_VERSION}/commitsar_${COMMITSAR_VERSION}_darwin_arm64.tar.gz
-            tar -xzf $_tempdir/commitsar_${COMMITSAR_VERSION}_darwin_arm64.tar.gz -C $_tempdir
-            chmod +x $_tempdir/commitsar
-            PATH=$_tempdir:$PATH
-          fi
-
-          cleanup() {
-            test ! -z $_tempdir && rm -rf $_tempdir
-          }
-
-          trap cleanup ERR
-          trap cleanup EXIT
-
-          commitsar -v -s
+        uses: ./.gitea/actions/commitsar
       - name: Notify Conventional Commits Status
         id: commitsar-gitea-notify
         if: always()
-        run: |
-          curl -LSs \
-            -X POST "${{ gitea.server_url }}/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}" \
-            -H "accept: application/json" \
-            -H "Authorization: token ${{ gitea.token }}" \
-            -H "Content-Type: application/json" \
-            -o /dev/null \
-            --data-raw \
-          '
-          {
-            "context": "conventional-commits",
-            "description": "${{ steps.commitsar.conclusion }}",
-            "state": "${{ steps.commitsar.conclusion }}",
-            "target_url": "https://www.conventionalcommits.org/en/v1.0.0/#why-use-conventional-commits"
-          }'
+        uses: ./.gitea/actions/gitea-notify
+        with:
+          context: "conventional-commits"
+          description: "${{ steps.commitsar.conclusion }}"
+          state: "${{ steps.commitsar.conclusion }}"
+          target_url: "https://www.conventionalcommits.org/en/v1.0.0/#why-use-conventional-commits"

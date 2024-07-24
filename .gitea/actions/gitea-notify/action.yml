@@ -1,0 +1,41 @@
+name: gitea notify
+description: Notify Gitea when event
+author: "Vadims I <vivolgin@vepay.online>"
+
+inputs:
+  context:
+    description: The context of the event
+    required: true
+  description:
+    description: The description of the event
+    required: true
+  state:
+    description: The state of the event
+    required: false
+    default: success
+  target_url:
+    description: The URL of the event
+    required: false
+    default: "${{ gitea.server_url }}/${{ gitea.repository }}/actions/runs/${{ gitea.run_id }}/jobs/0"
+
+runs:
+  using: composite
+  steps:
+    - name: Notify Gitea Event
+      id: gitea-notify
+      shell: bash
+      run: |
+        curl -LSs \
+          -X POST "${{ gitea.server_url }}/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}" \
+          -H "accept: application/json" \
+          -H "Authorization: token ${{ gitea.token }}" \
+          -H "Content-Type: application/json" \
+          -o /dev/null \
+          --data-raw \
+        '
+        {
+          "context": "${{ inputs.context }}",
+          "description": "${{ inputs.description }}",
+          "state": "${{ inputs.state }}",
+          "target_url": "${{ inputs.target_url }}"
+        }'

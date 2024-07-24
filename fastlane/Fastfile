@@ -1,3 +1,4 @@
+require 'fileutils'
 require 'securerandom'
 
 # Uncomment the line if you want fastlane to automatically update itself
@@ -13,7 +14,7 @@ platform :ios do
   before_all do |lane|
     FileUtils.mkdir_p(build_folder) unless File.directory?(build_folder)
 
-    ensure_bundle_exec()
+    ensure_bundle_exec
     clear_derived_data(derived_data_path: derived_data_path)
     xcodes(select_for_current_build_only: true)
   end
@@ -59,7 +60,7 @@ platform :ios do
   lane :buildVepaySDKExample do |lane|
     isCI
 
-    custom_id = lane.fetch(:custom_id, customID())
+    custom_id = lane.fetch(:custom_id, customID)
     keychain_name = SecureRandom.alphanumeric(32) + '.keychain'
     keychain_pass = SecureRandom.alphanumeric(32)
 
@@ -90,10 +91,10 @@ platform :ios do
         xcargs: "OTHER_CODE_SIGN_FLAGS=--keychain=\"#{keychain_path}\"",
         skip_profile_detection: true
       )
-      sh("echo IPA_OUTPUT_PATH=#{Actions.lane_context[SharedValues::IPA_OUTPUT_PATH]} >> #{ENV['GITHUB_ENV']}")
-      sh("echo DSYM_OUTPUT_PATH=#{Actions.lane_context[SharedValues::DSYM_OUTPUT_PATH]} >> #{ENV['GITHUB_ENV']}")
-      sh("echo XCODEBUILD_ARCHIVE=#{Actions.lane_context[SharedValues::XCODEBUILD_ARCHIVE]} >> #{ENV['GITHUB_ENV']}")
-      sh("echo IPA_OUTPUT_NAME=#{custom_id} >> #{ENV['GITHUB_ENV']}")
+      addToEnv(variable: "IPA_OUTPUT_PATH", value: Actions.lane_context[SharedValues::IPA_OUTPUT_PATH])
+      addToEnv(variable: "DSYM_OUTPUT_PATH", value: Actions.lane_context[SharedValues::DSYM_OUTPUT_PATH])
+      addToEnv(variable: "XCODEBUILD_ARCHIVE", value: Actions.lane_context[SharedValues::XCODEBUILD_ARCHIVE])
+      addToEnv(variable: "IPA_OUTPUT_NAME", value: custom_id)
     ensure
       delete_keychain(name: keychain_name)
     end
@@ -109,11 +110,6 @@ platform :ios do
       browserstack_access_key: ENV["BROWSERSTACK_ACCESS_KEY"],
       file_path: ENV['IPA_OUTPUT_PATH'],
       custom_id: ENV['IPA_OUTPUT_NAME']
-    )
-    upload_to_browserstack_app_live(
-      browserstack_username: ENV["BROWSERSTACK_USERNAME"],
-      browserstack_access_key: ENV["BROWSERSTACK_ACCESS_KEY"],
-      file_path: ENV['IPA_OUTPUT_PATH']
     )
   end
 
@@ -182,6 +178,17 @@ platform :ios do
         UI.error("Something went wrong: #{ex}")
       end
     end
+  end
+
+  private_lane :addToEnv do |options|
+    ensure_env_vars(env_vars: %w[GITHUB_WORKSPACE GITHUB_ENV])
+
+    variable = options[:variable]
+    value = options[:value]
+
+    ENV[variable] = value
+    File.open(File.join(ENV['GITHUB_WORKSPACE'], ".env.default"), "a") { |f| f << "#{variable}=#{value}\n" }
+    File.open(ENV['GITHUB_ENV'], "a") { |f| f << "#{variable}=#{value}\n" }
   end
 
   private_lane :isCI do
