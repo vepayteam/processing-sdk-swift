@@ -16,10 +16,10 @@ extension VepayPaymentController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
 
         let cardNumber: String
-        let cardExpiration: String
+        let expirationDate: String
         let paymentIcon: UIImage?
         let bankLogo: UIImage?
-        let bankColor: UIColor
+//        let bankColor: UIColor
 
         if savedCards.indices.contains(indexPath.row) {
 
@@ -27,47 +27,46 @@ extension VepayPaymentController: UICollectionViewDelegateFlowLayout {
             let card = savedCards[indexPath.row]
 
             cardNumber = card.number
-            cardExpiration = card.expire
+            expirationDate = card.expire
 
             paymentIcon = card.paymentSystem?.iconColored
             bankLogo = card.bank?.logo
-            bankColor = card.bank?.color ?? .coal
+//            bankColor = card.bank?.color ?? .coal
         } else if collectionView.cellForItem(at: indexPath)?.isSelected == false {
 
             // Create New One
             cardNumber = ""
-            cardExpiration = ""
+            expirationDate = ""
             
             paymentIcon = nil
             bankLogo = nil
-            bankColor = .coal
+//            bankColor = .coal
         } else {
             return true
         }
 
-        set(text: cardNumber, for: self.cardNumber)
-        set(text: cardExpiration, for: validUntil)
-        cvvCode = "•••"
-        set(text: "", for: cvv)
-        paymentMethod.image = paymentIcon
-        selectedCardLogo.image = bankLogo
+        cardView.cardNumber = cardNumber
+        cardView.expirationDate = (String(expirationDate.prefix(2)), String(expirationDate.suffix(2)))
+        cardView.cvv = ""
+        cardView.paymentMethod?.image = paymentIcon
+        cardView.bankLogo?.image = bankLogo
 
         selectedCardIndex = indexPath
-        UIView.animate(withDuration: 0.14, delay: .zero, options: [.allowUserInteraction, .curveLinear]) { [self] in
-            arrowToCard.tintColor = bankColor
-        }
+//        UIView.animate(withDuration: 0.14, delay: .zero, options: [.allowUserInteraction, .curveLinear]) { [self] in
+//            arrowToCard.tintColor = bankColor
+//        }
         updateArrowToSelectedCard()
 
-        let futureColors = [bankColor.cgColor, UIColor.coal24.cgColor]
-        let previousColors = cardProgressionGradient.colors
-        cardProgressionGradient.colors = futureColors
-
-        let animation = CABasicAnimation(keyPath: "colors")
-        animation.fromValue = previousColors
-        animation.toValue = futureColors
-        animation.duration = 0.16
-        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-        cardProgressionGradient.add(animation, forKey: "animateGradient")
+//        let futureColors = [bankColor.cgColor, UIColor.coal24.cgColor]
+//        let previousColors = cardProgressionGradient.colors
+//        cardProgressionGradient.colors = futureColors
+//
+//        let animation = CABasicAnimation(keyPath: "colors")
+//        animation.fromValue = previousColors
+//        animation.toValue = futureColors
+//        animation.duration = 0.16
+//        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+//        cardProgressionGradient.add(animation, forKey: "animateGradient")
         return true
     }
 
