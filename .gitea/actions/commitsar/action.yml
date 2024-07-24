@@ -1,0 +1,35 @@
+name: comitsar checks
+description: Conventional Commits Check
+author: "Vadims I <vivolgin@vepay.online>"
+
+inputs:
+  version:
+    description: "comitsar utility version"
+    required: false
+    default: 0.20.2
+
+runs:
+  using: composite
+  steps:
+    - name: Check for Conventional Commits
+      id: commitsar
+      run: |
+        if ! command -v commitsar &> /dev/null
+        then
+          _tempdir=$(mktemp -d)  
+          curl -LSs -o $_tempdir/commitsar_${{ inputs.version }}_darwin_arm64.tar.gz \
+            https://github.com/aevea/commitsar/releases/download/v${{ inputs.version }}/commitsar_${{ inputs.version }}_darwin_arm64.tar.gz
+          tar -xzf $_tempdir/commitsar_${{ inputs.version }}_darwin_arm64.tar.gz -C $_tempdir
+          chmod +x $_tempdir/commitsar
+          PATH=$_tempdir:$PATH
+        fi
+  
+        cleanup() {
+          test ! -z $_tempdir && rm -rf $_tempdir
+        }
+  
+        trap cleanup ERR
+        trap cleanup EXIT
+  
+        commitsar -v -s
+      shell: bash
