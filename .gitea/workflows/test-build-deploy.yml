@@ -5,6 +5,8 @@ on:
       - develop
       - main
   pull_request:
+    branches-ignore:
+      - main
 
 env:
   BUNDLE_FORCE_RUBY_PLATFORM: true
@@ -26,14 +28,15 @@ jobs:
           fetch-depth: 0
       - name: Install RubyGems & Fastlane Plugins
         run: |
-          bundle config path $GEM_HOME
-          bundle config set force_ruby_platform true
+          bundle config --local force_ruby_platform true
           bundle install --no-color --jobs 8 --retry 3
           bundle exec fastlane install_plugins
 
   lint-test-scan:
-    runs-on: macos-arm64
     if: gitea.ref != 'refs/heads/main'
+
+    name: "Lint and Test SDK"
+    runs-on: macos-arm64
     needs:
       - prepare
 
@@ -57,12 +60,15 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  build-n-artifact-deploy:
+  build-n-artifact-deploy-staging:
+    if: gitea.ref == 'refs/heads/main'
+
+    name: "Build and Deploy Sample App :: Staging"
     runs-on: macos-arm64
     needs:
       - prepare
 
-    steps:
+    steps: &steps
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
@@ -94,23 +100,22 @@ jobs:
             ${{ env.XCODEBUILD_ARCHIVE }}
           retention-days: 60
       - name: Upload IPA to Generic Packages
-        run: |
-          curl -LSs \
-            -H "Authorization: token ${{ secrets.TEA_TOKEN }}" \
-            -o /dev/null \
-            --upload-file ${{ env.IPA_OUTPUT_PATH }} \
-            ${{ gitea.server_url }}/api/packages/${{ gitea.repository_owner }}/generic/${{ steps.repo-name.outputs.repository-name }}/${{ env.IPA_OUTPUT_NAME }}/${{ env.IPA_OUTPUT_NAME }}.ipa
-          curl -LSs \
-            -X POST "${{ gitea.server_url }}/api/v1/repos/${{ gitea.repository }}/statuses/${{ gitea.sha }}" \
-            -H "accept: application/json" \
-            -H "Authorization: token ${{ gitea.token }}" \
-            -H "Content-Type: application/json" \
-            -o /dev/null \
-            --data-raw \
-          '
-          {
-            "context": "Build / VepaySDKExample",
-            "description": "ipa",
-            "state": "${{ steps.build-sample-app.conclusion }}",
-            "target_url": "${{ gitea.server_url }}/${{ gitea.repository_owner }}/-/packages/generic/${{ steps.repo-name.outputs.repository-name }}/${{ env.IPA_OUTPUT_NAME }}"
-          }'
+        uses: VAllens/gitea-publish-generic-packages@v1
+        with:
+          token: ${{ secrets.TEA_TOKEN }}
+          package_name: ${{ env.IPA_OUTPUT_NAME }}
+          package_version: development
+          files: |-
+            ${{ env.IPA_OUTPUT_PATH }}
+            ${{ env.DSYM_OUTPUT_PATH }}
+            ${{ env.XCODEBUILD_ARCHIVE }}
+
+  build-n-artifact-deploy:
+    if: gitea.ref != 'refs/heads/main'
+
+    name: "Build and Deploy Sample App :: Development & PR's"
+    runs-on: macos-arm64
+    needs:
+      - prepare
+      - lint-test-scan
+    steps: *steps

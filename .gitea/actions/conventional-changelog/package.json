@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "conventional-changelog-cli": "^5.0.0"
+  },
+  "scripts": {
+    "changelog": "conventional-changelog -p conventionalcommits -r 2"
+  }
+}
