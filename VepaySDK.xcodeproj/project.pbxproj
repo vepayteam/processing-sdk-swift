@@ -117,6 +117,7 @@
 		434161B22B602B43000672B2 /* GlassmorphismView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlassmorphismView.swift; sourceTree = "<group>"; };
 		434161B42B602F83000672B2 /* PayController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayController.swift; sourceTree = "<group>"; };
 		434161B72B6038E3000672B2 /* VepayPaymentController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = VepayPaymentController.storyboard; sourceTree = "<group>"; };
+		434A73692C50EDCB007AC739 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		434CE55B2C481B040057BB56 /* VepayCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VepayCardView.swift; sourceTree = "<group>"; };
 		434CE55D2C481CBD0057BB56 /* VepayCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VepayCardView.xib; sourceTree = "<group>"; };
 		437402792B6CFC980081EDD8 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -284,6 +285,7 @@
 		43338C502B3D300F0063BD3F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				434A73692C50EDCB007AC739 /* PrivacyInfo.xcprivacy */,
 				430D82262B56041100BA84EC /* Assets.xcassets */,
 				430D821F2B56041100BA84EC /* Fonts */,
 				43338C522B3D300F0063BD3F /* Support.swift */,
