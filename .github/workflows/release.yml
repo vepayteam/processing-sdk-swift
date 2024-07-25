@@ -29,6 +29,7 @@ jobs:
           echo "previousTag=$name" >> $GITHUB_ENV
 
       - name: Update CHANGELOG
+        continue-on-error: true
         id: changelog
         uses: requarks/changelog-action@v1.10.1
         with:
@@ -38,6 +39,7 @@ jobs:
           writeToFile: false
 
       - name: Create Release
+        continue-on-error: true
         uses: ncipollo/release-action@v1.14.0
         with:
           allowUpdates: true
