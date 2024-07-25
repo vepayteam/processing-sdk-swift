@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+.[0-9]+'
+      - '[0-9]+.[0-9]+.[0-9]+.[0-9]+.[a-z]+'
+
+env:
+  npm_config_cache: "${{ gitea.workspace }}/../../.npm"
+
+jobs:
+  release-and-changelog:
+    runs-on: macos-arm64
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate CHANGELOG from commits
+        id: conventional
+        uses: ./.gitea/actions/conventional-changelog
+
+      - name: Create Gitea Release
+        uses: akkuman/gitea-release-action@v1
+        with:
+          name: ${{ gitea.ref_name }}
+          body_path: ${{ steps.conventional.outputs.changelog_file_path }}
+          draft: false
+          prerelease: false
+          target_commitish: main
+
+      - name: Push to GitHub
+        uses: ad-m/github-push-action@master
+        with:
+          repository: vepayteam/processing-sdk-swift
+          github_token: ${{ secrets.PAT_TOKEN }}
+          branch: main
+          force: true
+          tags: true

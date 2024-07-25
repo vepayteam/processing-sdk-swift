@@ -1,0 +1,27 @@
+name: conventional changelog
+description: Generate a changelog from git metadata
+author: "Vadims I <vivolgin@vepay.online>"
+
+outputs:
+  changelog_file_path:
+    description: Changelog File Path
+    value: ${{ steps.conventional-changelog.outputs.file_path }}
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: npm
+        cache-dependency-path: '**/package-lock.json'
+    - run: npm --prefix=${{ github.action_path }} ci
+      shell: bash
+    - name: Generate changelog
+      id: conventional-changelog
+      shell: bash
+      run: |
+        _tmp=$(basename $(mktemp -u CHANGELOG.XXXXXXXXXX))
+        npm --prefix=${{ github.action_path }} --silent run changelog | tail +4 | tee "${{ runner.temp }}/${_tmp}"
+        echo "file_path=${{ runner.temp }}/${_tmp}" >> "$GITHUB_OUTPUT"

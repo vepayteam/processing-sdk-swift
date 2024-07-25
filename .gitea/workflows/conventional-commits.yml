@@ -1,0 +1,28 @@
+name: Conventions
+run-name: Conventions Checks on pushed code by ${{ gitea.actor }}
+on:
+  pull_request:
+    branches-ignore:
+      - main
+
+jobs:
+  commits:
+    runs-on: macos-arm64
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check for Conventional Commits
+        id: commitsar
+        uses: ./.gitea/actions/commitsar
+      - name: Notify Conventional Commits Status
+        id: commitsar-gitea-notify
+        if: always()
+        uses: ./.gitea/actions/gitea-notify
+        with:
+          context: "conventional-commits"
+          description: "${{ steps.commitsar.conclusion }}"
+          state: "${{ steps.commitsar.conclusion }}"
+          target_url: "https://www.conventionalcommits.org/en/v1.0.0/#why-use-conventional-commits"

@@ -14,7 +14,7 @@ final class PayController: UIViewController {
 
     // MARK: - Views
 
-    private weak var payment: VepayPaymentController!
+    private(set) weak var payment: VepayPaymentController!
 
     @IBOutlet private weak var actionView: UIView!
     @IBOutlet private weak var makeTransfer: UIButton!
@@ -23,6 +23,12 @@ final class PayController: UIViewController {
 
 
     // MARK: - Propertys
+
+//    public var overrideSavedCards: Bool = false {
+//        didSet {
+//            payment?.overrideSavedCards = overrideSavedCards
+//        }
+//    }
 
     private var invoice: VepayInvoice!
     func configure(invoice: VepayInvoice) {
@@ -40,13 +46,27 @@ extension PayController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         payment = segue.destination as? VepayPaymentController
-        payment.delegate = self
+        payment.expirationDate = ("11", "24")
+        payment.cardNumber = "4917610000000000"
+        payment.cvv = "333"
+//        payment.hideAddCardViaNFC = true
+//        payment.hideAddCardViaCamera = true
+//        payment.showCVV = false
+//        payment.showExpirtionDate = false
+//        payment.hideRemberCard = true
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         actionView.layer.maskedCorners = .layerMaxXMinYCorner
         setActionView(animated: false)
+        payment.cardView.delegate = self
+        cardView(ready: payment.cardView.ready)
+//        payment.cardView.hideAddCardViaNFC = true
+//        payment.cardView.hideAddCardViaCamera = true
+//        payment.cardView.showCVV = false
+//        payment.cardView.showExpirtionDate = false
+//        payment.hideRemberCard = true
     }
 
     override func viewDidLayoutSubviews() {
@@ -76,13 +96,13 @@ extension PayController {
 }
 
 
-// MARK: - VepayPaymentControllerDelegate
+// MARK: - VepayCardViewDelegate
 
-extension PayController: VepayPaymentControllerDelegate {
+extension PayController: VepayCardViewDelegate {
     
-    func paymentController(isReadyToPay: Bool) {
+    func cardView(ready: Bool) {
         UIView.animate(withDuration: 0.2, delay: .zero, options: [.curveEaseOut, .allowUserInteraction]) { [weak makeTransfer] in
-            makeTransfer?.tintColor = isReadyToPay ? UIColor.ice : UIColor.ice24
+            makeTransfer?.tintColor = ready ? UIColor.ice : UIColor.ice24
         }
     }
 
@@ -94,14 +114,14 @@ extension PayController: VepayPaymentControllerDelegate {
 extension PayController {
     
     @IBAction private func pay() {
-        if payment.validateReadinnes(), let card = payment.selectedCard {
+        if payment.cardView.ready {
             let loader = LoadingScreen()
             view.addSubview(loader)
             loader.frame = view.bounds
             loader.startAnimating()
             self.loader = loader
 
-            VepayInvoicePayment(invoice: invoice, card: card, size: view.bounds.size, xUser: xUser, isTest: true)?.request(success: { [weak self] response in
+            VepayInvoicePayment(invoice: invoice, card: .init(cardNumber: payment.cardView.cardNumber, cardHolder: "holder", expires: payment.cardView.expirationDateRow, cvc: payment.cardView.cvv), size: view.bounds.size, xUser: xUser, isTest: true)?.request(success: { [weak self] response in
                 guard let self = self else { return }
                 switch response.readable {
                 case .ready(let url, let method, let postParameters):
@@ -116,6 +136,9 @@ extension PayController {
                 loader?.stopAnimationg()
                 print($0)
             })
+
+        } else {
+            payment.cardView.showErrorNotReady()
         }
     }
 
@@ -129,3 +152,7 @@ extension PayController {
     }
 
 }
+
+//#Preview {
+//    storyboard!.instantiateViewController(identifier: "PayController") as! PayController
+//}
