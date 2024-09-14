@@ -7,6 +7,7 @@
 
 import WebKit
 import VepaySDK
+//import LDSwiftEventSource
 
 
 final class PayController: UIViewController {
@@ -121,35 +122,47 @@ extension PayController {
             loader.startAnimating()
             self.loader = loader
 
-            VepayInvoicePayment(invoice: invoice, card: .init(cardNumber: payment.cardView.cardNumber, cardHolder: "holder", expires: payment.cardView.expirationDateRow, cvc: payment.cardView.cvv), size: view.bounds.size, xUser: xUser, isTest: true)?.request(success: { [weak self] response in
-                guard let self = self else { return }
-                switch response.readable {
-                case .ready(let url, let method, let postParameters):
-                    start3DS(url: url, uuid: invoice.uuid!, method: method, postParameters: postParameters)
-                case .pending:
-                    print("\nPending")
-                case .redirectingNotNeaded:
-                    print("\nReadirect Not Neaded")
-                }
-                self.loader?.stopAnimationg()
-            }, error: { [weak loader] in
-                loader?.stopAnimationg()
-                print($0)
-            })
+            guard let uuid = invoice.uuid else { return }
+            Vepay3DSController.paymentAndStart(uuid: uuid, form: .init(card: .init(cardNumber: payment.cardView.cardNumber, cardHolder: "holder", expires: payment.cardView.expirationDateRow, cvc: payment.cardView.cvv), size: view.bounds.size), xUser: xUser, isTest: true) { [weak self] controller in
+                controller.startSSE(invoiceUUID: uuid, isTest: true)
+                self?.navigationController?.pushViewController(controller, animated: true)
+            } pending: {
+                
+            } redirectingNotNeaded: {
+                
+            } failure: { error in
+                print(error)
+            }
 
-        } else {
-            payment.cardView.showErrorNotReady()
+//            VepayInvoicePayment(invoice: invoice, card: , size: view.bounds.size, xUser: xUser, isTest: true)?.request(success: { [weak self] response in
+//                guard let self = self else { return }
+//                switch response.readable {
+//                case .ready(let url, let method, let postParameters):
+//                    start3DS(url: url, uuid: invoice.uuid!, method: method, postParameters: postParameters)
+//                case .pending:
+//                    print("\nPending")
+//                case .redirectingNotNeaded:
+//                    print("\nReadirect Not Neaded")
+//                }
+//                self.loader?.stopAnimationg()
+//            }, error: { [weak loader] in
+//                loader?.stopAnimationg()
+//                print($0)
+//            })
+//
+//        } else {
+//            payment.cardView.showErrorNotReady()
         }
     }
 
-    private func start3DS(url: String, uuid: String, method: String, postParameters: [String: String]?) {
-        Vepay3DSController.start(url: url, method: method, postParameters: postParameters) { [weak navigationController] controller in
-            controller.startSSE(invoiceUUID: uuid, isTest: true)
-            navigationController?.pushViewController(controller, animated: true)
-        } failure: { error in
-            print("\n3DS Error\n\(error)")
-        }
-    }
+//    private func start3DS(url: String, uuid: String, method: String, postParameters: [String: String]?) {
+//        Vepay3DSController.start(url: url, method: method, postParameters: postParameters) { [weak navigationController] controller in
+//            controller.startSSE(invoiceUUID: uuid, isTest: true)
+//            navigationController?.pushViewController(controller, animated: true)
+//        } failure: { error in
+//            print("\n3DS Error\n\(error)")
+//        }
+//    }
 
 }
 

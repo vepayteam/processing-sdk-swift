@@ -15,29 +15,17 @@ final class CreateController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // MARK: - For Testing UI
-//        let pay = storyboard!.instantiateViewController(identifier: "PayController") as! PayController
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//            pay.payment.set(cards: [.init(id: 0,
-//                                          number: "4917610000000000",
-//                                          expire: "1130",
-//                                          holder: "Cezary Stypulkowski",
-//                                          paymentSystem: "VISA",
-//                                          bank: VepayBank(
-//                                            name: "PEKAO",
-//                                            icon: UIImage(named: "PekaoIconExample", in: .vepaySDK, compatibleWith: nil)!,
-//                                            logo: UIImage(named: "PekaoLogoExample", in: .vepaySDK, compatibleWith: nil)!,
-//                                            color: .red)),])
-//        }
-//        self.navigationController?.pushViewController(
-//            pay,
-//            animated: true)
+//        start()
     }
 
     @IBAction private func createInvoice() {
+        start()
+    }
+
+    private func start() {
         // MARK: - For Testing Flow
         let statingInvoice = VepayInvoice(
-            amountFractional: 30000,
+            amountFractional: 10000,
             currency: "RUB",
             client: .init(
                 fullName: "Терентьев Михаил Павлович",
