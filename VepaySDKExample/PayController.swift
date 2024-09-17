@@ -46,13 +46,13 @@ extension PayController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         payment = segue.destination as? VepayPaymentController
-        payment.expirationDate = ("11", "24")
+        payment.expirationDate = .init(month: 11, year: 25)
         payment.cardNumber = "4917610000000000"
         payment.cvv = "333"
 //        payment.hideAddCardViaNFC = true
 //        payment.hideAddCardViaCamera = true
-//        payment.showCVV = false
-//        payment.showExpirtionDate = false
+//        payment.removeExpirtionDate = true
+//        payment.removeCVV = true
 //        payment.hideRemberCard = true
     }
 
@@ -64,8 +64,8 @@ extension PayController {
         cardView(ready: payment.cardView.ready)
 //        payment.cardView.hideAddCardViaNFC = true
 //        payment.cardView.hideAddCardViaCamera = true
-//        payment.cardView.showCVV = false
-//        payment.cardView.showExpirtionDate = false
+//        payment.cardView.removeCVV = false
+//        payment.cardView.removeExpirtionDate = false
 //        payment.hideRemberCard = true
     }
 
@@ -102,7 +102,7 @@ extension PayController: VepayCardViewDelegate {
     
     func cardView(ready: Bool) {
         UIView.animate(withDuration: 0.2, delay: .zero, options: [.curveEaseOut, .allowUserInteraction]) { [weak makeTransfer] in
-            makeTransfer?.tintColor = ready ? UIColor.ice : UIColor.ice24
+            makeTransfer?.tintColor = ready ? UIColor.ice24.withAlphaComponent(1) : UIColor.ice24
         }
     }
 
