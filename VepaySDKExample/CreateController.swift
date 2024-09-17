@@ -32,10 +32,11 @@ final class CreateController: UIViewController {
 //        self.navigationController?.pushViewController(
 //            pay,
 //            animated: true)
+        // MARK: - For Testing Flow
+//        createInvoice()
     }
 
     @IBAction private func createInvoice() {
-        // MARK: - For Testing Flow
         let statingInvoice = VepayInvoice(
             amountFractional: 30000,
             currency: "RUB",
