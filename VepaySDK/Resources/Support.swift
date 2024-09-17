@@ -13,25 +13,35 @@ import UIKit.UIColor
 extension UIColor {
 
     // Primary
-//    public static let coal = UIColor(named: "Coal", in: .vepaySDK, compatibleWith: nil)!
-//    public static let ice = UIColor(named: "Ice", in: .vepaySDK, compatibleWith: nil)!
-//    public static let limequat = UIColor(named: "Limequat", in: .vepaySDK, compatibleWith: nil)!
-//    public static let strawberry = UIColor(named: "Strawberry", in: .vepaySDK, compatibleWith: nil)!
-//
-//    public static let cherry = UIColor(named: "Cherry", in: .vepaySDK, compatibleWith: nil)!
-
+    public static var coal: UIColor {
+        UIColor(named: "Coal", in: .vepaySDK, compatibleWith: nil)!
+    }
+    public static var ice: UIColor {
+        UIColor(named: "Ice", in: .vepaySDK, compatibleWith: nil)!
+    }
+    public static var limequat: UIColor {
+        UIColor(named: "Limequat", in: .vepaySDK, compatibleWith: nil)!
+                    }
+    public static var strawberry: UIColor {
+        UIColor(named: "Strawberry", in: .vepaySDK, compatibleWith: nil)!
+    }
+    
+    public static var cherry: UIColor {
+        UIColor(named: "Cherry", in: .vepaySDK, compatibleWith: nil)!
+    }
+    
     public static var coal24: UIColor {
         coal.withAlphaComponent(0.24)
     }
-
+    
     public static var coal48: UIColor {
         coal.withAlphaComponent(0.48)
     }
-
+    
     public static var ice24: UIColor {
         ice.withAlphaComponent(0.24)
     }
-
+    
     public static var ice48: UIColor {
         ice.withAlphaComponent(0.48)
     }

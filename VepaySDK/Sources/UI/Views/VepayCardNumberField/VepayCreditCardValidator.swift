@@ -123,27 +123,27 @@ public class VepayPaymentService: Hashable {
     }
 
     public class var mir: VepayPaymentService {
-        .init(name: "Мир", icon: .MIR, regex: "^2[0-9]{6,}$", validateDate: false, validNumberLength: 16...19)
+        .init(name: "Мир", icon: UIImage(named: "MIR", in: .vepaySDK, compatibleWith: nil)!, regex: "^2[0-9]{6,}$", validateDate: false, validNumberLength: 16...19)
     }
 
     public class var masterCard: VepayPaymentService {
-        .init(name: "Master Card", icon: .mastercard, regex: "^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$")
+        .init(name: "Master Card", icon: UIImage(named: "Mastercard", in: .vepaySDK, compatibleWith: nil)!, regex: "^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$")
     }
 
     public class var visa: VepayPaymentService {
-        .init(name: "Visa", icon: .visa, regex: "^4[0-9]{6,}$", validNumberLength: 13...16)
+        .init(name: "Visa", icon: UIImage(named: "Visa", in: .vepaySDK, compatibleWith: nil)!, regex: "^4[0-9]{6,}$", validNumberLength: 13...16)
     }
 
     public class var americanExpress: VepayPaymentService {
-        .init(name: "American Express", icon: .americanExpress, regex: "^3[47][0-9]{5,}$", maxCVV: 4, validNumberLength: 15...15)
+        .init(name: "American Express", icon: UIImage(named: "AmericanExpress", in: .vepaySDK, compatibleWith: nil)!, regex: "^3[47][0-9]{5,}$", maxCVV: 4, validNumberLength: 15...15)
     }
 
     public class var unionPay: VepayPaymentService {
-        .init(name: "Union Pay", icon: .unionPay, regex: "^62[0-5]\\d{13,16}$", usesLuhnAlgorithm: false, validNumberLength: 16...19)
+        .init(name: "Union Pay", icon: UIImage(named: "UnionPay", in: .vepaySDK, compatibleWith: nil)!, regex: "^62[0-5]\\d{13,16}$", usesLuhnAlgorithm: false, validNumberLength: 16...19)
     }
     
     public class var jcb: VepayPaymentService {
-        .init(name: "JCB", icon: .JCB, regex: "^(?:2131|1800|35[0-9]{3})[0-9]{3,}$", validNumberLength: 16...19)
+        .init(name: "JCB", icon: UIImage(named: "JCB", in: .vepaySDK, compatibleWith: nil)!, regex: "^(?:2131|1800|35[0-9]{3})[0-9]{3,}$", validNumberLength: 16...19)
     }
 
     public func hash(into hasher: inout Hasher) {
