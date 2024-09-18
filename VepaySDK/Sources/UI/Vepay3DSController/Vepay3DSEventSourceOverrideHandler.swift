@@ -53,8 +53,8 @@ public protocol Vepay3DSControllerDelegate: NSObject {
     
     /// When SSE message contains status, this method is called
     /// # Default Behavior
-    /// if you are using default behavior, when this method is called, sse closed (sse will not call more messages)
+    /// Returns true, sse will close, if false sse continue accept events
     /// About default behavior you can read in Vepay3DSController description
-    func threeDSFninished(status: VepayInvoice.VepayStatus.ReadableStatus)
-
+    func sseUpdated(status: TransactionStatus) -> Bool
+    func sseClosed()
 }

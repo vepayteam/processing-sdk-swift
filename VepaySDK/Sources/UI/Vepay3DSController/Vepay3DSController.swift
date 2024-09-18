@@ -6,7 +6,6 @@
 //
 
 import WebKit
-//import LDSwiftEventSource
 
 /// Fully customizable WebController. You can use it to show WebView with 3DS
 /// # Init & Start
@@ -17,15 +16,12 @@ import WebKit
 /// 1. Listens SSE for EventMessage.data with status
 /// 2. SSE.stop and sse = nil
 /// 3. Tries to parse status
-/// 3. Calls threeDSFninished(status: parsedStatus ?? .inProgress)
+/// 4. Calls delegate.sseUpdated(status: )
+/// If returns true, sse will close, if false sse continue accept events
 /// # Default Error Behavior
 /// If SSE connection stoped or internet connection droped, calls
 /// 1. SSE.stop and sse = nil
-/// 2. Calls threeDSFninished(status:  .inProgress)
-/// # Default Internet Connection Handiling Behavior
-/// If internet connection droped
-/// 1. SSE.stop and sse = nil
-/// 2. Calls threeDSFninished(status: .inProgress)
+/// 2. Calls delegate.sseClosed()
 /// # Using Default Behavior
 /// You can simply Vepay3DSController.init or Vepay3DSController.start, and set delegate property to listen for result
 /// # Partially Custom Behavior
@@ -35,6 +31,9 @@ import WebKit
 /// # Fully Custom WebView Behavior
 /// You can access controller.webView property to fully customize it
 public final class Vepay3DSController: UIViewController {
+
+
+    // MARK: - Propertys
 
     public var webView: WKWebView { view as! WKWebView }
 
@@ -51,14 +50,16 @@ public final class Vepay3DSController: UIViewController {
     /// Allows to customize specific part of behavior. For more information, you can read in Vepay3DSController description
     public weak var overrideSSEHandler: Vepay3DSEventSourceOverrideHandler?
 
-    init() {
+
+    // MARK: - Init
+
+    public init() {
         super.init(nibName: nil, bundle: nil)
     }
 
-
     /// - Parameters:
     ///   - sse: sse.start()
-    init(sse: EventSource? = nil, delegate: Vepay3DSControllerDelegate? = nil, overrideSSEHandler: Vepay3DSEventSourceOverrideHandler? = nil) {
+    public init(sse: EventSource? = nil, delegate: Vepay3DSControllerDelegate? = nil, overrideSSEHandler: Vepay3DSEventSourceOverrideHandler? = nil) {
         super.init(nibName: nil, bundle: nil)
         self.sse = sse
         self.delegate = delegate
@@ -66,7 +67,7 @@ public final class Vepay3DSController: UIViewController {
     }
 
     /// init with 3DS Data. Init controller with configured 3DS in webView
-    init(webViewURL: URL,
+    public init(webViewURL: URL,
          data: Data? = nil,
          mimeType: String? = nil,
          characterEncodingName: String? = nil,
@@ -79,7 +80,7 @@ public final class Vepay3DSController: UIViewController {
         }
     }
     
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
 
@@ -96,6 +97,9 @@ extension Vepay3DSController {
 
 }
 
+
+// MARK: - SSE Delegate
+
 extension Vepay3DSController: EventHandler {
 
     public func onOpened() {
@@ -104,23 +108,26 @@ extension Vepay3DSController: EventHandler {
 
     public func onClosed() {
         if overrideSSEHandler?.onClosed() ?? true {
-            delegate?.threeDSFninished(status: .inProgress)
+            delegate?.sseClosed()
         }
     }
 
     public func onMessage(eventType: String, messageEvent: MessageEvent) {
         guard overrideSSEHandler?.onMessage(eventType: eventType, messageEvent: messageEvent) ?? true else { return }
-        if let range = messageEvent.data.range(of: "\"status\":") {
-            stopSSEAndNullify()
-
-            let status: VepayInvoice.VepayStatus.ReadableStatus
-            if let statusRaw = Int8(String(messageEvent.data[range.upperBound])) {
-                status = .init(rawValue: statusRaw) ?? .inProgress
+        if let range = messageEvent.data.range(of: "\"status\":\"") {
+            let status: TransactionStatus
+            if let statusInt = Int8(String(messageEvent.data[range.upperBound])) {
+                status = .init(status: statusInt)
             } else {
-                status = .inProgress
+                let endIndex = messageEvent.data.range(of: "\",", range: .init(uncheckedBounds: (lower: range.upperBound, upper: messageEvent.data.endIndex)))?.lowerBound ?? messageEvent.data.endIndex
+                let string = messageEvent.data[range.upperBound...endIndex]
+                let statusString = string.replacingOccurrences(of: "[^A-Z]", with: "", options: .regularExpression)
+                status = .init(status: statusString)
             }
-            delegate?.threeDSFninished(status: status)
-            print(status)
+
+            if delegate?.sseUpdated(status: status) ?? true {
+                stopSSEAndNullify()
+            }
         }
     }
 
@@ -131,7 +138,7 @@ extension Vepay3DSController: EventHandler {
     public func onError(error: any Error) {
         guard overrideSSEHandler?.onError(error: error) ?? true else { return }
         stopSSEAndNullify()
-        delegate?.threeDSFninished(status: .inProgress)
+        delegate?.sseClosed()
     }
 
     func stopSSEAndNullify() {
