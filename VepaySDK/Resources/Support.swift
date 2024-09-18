@@ -51,6 +51,7 @@ extension UIColor {
 extension UIFont {
 
     public static func interRegular(of size: CGFloat) -> UIFont {
+        
         UIFont(name: "Inter-Regular", size: size)!
     }
     public static func interSemiBold(of size: CGFloat) -> UIFont {

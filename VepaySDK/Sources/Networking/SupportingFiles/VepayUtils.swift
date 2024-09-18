@@ -7,6 +7,7 @@
 
 import WebKit.WKWebView
 
+/// Library of base URLs, that you can override
 public struct VepayUtils {
 
     private init() { }

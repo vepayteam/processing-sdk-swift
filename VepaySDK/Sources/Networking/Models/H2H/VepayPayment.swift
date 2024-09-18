@@ -40,7 +40,7 @@ public struct VepayPayment: Codable {
         self.browserData = browserData
     }
     
-    /// Occure ip from VepayUtils.ip(), default headerMap
+    /// Occure ip from VepayUtils.ip(), default headerMap. nil if can't get ip
     /// - Parameters:
     ///   - size: of WebView where 3DS will be presented
     public init?(card: VepayPaymentCard, size: CGSize, specificIPVersion: VepayUtils.IPVersion? = nil) {

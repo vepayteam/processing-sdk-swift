@@ -13,6 +13,8 @@ public final class VepayMake3DS: VepayBaseRequest, VepayRequest {
 
     public typealias ResponseType = VepayInvoice
 
+    /// # URL Creation
+    /// This method creates URL using VepayUtils.h2hURL(endpoint:, isTest). You can override h2h url using VepayUtils
     public init(url: String, method: String, postParameters: [String: String]?) {
         super.init(method: .init(rawValue: method) ?? .get, path: url, bodyParams: postParameters ?? [:])
     }
