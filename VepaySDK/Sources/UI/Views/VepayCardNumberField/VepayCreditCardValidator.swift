@@ -89,7 +89,7 @@ public class VepayPaymentService: Hashable {
     public init(name: String,
                 icon: UIImage,
                 regex: String,
-                validateDate: Bool = true,
+                validateDate: Bool = false,
                 maxCVV: Int = 3,
                 usesLuhnAlgorithm: Bool = true,
                 validNumberLength: ClosedRange<Int> = 16...16) {
@@ -123,7 +123,7 @@ public class VepayPaymentService: Hashable {
     }
 
     public class var mir: VepayPaymentService {
-        .init(name: "Мир", icon: UIImage(named: "MIR", in: .vepaySDK, compatibleWith: nil)!, regex: "^2[0-9]{6,}$", validateDate: false, validNumberLength: 16...19)
+        .init(name: "Мир", icon: UIImage(named: "MIR", in: .vepaySDK, compatibleWith: nil)!, regex: "^2[0-9]{6,}$", validateDate: true, validNumberLength: 16...19)
     }
 
     public class var masterCard: VepayPaymentService {

@@ -234,7 +234,7 @@ extension VepayCardView: VepayCardNumberFieldDelegate {
     public func cardChanged(field: VepayCardNumberField, number: String) { }
     
     public func cardIdentificationChanged(field: VepayCardNumberField, service: VepayPaymentService?) {
-        expirationDateField?.validateMinDay = notValidateMIRSystemExpirationDate ? service != .mir : true
+        expirationDateField?.validateMinDay = service?.validateDate ?? false
         cvvField?.cvvMaxCount = service?.maxCVV ?? 3
         paymentMethod.image = service?.icon
     }
@@ -311,16 +311,16 @@ extension VepayCardView {
             }
         }
 
-        if cardNumberField.cardReady {
+        if !cardNumberField.cardReady {
             animate(field: cardNumberField.field, placeholderOrText: cardMasked.isEmpty)
             
         }
 
-        if !removeExpirtionDate, expirationDateField!.dayReady {
+        if !removeExpirtionDate, !expirationDateField!.dayReady {
             animate(field: expirationDateField!.field, placeholderOrText: expirationDateField!.dayMasked.isEmpty)
         }
 
-        if !removeCVV, cvvField!.cvvReady {
+        if !removeCVV, !cvvField!.cvvReady {
             animate(field: cvvField!.field, placeholderOrText: cvv.isEmpty)
         }
     }

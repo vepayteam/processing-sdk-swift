@@ -43,9 +43,7 @@ public final class VepayExpirationDateField: UIView {
 
     public var validateMinDay = true {
         didSet {
-            if oldValue != validateMinDay {
-                validateDate()
-            }
+            validateDate()
         }
     }
 
@@ -185,9 +183,6 @@ extension VepayExpirationDateField {
         }
 
         validateDate()
-
-        let progress = min(CGFloat(numbers.count) / 4, 1)
-        self.progress = dayReady ? progress : progress - 0.1
     }
 
 }
@@ -217,6 +212,9 @@ private extension VepayExpirationDateField {
         if !dayReady {
             drawError(monthValid: monthValid, yearValid: yearValid)
         }
+
+        let progress = min(CGFloat(numbers.count) / 4, 1)
+        self.progress = dayReady ? progress : progress - 0.1
     }
 
     private func validateWholeDate(month: Int8, year: Int8, monthValid: inout Bool, yearValid: inout Bool) {
