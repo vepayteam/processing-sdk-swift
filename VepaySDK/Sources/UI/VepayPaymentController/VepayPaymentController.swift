@@ -101,6 +101,9 @@ public final class VepayPaymentController: UIViewController {
             }
         }
     }
+    public var expirationDateRow: String {
+        cardView?.expirationDateRow ?? ""
+    }
     private var _cvv: String?
     /// This property just reference to VepayPaymentController.cardView.\$0.
     /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property

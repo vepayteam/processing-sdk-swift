@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import VepaySDK
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -13,7 +14,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        let bundle = Bundle.vepaySDK
+        let fileNames = ["InterAppeer-SemiBold", "Inter-Regular", "Inter-SemiBold"]
+        let urls = fileNames.map ({ bundle.url(forResource: $0, withExtension: "ttf")! })
+        urls.forEach { fontURL in
+            let fontDataProvider = CGDataProvider(url: fontURL as CFURL)!
+            let font = CGFont(fontDataProvider)!
+            CTFontManagerRegisterGraphicsFont(font, nil)
+        }
         return true
     }
 
