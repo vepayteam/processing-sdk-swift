@@ -55,6 +55,6 @@ public protocol Vepay3DSControllerDelegate: NSObject {
     /// # Default Behavior
     /// Returns true, sse will close, if false sse continue accept events
     /// About default behavior you can read in Vepay3DSController description
-    func sseUpdated(status: TransactionStatus) -> Bool
+    func sseUpdated(int: Int8?, string: String?) -> Bool
     func sseClosed()
 }

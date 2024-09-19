@@ -2,8 +2,8 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23089" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7jd-XO-31r">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23077"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -126,19 +126,75 @@
                                     <constraint firstItem="0kb-qi-Uva" firstAttribute="width" secondItem="Dvl-35-Qe4" secondAttribute="width" id="lvT-Iz-kG9"/>
                                 </constraints>
                             </stackView>
+                            <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DiN-M6-vHB">
+                                <rect key="frame" x="302.66666666666669" y="477.33333333333331" width="14" height="14.666666666666686"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <color key="tintColor" name="Cherry"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal">
+                                    <imageReference key="image" image="xmark" catalog="system" symbolScale="small"/>
+                                </state>
+                                <connections>
+                                    <action selector="tappedWithButton:" destination="EP7-eJ-9JL" eventType="touchUpInside" id="dMD-Nt-aFT"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6zw-UO-Ofz">
+                                <rect key="frame" x="302.66666666666669" y="430.33333333333331" width="14" height="14.666666666666686"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <color key="tintColor" name="Cherry"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal">
+                                    <imageReference key="image" image="xmark" catalog="system" symbolScale="small"/>
+                                </state>
+                                <connections>
+                                    <action selector="tappedWithButton:" destination="EP7-eJ-9JL" eventType="touchUpInside" id="BHM-yb-d3x"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9rI-aF-qdf">
+                                <rect key="frame" x="302.66666666666669" y="383.33333333333331" width="14" height="14.666666666666686"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <color key="tintColor" name="Cherry"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal">
+                                    <imageReference key="image" image="xmark" catalog="system" symbolScale="small"/>
+                                </state>
+                                <connections>
+                                    <action selector="tappedWithButton:" destination="EP7-eJ-9JL" eventType="touchUpInside" id="Rk6-hi-5et"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kpb-pz-2pL">
+                                <rect key="frame" x="302.66666666666669" y="336.33333333333331" width="14" height="14.666666666666686"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <color key="tintColor" name="Cherry"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal">
+                                    <imageReference key="image" image="xmark" catalog="system" symbolScale="small"/>
+                                </state>
+                                <connections>
+                                    <action selector="tappedWithButton:" destination="EP7-eJ-9JL" eventType="touchUpInside" id="77c-Ld-v5j"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="1Bb-WJ-jIe"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="fP4-nu-BTc" firstAttribute="width" secondItem="tdH-0P-k9W" secondAttribute="width" multiplier="0.5" id="957-Bk-Dg5"/>
+                            <constraint firstItem="Kpb-pz-2pL" firstAttribute="centerY" secondItem="0kb-qi-Uva" secondAttribute="centerY" id="DvQ-D7-9cc"/>
+                            <constraint firstItem="DiN-M6-vHB" firstAttribute="leading" secondItem="fP4-nu-BTc" secondAttribute="trailing" constant="8" id="Fuo-7R-NNC"/>
                             <constraint firstItem="fP4-nu-BTc" firstAttribute="centerY" secondItem="1Bb-WJ-jIe" secondAttribute="centerY" id="HMv-rD-xwm"/>
+                            <constraint firstItem="6zw-UO-Ofz" firstAttribute="leading" secondItem="DiN-M6-vHB" secondAttribute="leading" id="Lce-mB-4rA"/>
                             <constraint firstItem="fP4-nu-BTc" firstAttribute="centerX" secondItem="1Bb-WJ-jIe" secondAttribute="centerX" id="LfL-O4-ZCy"/>
+                            <constraint firstItem="9rI-aF-qdf" firstAttribute="centerY" secondItem="Dvl-35-Qe4" secondAttribute="centerY" id="Uc7-jP-Goe"/>
                             <constraint firstItem="1QX-f5-JCK" firstAttribute="top" secondItem="1Bb-WJ-jIe" secondAttribute="top" constant="72" id="Vwq-kI-JJx"/>
                             <constraint firstItem="hc1-ll-53h" firstAttribute="centerX" secondItem="1Bb-WJ-jIe" secondAttribute="centerX" id="WWB-0w-a11"/>
+                            <constraint firstItem="6zw-UO-Ofz" firstAttribute="centerY" secondItem="mhU-Im-33M" secondAttribute="centerY" id="cla-eU-XJB"/>
+                            <constraint firstItem="DiN-M6-vHB" firstAttribute="centerY" secondItem="Ltp-gE-r8K" secondAttribute="centerY" id="dRe-4r-avi"/>
                             <constraint firstItem="hc1-ll-53h" firstAttribute="top" secondItem="H4A-DM-kJR" secondAttribute="bottom" constant="24" id="dTb-8r-iC6"/>
+                            <constraint firstItem="Kpb-pz-2pL" firstAttribute="leading" secondItem="DiN-M6-vHB" secondAttribute="leading" id="hna-2J-5zi"/>
                             <constraint firstItem="H4A-DM-kJR" firstAttribute="top" secondItem="fP4-nu-BTc" secondAttribute="bottom" constant="24" id="kRa-w6-QLv"/>
                             <constraint firstItem="1QX-f5-JCK" firstAttribute="centerX" secondItem="1Bb-WJ-jIe" secondAttribute="centerX" id="kXs-xE-N4j"/>
                             <constraint firstItem="H4A-DM-kJR" firstAttribute="centerX" secondItem="1Bb-WJ-jIe" secondAttribute="centerX" id="kvT-bV-nBk"/>
+                            <constraint firstItem="9rI-aF-qdf" firstAttribute="leading" secondItem="DiN-M6-vHB" secondAttribute="leading" id="lCk-T8-oq2"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" tag="1" title="Appear" image="Appeer" id="Wbp-hE-D8E"/>
@@ -163,8 +219,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Custom" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="szz-F5-efH">
-                                <rect key="frame" x="116" y="131" width="161" height="58"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Custom" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="szz-F5-efH">
+                                <rect key="frame" x="116.33333333333333" y="131" width="160.66666666666669" height="57.333333333333343"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="48"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -184,16 +240,25 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Start"/>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Here you can create your custom flow" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0RL-Xd-WYz">
+                                <rect key="frame" x="24" y="196.33333333333334" width="345" height="19.333333333333343"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="OWL-g7-qp2"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="uye-ZD-863" firstAttribute="top" secondItem="6Cz-ih-pAR" secondAttribute="bottom" constant="24" id="B1P-BF-SDE"/>
+                            <constraint firstItem="0RL-Xd-WYz" firstAttribute="top" secondItem="szz-F5-efH" secondAttribute="bottom" constant="8" symbolic="YES" id="Bec-i1-ZZc"/>
                             <constraint firstItem="NdB-dL-0Pj" firstAttribute="centerY" secondItem="OWL-g7-qp2" secondAttribute="centerY" id="BqY-f4-qzi"/>
+                            <constraint firstItem="OWL-g7-qp2" firstAttribute="trailing" secondItem="0RL-Xd-WYz" secondAttribute="trailing" constant="24" id="GwX-ko-O16"/>
                             <constraint firstItem="NdB-dL-0Pj" firstAttribute="width" secondItem="NY8-gq-HbY" secondAttribute="width" multiplier="0.5" id="H4n-0d-4Q5"/>
                             <constraint firstItem="szz-F5-efH" firstAttribute="centerX" secondItem="OWL-g7-qp2" secondAttribute="centerX" id="W4z-P8-LbT"/>
                             <constraint firstItem="uye-ZD-863" firstAttribute="centerX" secondItem="OWL-g7-qp2" secondAttribute="centerX" id="eCc-4P-S2K"/>
                             <constraint firstItem="szz-F5-efH" firstAttribute="top" secondItem="OWL-g7-qp2" secondAttribute="top" constant="72" id="fhS-3u-4aB"/>
+                            <constraint firstItem="0RL-Xd-WYz" firstAttribute="leading" secondItem="OWL-g7-qp2" secondAttribute="leading" constant="24" id="k35-mx-6Vn"/>
                             <constraint firstItem="6Cz-ih-pAR" firstAttribute="top" secondItem="NdB-dL-0Pj" secondAttribute="bottom" constant="16" id="mm4-n8-G1W"/>
                             <constraint firstItem="6Cz-ih-pAR" firstAttribute="centerX" secondItem="OWL-g7-qp2" secondAttribute="centerX" id="ss0-KV-Ojj"/>
                             <constraint firstItem="NdB-dL-0Pj" firstAttribute="centerX" secondItem="OWL-g7-qp2" secondAttribute="centerX" id="xeq-R8-gnO"/>
@@ -249,16 +314,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I9F-EK-kvw">
-                                <rect key="frame" x="0.0" y="59" width="393" height="670"/>
+                                <rect key="frame" x="0.0" y="59" width="393" height="671"/>
                                 <connections>
                                     <segue destination="UXT-4T-1YP" kind="embed" id="aDJ-9q-fen"/>
                                 </connections>
                             </containerView>
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SQ9-mJ-VMI">
-                                <rect key="frame" x="0.0" y="705" width="393" height="147"/>
+                                <rect key="frame" x="0.0" y="706" width="393" height="146"/>
                                 <subviews>
                                     <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xjt-ja-VFP">
-                                        <rect key="frame" x="24" y="24" width="345" height="57"/>
+                                        <rect key="frame" x="24" y="24" width="345" height="56"/>
                                         <color key="backgroundColor" name="Coal"/>
                                         <fontDescription key="fontDescription" name="InterAppeer-SemiBold" family="Inter Appeer" pointSize="20"/>
                                         <color key="tintColor" name="Ice24"/>
@@ -318,6 +383,10 @@
         <image name="Appeer" width="24" height="24"/>
         <image name="Vepay" width="70" height="71"/>
         <image name="plus" catalog="system" width="128" height="113"/>
+        <image name="xmark" catalog="system" width="128" height="113"/>
+        <namedColor name="Cherry">
+            <color red="0.58399999141693115" green="0.18799999356269836" blue="0.25900000333786011" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Coal">
             <color red="0.13300000131130219" green="0.13300000131130219" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

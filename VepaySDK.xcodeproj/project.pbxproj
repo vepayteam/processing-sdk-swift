@@ -29,10 +29,10 @@
 		434161B82B6038E3000672B2 /* VepayPaymentController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 434161B72B6038E3000672B2 /* VepayPaymentController.storyboard */; };
 		434CE55C2C481B040057BB56 /* VepayCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434CE55B2C481B040057BB56 /* VepayCardView.swift */; };
 		434CE55E2C481CBD0057BB56 /* VepayCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 434CE55D2C481CBD0057BB56 /* VepayCardView.xib */; };
+		434E378A2C9CBD7E002FF37D /* TapToDismiss.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434E37892C9CBD7A002FF37D /* TapToDismiss.swift */; };
 		435039D22C9ADE9200FAC3B6 /* AppearFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435039D12C9ADE8E00FAC3B6 /* AppearFlowController.swift */; };
 		435039D42C9ADEA800FAC3B6 /* CustomFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435039D32C9ADE9E00FAC3B6 /* CustomFlowController.swift */; };
 		435039D82C9B05C300FAC3B6 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435039D72C9B05BE00FAC3B6 /* NetworkManager.swift */; };
-		435039DC2C9B125800FAC3B6 /* TransactionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435039DB2C9B125500FAC3B6 /* TransactionStatus.swift */; };
 		435039DF2C9B1C5700FAC3B6 /* AppearInvoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435039DE2C9B1C5200FAC3B6 /* AppearInvoice.swift */; };
 		435039E12C9B1C7800FAC3B6 /* AppearTransfer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435039E02C9B1C7500FAC3B6 /* AppearTransfer.swift */; };
 		4374027A2B6CFC980081EDD8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 437402792B6CFC980081EDD8 /* README.md */; };
@@ -134,10 +134,10 @@
 		434A73692C50EDCB007AC739 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		434CE55B2C481B040057BB56 /* VepayCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VepayCardView.swift; sourceTree = "<group>"; };
 		434CE55D2C481CBD0057BB56 /* VepayCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VepayCardView.xib; sourceTree = "<group>"; };
+		434E37892C9CBD7A002FF37D /* TapToDismiss.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TapToDismiss.swift; sourceTree = "<group>"; };
 		435039D12C9ADE8E00FAC3B6 /* AppearFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearFlowController.swift; sourceTree = "<group>"; };
 		435039D32C9ADE9E00FAC3B6 /* CustomFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFlowController.swift; sourceTree = "<group>"; };
 		435039D72C9B05BE00FAC3B6 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		435039DB2C9B125500FAC3B6 /* TransactionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionStatus.swift; sourceTree = "<group>"; };
 		435039DE2C9B1C5200FAC3B6 /* AppearInvoice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearInvoice.swift; sourceTree = "<group>"; };
 		435039E02C9B1C7500FAC3B6 /* AppearTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearTransfer.swift; sourceTree = "<group>"; };
 		437402792B6CFC980081EDD8 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -356,6 +356,7 @@
 		435039D92C9B0C2700FAC3B6 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				434E37892C9CBD7A002FF37D /* TapToDismiss.swift */,
 				439480102C9ADD6000A625F4 /* DemoAssets.xcassets */,
 				435039D72C9B05BE00FAC3B6 /* NetworkManager.swift */,
 				43338C8B2B3D322D0063BD3F /* LaunchScreen.storyboard */,
@@ -363,14 +364,6 @@
 				43338C822B3D322C0063BD3F /* SceneDelegate.swift */,
 			);
 			path = Support;
-			sourceTree = "<group>";
-		};
-		435039DA2C9B120E00FAC3B6 /* Transfer */ = {
-			isa = PBXGroup;
-			children = (
-				435039DB2C9B125500FAC3B6 /* TransactionStatus.swift */,
-			);
-			path = Transfer;
 			sourceTree = "<group>";
 		};
 		435039DD2C9B1C4500FAC3B6 /* AppearFlowController */ = {
@@ -446,7 +439,6 @@
 		43E1060E2B4B47B6001D650B /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				435039DA2C9B120E00FAC3B6 /* Transfer */,
 				43CFEDD52B4DE4F0009076DA /* H2H */,
 				43EE2A8D2C98A6A9006ED2C4 /* Card */,
 			);
@@ -647,7 +639,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				435039DC2C9B125800FAC3B6 /* TransactionStatus.swift in Sources */,
 				43E1061F2B4CD38A001D650B /* VepayInvoiceGetPayment.swift in Sources */,
 				43338C5E2B3D300F0063BD3F /* VepayError.swift in Sources */,
 				43EE2A932C98A6DF006ED2C4 /* VepayBank.swift in Sources */,
@@ -699,6 +690,7 @@
 				43338C852B3D322C0063BD3F /* VepayFlowController.swift in Sources */,
 				435039D82C9B05C300FAC3B6 /* NetworkManager.swift in Sources */,
 				435039DF2C9B1C5700FAC3B6 /* AppearInvoice.swift in Sources */,
+				434E378A2C9CBD7E002FF37D /* TapToDismiss.swift in Sources */,
 				43338C812B3D322C0063BD3F /* AppDelegate.swift in Sources */,
 				43338C832B3D322C0063BD3F /* SceneDelegate.swift in Sources */,
 				435039E12C9B1C7800FAC3B6 /* AppearTransfer.swift in Sources */,
