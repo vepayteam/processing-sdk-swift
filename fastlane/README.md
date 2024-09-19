@@ -47,14 +47,6 @@ Build VEPAY SDK Example app
 
 Upload *.ipa to BrowserStack
 
-### ios dumpSharedValues
-
-```sh
-[bundle exec] fastlane ios dumpSharedValues
-```
-
-Dump Build Shared Values
-
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
