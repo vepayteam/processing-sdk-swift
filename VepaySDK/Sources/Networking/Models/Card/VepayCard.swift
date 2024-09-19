@@ -23,17 +23,13 @@ public final class VepayCard: Decodable {
    public var holder: String!
 
     /// Система оплаты. Возможные значения: VISA, MASTERCARD, MIR, AMERICAN EXPRESS, JCB, DINNERSCLUB, MAESTRO, DISCOVER, CHINA UNIONPAY
-   public var paymentSystemName: String! {
-        didSet {
-            paymentSystem = .init(name: paymentSystemName)
-        }
-    }
+   public var paymentSystemName: String!
 
     // Just Handfull
    public var bank: VepayBank?
 
     /// Handy enum; Not codable
-    public private(set) var paymentSystem: VepayPaymentSystem?
+    public var paymentSystem: VepayPaymentService?
 
 
     // MARK: - Empty Init
@@ -44,13 +40,13 @@ public final class VepayCard: Decodable {
 
     // MARK: - Valued Init
 
-    public init(id: Int, number: String, expire: String, holder: String, paymentSystem: String, bank: VepayBank? = nil) {
+    public init(id: Int, number: String, expire: String, holder: String, paymentService: VepayPaymentService, bank: VepayBank? = nil) {
         self.id = id
         self.number = number
         self.expire = expire
         self.holder = holder
-        self.paymentSystemName = paymentSystem
-        self.paymentSystem = .init(name: paymentSystem)
+        self.paymentSystemName = paymentService.name
+        self.paymentSystem = paymentService
         self.bank = bank
     }
 
