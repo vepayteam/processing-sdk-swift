@@ -1,5 +1,5 @@
 src_dir = ENV.fetch("GITHUB_WORKSPACE", __dir__)
-local_run = true if ENV.fetch("GITEA_ACTIONS", "false") == "true"
+local_run = ENV.fetch("GITEA_ACTIONS", "false") == "true"
 
 Pod::Spec.new do |s|
   s.name = 'VepaySDK'
