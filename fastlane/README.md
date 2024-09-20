@@ -39,14 +39,6 @@ SonarQube Scanner for Build Process
 
 Build VEPAY SDK Example app
 
-### ios uploadToBrowserStack
-
-```sh
-[bundle exec] fastlane ios uploadToBrowserStack
-```
-
-Upload *.ipa to BrowserStack
-
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
