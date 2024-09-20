@@ -7,6 +7,7 @@
 
 import WebKit
 
+
 /// Fully customizable WebController. You can use it to show WebView with 3DS
 /// # Init & Start
 /// Controller has many ways to start working with it.
@@ -16,7 +17,7 @@ import WebKit
 /// 1. Listens SSE for EventMessage.data with status
 /// 2. SSE.stop and sse = nil
 /// 3. Tries to parse status
-/// 4. Calls delegate.sseUpdated(status: )
+/// 4. Calls delegate.sseUpdated
 /// If returns true, sse will close, if false sse continue accept events
 /// # Default Error Behavior
 /// If SSE connection stoped or internet connection droped, calls
@@ -113,19 +114,19 @@ extension Vepay3DSController: EventHandler {
     }
 
     public func onMessage(eventType: String, messageEvent: MessageEvent) {
-        guard overrideSSEHandler?.onMessage(eventType: eventType, messageEvent: messageEvent) ?? true else { return }
-        if let range = messageEvent.data.range(of: "\"status\":\"") {
-            let status: TransactionStatus
-            if let statusInt = Int8(String(messageEvent.data[range.upperBound])) {
-                status = .init(status: statusInt)
+        guard overrideSSEHandler?.onMessage(eventType: eventType, messageEvent: messageEvent) ?? messageEvent.data.contains("status") else { return }
+        let data = messageEvent.data.replacingOccurrences(of: "\"", with: "", options: .regularExpression)
+        if let statusUpperBound = data.range(of: "status:")?.upperBound {
+            var int: Int8? = nil
+            var string: String? = nil
+            if let statusInt = Int8(String(data[statusUpperBound])) {
+                int = statusInt
             } else {
-                let endIndex = messageEvent.data.range(of: "\",", range: .init(uncheckedBounds: (lower: range.upperBound, upper: messageEvent.data.endIndex)))?.lowerBound ?? messageEvent.data.endIndex
-                let string = messageEvent.data[range.upperBound...endIndex]
-                let statusString = string.replacingOccurrences(of: "[^A-Z]", with: "", options: .regularExpression)
-                status = .init(status: statusString)
+                let endIndex = data.range(of: ",", range: .init(uncheckedBounds: (lower: statusUpperBound, upper: data.endIndex)))?.lowerBound ?? data.endIndex
+                string = data[statusUpperBound...endIndex].replacingOccurrences(of: "[^A-Z]", with: "", options: .regularExpression)
             }
 
-            if delegate?.sseUpdated(status: status) ?? true {
+            if delegate?.sseUpdated(int: int, string: string) ?? true {
                 stopSSEAndNullify()
             }
         }

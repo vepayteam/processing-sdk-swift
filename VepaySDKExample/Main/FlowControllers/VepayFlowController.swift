@@ -18,23 +18,6 @@ final class VepayFlowController: UIViewController {
 
     private var invoice: VepayInvoice!
 
-
-    // MARK: - Life Cycle
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        xUser.text = UserDefaults.standard.string(forKey: "XUserVepay")
-        xUser.font = .subHeading
-        create.titleLabel?.font = .bodyLarge
-    }
-
-
-    // MARK: - Actions
-
-    @IBAction private func createInvoice() {
-        start()
-    }
-
 }
 
 
@@ -47,7 +30,7 @@ extension VepayFlowController {
         UserDefaults.standard.set(xUser.text, forKey: "XUserVepay")
 
         let statingInvoice = VepayInvoice(
-            amountFractional: 10000,
+            amountFractional: 30000,
             currency: "RUB",
             client: .init(
                 fullName: "Терентьев Михаил Павлович",
@@ -94,30 +77,32 @@ extension VepayFlowController {
 
 extension VepayFlowController: Vepay3DSControllerDelegate {
 
-    func sseUpdated(status: VepaySDK.TransactionStatus) -> Bool {
+    func sseUpdated(int: Int8?, string: String?) -> Bool {
+        guard let int = int else {
+            fatalError("int = nil | string = \(string ?? "Empty")")
+        }
+
         let title: String
         var willStop = true
-        switch status {
-        case .failed:
-            title = "Failed"
-        case .initiated:
-            title = "Initiated"
-            willStop = false
-        case .processing:
-            title = "In Progress"
-            willStop = false
-        case .done:
-            title = "Done"
-        case .pending:
-            title = "Pending"
+        switch VepaySDK.VepayInvoice.VepayStatus.ReadableStatus(status: int) {
+        case .inProgress:
+            title = "Progress"
             willStop = false
         case .paid:
             title = "Paid"
+        case .canceledDueToError:
+            title = "Canceled Due To Error"
+        case .reversed:
+            title = "Reversed"
+        case .processing:
             willStop = false
-        case .invoiceFailed:
-            title = "Invoice Failed"
-        case .unknown(let int, let string):
-            title = "Unknown Status: \(int != nil ? "\(int!)" : string ?? "Empty")"
+            title = "Processing"
+        case .statusRequestAwaited:
+            title = "Status Request Awaited"
+        case .refunded:
+            title = "Refunded"
+        case .unknown(let int):
+            title = "Unknown Status: \(int == nil ? "nil" : "\(int!)")"
         }
         
         presentAlert(title: "\(title)", body: "SSE Stoped \(willStop)", showGoToMainScreen: willStop)
@@ -143,6 +128,28 @@ extension VepayFlowController: Vepay3DSControllerDelegate {
 
 }
 
+
+// MARK: - Support
+
+extension VepayFlowController {
+
+    // MARK: - Life Cycle
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        xUser.text = UserDefaults.standard.string(forKey: "XUserVepay")
+        xUser.font = .subHeading
+        create.titleLabel?.font = .bodyLarge
+        setupTapToDismiss()
+    }
+
+    // MARK: - Actions
+
+    @IBAction private func createInvoice() {
+        start()
+    }
+
+}
 
 // MARK: - Invoice Create
 

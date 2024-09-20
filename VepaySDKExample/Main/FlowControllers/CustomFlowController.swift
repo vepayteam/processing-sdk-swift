@@ -47,10 +47,14 @@ extension CustomFlowController {
 
 extension CustomFlowController: Vepay3DSControllerDelegate {
 
-    func sseUpdated(status: VepaySDK.TransactionStatus) -> Bool {
+    func sseUpdated(int: Int8?, string: String?) -> Bool {
+        guard let string = string else {
+            fatalError("int = \(int == nil ? "nil" : "\(int!)") | string = nil)")
+        }
+
         let title: String
         var willStop = true
-        switch status {
+        switch AppearFlowController.TransactionStatus(status: string) {
         case .failed:
             title = "Failed"
         case .initiated:
@@ -73,7 +77,7 @@ extension CustomFlowController: Vepay3DSControllerDelegate {
             title = "Unknown Status: \(int != nil ? "\(int!)" : string ?? "Empty")"
         }
 
-        presentAlert(title: "\(title)", body: "SSE Stoped \(willStop)", showGoToMainScreen: willStop)
+        presentAlert(title: title, body: "SSE Stoped \(willStop)", showGoToMainScreen: willStop)
         return willStop
     }
     
@@ -108,6 +112,7 @@ extension CustomFlowController {
         sseURL.font = .subHeading
         paste.titleLabel?.font = .bodyLarge
         start.titleLabel?.font = .subHeading
+        setupTapToDismiss()
     }
 
 

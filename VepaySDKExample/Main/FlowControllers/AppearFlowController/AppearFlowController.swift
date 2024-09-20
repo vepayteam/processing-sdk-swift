@@ -23,11 +23,11 @@ final class AppearFlowController: UIViewController {
     @IBOutlet private weak var paste: UIButton!
     @IBOutlet private weak var start: UIButton!
 
+    private let transactionStatus = UILabel()
     let defaultURL = "https://api.appeer.ru"
 
     var invoice: Invoice!
-    /// 7eb583f2-7a8c-4be3-9838-8afff0410c16
-    /// eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ3VHVLQWFMUVBLOENFV0JheEpINGVoZVVHR0tuRlZiYyIsImV4cCI6MTcyNjY2ODAwNCwibmJmIjoxNzI2NjY3OTQ0LCJzdWIiOiJhYjk0MGI4ZC0zYTY0LTRjNDItYjVkOS1iNzRkYmYwOGYxMTMiLCJyb2xlcyI6WyJcdTA0MWFcdTA0M2JcdTA0MzhcdTA0MzVcdTA0M2RcdTA0NDIiXSwicGhvbmUiOiIrNzk3ODU4OTQ1NzkifQ.BaQoNJhjm_VV79fgoHI6ecehDzEW8QTpUCmKh6k18cs","refreshToken":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJZbzVzMWpTcTdMSmJvVUxEcWNYRjJlRDZOdVhuWkNCaiIsImV4cCI6MTcyNjY2ODg0NCwibmJmIjoxNzI2NjY3OTQ0LCJzdWIiOiJhYjk0MGI4ZC0zYTY0LTRjNDItYjVkOS1iNzRkYmYwOGYxMTMiLCJyb2xlcyI6WyJcdTA0MWFcdTA0M2JcdTA0MzhcdTA0MzVcdTA0M2RcdTA0NDIiXSwicGhvbmUiOiIrNzk3ODU4OTQ1NzkifQ.MHrAa7XluLXRp5i6FOiqaHbhfYqdkl6cth041KZ9lLM
+
 }
 
 
@@ -70,15 +70,21 @@ extension AppearFlowController {
         let transactionID = transactionID.text!
         let accessToken = accessToken.text!
         AppearGetTransfer(urlBase: urlBase, transactionId: transactionID, accessToken: accessToken).request(sessionHandler: networkManager) { [self] transfer in
-            start3DS(confirmUrl: transfer.threeDs?.confirmUrl)
+            start3DS(confirmUrl: transfer.threeDs?.confirmUrl, attempts: 0)
         } error: { [self] error in
             presentAlert(title: "Appear Invoice Error", body: error.description, showGoToMainScreen: true)
         }
     }
 
-    private func start3DS(confirmUrl: String?) {
+    private func start3DS(confirmUrl: String?, attempts: Int ) {
         guard let confirmUrl = confirmUrl else {
-            presentAlert(title: "Appear Invoice Error", body: "confirmUrl == nil", showGoToMainScreen: true)
+            if attempts > 4 {
+                presentAlert(title: "Appear Invoice Error", body: "confirmUrl == nil", showGoToMainScreen: true)
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [self] in
+                    requestTransfer()
+                }
+            }
             return
         }
         let controller = Vepay3DSController()
@@ -97,10 +103,14 @@ extension AppearFlowController {
 
 extension AppearFlowController: Vepay3DSControllerDelegate {
 
-    func sseUpdated(status: VepaySDK.TransactionStatus) -> Bool {
+    func sseUpdated(int: Int8?, string: String?) -> Bool {
+        guard let string = string else {
+            fatalError("int = \(int == nil ? "nil" : "\(int!)") | string = nil)")
+        }
+
         let title: String
         var willStop = true
-        switch status {
+        switch TransactionStatus(status: string) {
         case .failed:
             title = "Failed"
         case .initiated:
@@ -123,7 +133,12 @@ extension AppearFlowController: Vepay3DSControllerDelegate {
             title = "Unknown Status: \(int != nil ? "\(int!)" : string ?? "Empty")"
         }
 
-        presentAlert(title: title, body: "SSE Stoped \(willStop)", showGoToMainScreen: willStop)
+        DispatchQueue.main.async { [self] in
+            transactionStatus.text = "\(title)\nSSE \(willStop ? "Stoped" : "Continue")"
+        }
+        if willStop {
+            presentAlert(title: title, body: "SSE Stoped", showGoToMainScreen: willStop)
+        }
         return willStop
     }
     
@@ -162,6 +177,14 @@ extension AppearFlowController {
         transactionID.font = .subHeading
         paste.titleLabel?.font = .bodyLarge
         start.titleLabel?.font = .subHeading
+
+        navigationController!.view.addSubview(transactionStatus)
+        transactionStatus.layer.zPosition = 100
+        transactionStatus.font = .subHeading
+        transactionStatus.textColor = .coal
+        transactionStatus.topAnchor.constraint(equalTo: navigationController!.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        transactionStatus.trailingAnchor.constraint(equalTo: navigationController!.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
+        setupTapToDismiss()
     }
 
 
@@ -170,8 +193,16 @@ extension AppearFlowController {
     @IBAction private func tapped(button: UIButton) {
         if button == start {
             startPay()
-        } else {
+        } else if button == paste {
             pasteFromClipboard()
+        } else if button.tag == 1 {
+            urlBase.text = ""
+        } else if button.tag == 2 {
+            transactionID.text = ""
+        } else if button.tag == 3 {
+            xUser.text = ""
+        } else if button.tag == 4 {
+            accessToken.text = ""
         }
     }
     
@@ -184,6 +215,7 @@ extension AppearFlowController {
             // Whole URL
             var urlBase = String(string[string.startIndex...separatorRange.lowerBound])
             urlBase = urlBase.replacingOccurrences(of: "/sse/", with: "")
+            urlBase = urlBase.replacingOccurrences(of: "/transactions/", with: "")
             if !urlBase.contains("//") {
                 urlBase = "https://\(urlBase)"
             }

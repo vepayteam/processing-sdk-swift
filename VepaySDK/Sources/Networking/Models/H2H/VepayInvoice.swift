@@ -188,9 +188,9 @@ extension VepayInvoice {
             case statusRequestAwaited
             /// Refunded (6): The invoice has been refunded.
                 case refunded
-            case unknown(status: Int8?, statusString: String?)
+            case unknown(status: Int8?)
 
-            init(status: Int8?) {
+            public init(status: Int8?) {
                 switch status {
                 case .zero:
                     self = .inProgress
@@ -207,13 +207,10 @@ extension VepayInvoice {
                 case 6:
                     self = .refunded
                 default:
-                    self = .unknown(status: status, statusString: nil)
+                    self = .unknown(status: status)
                 }
             }
 
-            init(string: String) {
-                self = .unknown(status: nil, statusString: string)
-            }
         }
     }
 
