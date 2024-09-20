@@ -86,10 +86,10 @@ public final class VepayPaymentController: UIViewController {
     }
 
 
-    private var _expirationDate: (String, String)?
+    private var _expirationDate: VepayExpirationDateField.Day?
     /// This property just reference to VepayPaymentController.cardView.\$0.
     /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
-    public var expirationDate: (String, String)? {
+    public var expirationDate: VepayExpirationDateField.Day? {
         get {
             _expirationDate ?? cardView?.expirationDate
         }
@@ -100,6 +100,9 @@ public final class VepayPaymentController: UIViewController {
                 cardView.expirationDate = newValue
             }
         }
+    }
+    public var expirationDateRow: String {
+        cardView?.expirationDateRow ?? ""
     }
     private var _cvv: String?
     /// This property just reference to VepayPaymentController.cardView.\$0.
@@ -123,12 +126,12 @@ public final class VepayPaymentController: UIViewController {
     /// This property just reference to VepayPaymentController.cardView.\$0.
     /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
     /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
-    public var showExpirtionDate: Bool?
+    public var removeExpirtionDate: Bool?
 
     /// This property just reference to VepayPaymentController.cardView.\$0.
     /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
     /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
-    public var showCVV: Bool?
+    public var removeCVV: Bool?
     /// This property just reference to VepayPaymentController.cardView.\$0.
     /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
     /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
@@ -189,13 +192,13 @@ public extension VepayPaymentController {
             _cvv = nil
         }
 
-        if showExpirtionDate != nil {
-            cardView.showExpirtionDate = showExpirtionDate!
-            showExpirtionDate = nil
+        if removeExpirtionDate != nil {
+            cardView.removeExpirtionDate = removeExpirtionDate!
+            removeExpirtionDate = nil
         }
-        if showCVV != nil {
-            cardView.showCVV = showCVV!
-            showCVV = nil
+        if removeCVV != nil {
+            cardView.removeCVV = removeCVV!
+            removeCVV = nil
         }
         if overrideAddCardViaNFC != nil {
             cardView.overrideAddCardViaNFC = overrideAddCardViaNFC!

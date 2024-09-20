@@ -14,6 +14,8 @@ public final class VepayInvoiceRefund: VepayBaseRequest, VepayRequest {
     /// - Parameters:
     ///   - uuid: ID или UUID счета, ID является устаревшим
     ///   - amount: В копейках
+    /// # URL Creation
+    /// This method creates URL using VepayUtils.h2hURL(endpoint:, isTest). You can override h2h url using VepayUtils
     init(uuid: String, amount: Int, xUser: String, isTest: Bool = false) {
         super.init(method: .post,
                    path: VepayUtils.h2hURL(endpoint: "invoices\(uuid)/payment/refunds", isTest: isTest),

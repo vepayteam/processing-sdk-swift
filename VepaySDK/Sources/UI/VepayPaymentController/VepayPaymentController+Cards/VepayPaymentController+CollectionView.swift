@@ -29,7 +29,7 @@ extension VepayPaymentController: UICollectionViewDelegateFlowLayout {
             cardNumber = card.number
             expirationDate = card.expire
 
-            paymentIcon = card.paymentSystem?.iconColored
+            paymentIcon = card.paymentSystem?.icon
             bankLogo = card.bank?.logo
 //            bankColor = card.bank?.color ?? .coal
         } else if collectionView.cellForItem(at: indexPath)?.isSelected == false {
@@ -46,7 +46,9 @@ extension VepayPaymentController: UICollectionViewDelegateFlowLayout {
         }
 
         cardView.cardNumber = cardNumber
-        cardView.expirationDate = (String(expirationDate.prefix(2)), String(expirationDate.suffix(2)))
+        if expirationDate.count > 3 {
+            cardView.expirationDate = .init(month: Int8(expirationDate.prefix(2))!, year: Int8(expirationDate.suffix(2))!)
+        }
         cardView.cvv = ""
         cardView.paymentMethod?.image = paymentIcon
         cardView.bankLogo?.image = bankLogo

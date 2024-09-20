@@ -136,20 +136,15 @@ extension VepayInvoice {
 
         /// Статус Счёта
         /// # Example: 1
-        /// * 0 - В обработке
-        /// * 1 - Оплачен
-        /// * 2 - Отмена (Ошибка)
-        /// * 3 - Возврат
-        /// * 4 - Ожидается обработка
-        /// * 5 - Ожидается запрос статуса
-        public let id: Int
-        public var readable: ReadableStatus? { .init(rawValue: Int8(id))}
+        /// Вы можете посмотреть статус в ReadableStatus
+        public let id: Int8?
+        public var readable: ReadableStatus? { .init(status: id) }
         /// Название статуса
         /// # Example: Оплачен
-        public let name: String
+        public let name: String?
         /// Банк-эквайер, через который была совершена транзакция
         /// # Example: FortaTech
-        public let bank: String
+        public let bank: String?
         /// Ошибка, если есть
         public let errorInfo: String?
         /// Код ошибки от банка, если есть
@@ -160,9 +155,9 @@ extension VepayInvoice {
 
         public init(from decoder: Decoder) throws {
             let container: KeyedDecodingContainer<VepayInvoice.VepayStatus.CodingKeys> = try decoder.container(keyedBy: VepayInvoice.VepayStatus.CodingKeys.self)
-            id = try container.decode(Int.self, forKey: .id)
-            name = try container.decode(String.self, forKey: .name)
-            bank = try container.decode(String.self, forKey: .bank)
+            id = try container.decodeIfPresent(Int8.self, forKey: .id)
+            name = try container.decodeIfPresent(String.self, forKey: .name)
+            bank = try container.decodeIfPresent(String.self, forKey: .bank)
             errorInfo = try container.decodeIfPresent(String.self, forKey: .errorInfo)
             bankErrorCode = try container.decodeIfPresent(String.self, forKey: .bankErrorCode)
         }
@@ -178,13 +173,44 @@ extension VepayInvoice {
 
         // MARK: - Readable Status
 
-        public enum ReadableStatus: Int8 {
-            case inProgress = 0
-            case paid = 1
-            case canceledDueToError = 2
-            case refund = 3
-            case processing = 4
-            case statusRequestAwaited = 5
+        public enum ReadableStatus {
+            /// Processing (0): The invoice is currently being processed.
+            case inProgress
+            /// Success (1): The invoice has been successfully processed.
+            case paid
+            /// Decline (2): The invoice has been declined.
+            case canceledDueToError
+            /// Reversed (3): The invoice has been reversed.
+            case reversed
+            /// Not Executed (4): The invoice is in an extended processing state.
+            case processing
+            /// Waiting Check (5): The invoice is waiting for a status check.
+            case statusRequestAwaited
+            /// Refunded (6): The invoice has been refunded.
+                case refunded
+            case unknown(status: Int8?)
+
+            public init(status: Int8?) {
+                switch status {
+                case .zero:
+                    self = .inProgress
+                case 1:
+                    self = .paid
+                case 2:
+                    self = .canceledDueToError
+                case 3:
+                    self = .reversed
+                case 4:
+                    self = .processing
+                case 5:
+                    self = .statusRequestAwaited
+                case 6:
+                    self = .refunded
+                default:
+                    self = .unknown(status: status)
+                }
+            }
+
         }
     }
 
