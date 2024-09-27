@@ -1,0 +1,46 @@
+name: browserstack app automate
+description: BrowserStack App Automate Upload
+author: "Vadims I <vivolgin@vepay.online>"
+
+inputs:
+  username:
+    description: BrowserStack Username
+    required: true
+  access_key:
+    description: BrowserStack Access Key
+    required: true
+  path:
+    description: Full path to the APK/IPA/AAB file
+    required: true
+
+outputs:
+  app_url:
+    description: URL to the uploaded APK/IPA/OOB file on BrowserStack App Automate
+    value: ${{ steps.upload.outputs.app_url }}
+
+runs:
+  using: composite
+  steps:
+    - name: Upload To BrowserStack App Automate
+      id: upload
+      shell: bash
+      run: |
+        _resp=$(curl -LSs \
+                    -X POST "https://api-cloud.browserstack.com/app-automate/upload" \
+                    -u '${{ inputs.username }}:${{ inputs.access_key }}' \
+                    -F "file=@${{ inputs.path }}")
+        if jq -e . >/dev/null 2>&1 <<< "$_resp"; then
+          _data=$(jq -r '.app_url' <<< $_resp)
+          echo "app_url=$_data" >> $GITHUB_OUTPUT
+          echo "✅ Successfully uploaded file $(basename ${{ inputs.path }})"
+          echo "🚀 App URL from response: $_data"
+        else
+          echo "❌ Error uploading file: $_resp"
+          exit 1
+        fi
+    - name: Notify BrowserStack App Automate URL
+      uses: ./.gitea/actions/gitea-notify
+      with:
+        context: "BrowserStack App Automate URL"
+        description: "${{ steps.upload.outputs.app_url }}"
+        state: "${{ steps.upload.conclusion }}"

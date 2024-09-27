@@ -100,19 +100,6 @@ platform :ios do
     end
   end
 
-  desc "Upload *.ipa to BrowserStack"
-  lane :uploadToBrowserStack do |lane|
-    isCI
-    ensure_env_vars(env_vars: %w[BROWSERSTACK_USERNAME BROWSERSTACK_ACCESS_KEY IPA_OUTPUT_PATH IPA_OUTPUT_NAME])
-
-    upload_to_browserstack_app_automate(
-      browserstack_username: ENV["BROWSERSTACK_USERNAME"],
-      browserstack_access_key: ENV["BROWSERSTACK_ACCESS_KEY"],
-      file_path: ENV['IPA_OUTPUT_PATH'],
-      custom_id: ENV['IPA_OUTPUT_NAME']
-    )
-  end
-
   private_lane :initPods do
     isCI
 
