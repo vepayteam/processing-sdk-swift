@@ -107,7 +107,7 @@
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="VerifiedByVisa" translatesAutoresizingMaskIntoConstraints="NO" id="WZa-29-jXj">
                                                                 <rect key="frame" x="62" y="0.0" width="36" height="24"/>
                                                             </imageView>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MIR" translatesAutoresizingMaskIntoConstraints="NO" id="AUd-j7-6xh">
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MIRB" translatesAutoresizingMaskIntoConstraints="NO" id="AUd-j7-6xh">
                                                                 <rect key="frame" x="114" y="0.0" width="40" height="24"/>
                                                             </imageView>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PciDSS" translatesAutoresizingMaskIntoConstraints="NO" id="Ldf-ar-nfv">
@@ -180,7 +180,7 @@
     </scenes>
     <resources>
         <image name="CheckboxEmpty" width="24" height="24"/>
-        <image name="MIR" width="40" height="24"/>
+        <image name="MIRB" width="40" height="24"/>
         <image name="MastercardSC" width="46" height="24"/>
         <image name="PciDSS" width="48" height="24"/>
         <image name="VerifiedByVisa" width="36" height="24"/>
