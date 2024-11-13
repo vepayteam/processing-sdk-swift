@@ -52,30 +52,15 @@ extension CustomFlowController: Vepay3DSControllerDelegate {
             fatalError("int = \(int == nil ? "nil" : "\(int!)") | string = nil)")
         }
 
-        let title: String
-        var willStop = true
-        switch AppearFlowController.TransactionStatus(status: string) {
-        case .failed:
-            title = "Failed"
-        case .initiated:
-            title = "Initiated"
+        var willStop = false
+        let status = AppearFlowController.TransactionStatus(status: string)
+        switch status {
+        case .need3DS, .needAction, .done, .failed, .invoiceFailed:
+            willStop = true
+        default:
             willStop = false
-        case .processing:
-            title = "In Progress"
-            willStop = false
-        case .done:
-            title = "Done"
-        case .pending:
-            title = "Pending"
-            willStop = false
-        case .paid:
-            title = "Paid"
-            willStop = false
-        case .invoiceFailed:
-            title = "Invoice Failed"
-        case .unknown(let int, let string):
-            title = "Unknown Status: \(int != nil ? "\(int!)" : string ?? "Empty")"
         }
+        let title = status.title
 
         presentAlert(title: title, body: "SSE Stoped \(willStop)", showGoToMainScreen: willStop)
         return willStop

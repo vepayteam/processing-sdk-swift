@@ -43,7 +43,7 @@ extension PayController {
         payment.expirationDate = .init(month: 11, year: 25)
         payment.cardNumber = "4917610000000000"
         payment.cvv = "333"
-        payment.cardViewPreloadConfiguration = .init(removeExpirtionDate: true, removeCVV: true, overrideAddCardViaNFC: nil, overrideAddCardViaCamera: nil, hideAddCardViaNFC: nil, hideAddCardViaCamera: nil)
+//        payment.cardViewPreloadConfiguration = .init(removeExpirtionDate: true, removeCVV: true, overrideAddCardViaNFC: true, overrideAddCardViaCamera: true, hideAddCardViaNFC: true, hideAddCardViaCamera: true)
     }
 
     override func viewDidLoad() {
