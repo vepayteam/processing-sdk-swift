@@ -30,7 +30,7 @@ public final class VepayCardNumberField: UIView {
     }
 
     /// Must contain 16 or more X
-    public var cardMask: String = "XXXX XXXX XXXX XXXX XXXX" {
+    public var cardMask: String = "XXXX XXXX XXXX XXXX XXX" {
         didSet {
             formatField(textField: field)
         }
@@ -53,13 +53,15 @@ public final class VepayCardNumberField: UIView {
         }
     }
 
-    public var identifier = VepayCreditCardIdentifier()
+    /// if False, paymentServiceIdentifier will not called when card changed. You can use this property to fully customize card identification proccess flow
+    public var usePaymentServiceIndetificationFlow = true
+    /// You can use this property to identify input card. You can create your identification flow based on provided value, or you can fully override identification flow using usePaymentServiceIndetificationFlow. Default VepayBasicCreditCardIdentifier()
+    public var paymentServiceIdentifier: VepayCardIdentifier? = VepayBasicCreditCardIdentifier()
 
-    public var paymentService: VepayPaymentService? {
+    /// Identified payment service (will show in ui)
+    public var paymentService: (any VepayCardPaymentServiceRepresentable)? {
         didSet {
-            if oldValue != paymentService {
-                delegate?.cardIdentificationChanged(field: self, service: paymentService)
-            }
+            delegate?.cardIdentificationChanged(field: self, service: paymentService)
         }
     }
 
@@ -167,9 +169,7 @@ extension VepayCardNumberField {
         }
 
         textField.text = result
-        if inputText != result {
-            delegate?.cardChanged(field: self, number: result)
-        }
+        delegate?.cardChanged(field: self, number: result)
 
         DispatchQueue.main.async {
             if let targetPosition = textField.position(from: textField.beginningOfDocument, offset: targetCursorPosition) {
@@ -177,30 +177,19 @@ extension VepayCardNumberField {
             }
         }
 
-        validateCard()
+        if usePaymentServiceIndetificationFlow {
+            paymentServiceIdentifier!.identifyAndValidate(card: cardMasked) { [weak self] service, isReady in
+                self?.paymentService = service
+                self?.cardReady = isReady
+            }
+        }
 
-        let progress = min(CGFloat(numbers.count) / CGFloat(paymentService?.validNumberLength.lowerBound ?? 13), 1)
+        let progress = min(CGFloat(numbers.count) / CGFloat(paymentService?.validNumberLength?.lowerBound ?? 13), 1)
         self.progress = cardReady ? progress : progress - 0.1
     }
 
 }
 
-// MARK: - Card Validation
-
-private extension VepayCardNumberField {
-    
-    private func validateCard() {
-        if card.count > 5 {
-            let (service, ready) = identifier.identifyAndValidate(card: cardMasked)
-            paymentService = service
-            cardReady = ready
-        } else {
-            paymentService = nil
-            cardReady = false
-        }
-    }
-
-}
 
 
 // MARK: - Setup
@@ -240,7 +229,7 @@ public protocol VepayCardNumberFieldDelegate {
     /// - Parameter number: Masked
     func cardChanged(field: VepayCardNumberField, number: String)
 
-    func cardIdentificationChanged(field: VepayCardNumberField, service: VepayPaymentService?)
+    func cardIdentificationChanged(field: VepayCardNumberField, service: (any VepayCardPaymentServiceRepresentable)?)
 
     func cardReadinessChanged(field: VepayCardNumberField, isReady: Bool)
     func cardProgressChanged(field: VepayCardNumberField, progress: CGFloat)

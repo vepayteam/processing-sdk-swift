@@ -40,11 +40,13 @@ public protocol Vepay3DSEventSourceOverrideHandler: NSObject {
 }
 
 public extension Vepay3DSEventSourceOverrideHandler {
+
     func onOpened() { }
     func onClosed() -> Bool { true }
     func onMessage(eventType: String, messageEvent: MessageEvent) -> Bool { true }
     func onComment(comment: String) { }
     func onError(error: any Error) -> Bool { true }
+
 }
 
 // MARK: - Vepay3DSControllerDelegate
@@ -57,4 +59,5 @@ public protocol Vepay3DSControllerDelegate: NSObject {
     /// About default behavior you can read in Vepay3DSController description
     func sseUpdated(int: Int8?, string: String?) -> Bool
     func sseClosed()
+
 }

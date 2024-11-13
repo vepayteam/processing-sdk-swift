@@ -1,3 +1,4 @@
+
 # ``VepaySDK``
 
 Библиотека позволяющая проводить трансграничные переводы, основываясь на технологиях Vepay
@@ -7,31 +8,132 @@
 
 ## Начало работы
 
+### Демо
 
-### Авторизация
+Вы можете попробовать библиотеку запустив запустив VepaySDKExample target
+В нём у вас будет будет возможность выбрать между несколькими вариантами работы, так же вы можете создать и затестить ваш флоу во вкладке Custom
 
-Для авторизации в системе Vepay, вам понадобиться X-User
-<br />По вопросу с получением, вы можете обратиться к секции [Как получить X-User](#X-User)
+Для начала работы с библиотекой вам понадобиться **X-User**
+Для большей информации вы можете обратиться к пункту [Как получить X-User](#X-User)
 
 
 ### Подключение
 
-Вы можете подключить SDK через клонирование [Git Repository](#https://github.com/vepayteam/processing-sdk-swift) или CocoaPods
+Варианты подключения:
 
-Подключение через CocoaPods:
+#### CocoaPods:
+
 > pod 'VepaySDK'
 
-или
-
-> pod 'VepaySDK', :git => 'https://github.com/vepayteam/processing-sdk-swift'
+##### Либо вы можете скопировать папку VepaySDK в ваш проект
 
 
-### Example
+## Главные объекты
 
-Для того чтобы попробовать демо, вам нужно в CreateController файле, установить xUser, на ваш [X-User](#X-User)
+
+### VepayPaymentController
+
+UIViewController который показывает экран оплаты
+
+Работа с ним предполагается как SubView для вашего главного экрана
+
+Пример взаимодействия с ним, вы можете посмотреть в демо [PayController](#https://github.com/vepayteam/processing-sdk-swift/blob/main/VepaySDKExample/Main/PayController.swift)
+
+#### В нём есть [CardView](#CardView)
+
+Он загружается из Xib файла, что происходит после инициализации VepayPaymentController'a, поэтому для взаимодействия с ним вы можете использовать cardViewPreloadConfiguration в VepayPaymentController
+
+#### Встроенный менеджмент карт
+
+На данный момент находиться в работе
+> Вы можете отключить галочку сохранения поставив hideRemberCard = true
+
+#### Показ ошибок
+
+Для показа ошибок вы можете использовать showError(message:, durationToDisappear:)
+Либо вы можете добавить ваш UI в bottomStackView
+
+### <a name="Vepay3DSController"></a>Vepay3DSController
+
+### <a name="Vepay3DSController"></a>[Vepay3DSController](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/UI/Vepay3DSController/Vepay3DSController.swift#L10C1-L19C2)
+
+UIViewController для упрощения работы с 3DS & SSE
+Вы можете использовать delegate, для отслеживания прогресса ссе
+
+> Для работы с котроллером, предполгается использование его как childController
+> <br />[пример работы с Vepay3DSController](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDKExample/PayController.swift#L96C5-L129C6)
+
+Цикл работы c контроллером:
+1. Инициализация Vepay3DSController()
+2. Настроить [SSE](#SSE), если хотите можете использовать [встроенный SSE](#Работа с SSE)
+3. [настроить показ 3DS](#Показ 3DS)
+
+Так же вы можете использовать методы start, которые вернут вам настроенный контроллер
+Их вы можете посмотреть в [Vepay3DSController+Start](#https://github.com/vepayteam/processing-sdk-swift/blob/main/VepaySDK/Sources/UI/Vepay3DSController/Vepay3DSController%2bStart.swift)
+
+### <a name="CardView"></a>CardView
+
+Вы можете использовать delegate, для отслежки прогресса и идентификации карты
+
+UIView в котором 3 TextField'a:
+- cardNumberField:
+  - cardNumber
+  - cardMasked
+  - usePaymentServiceIndetificationFlow
+  - paymentServiceIdentifier
+  - paymentService
+ 
+CardNumberField Переменные конфигурации:
+- validateMinDay. False если не надо валидировать minDay
+- minDay & maxDay. Дни для проверки
+
+- expirationDateField
+  - removeExpirtionDate
+  - expirationDate
+  - expirationDateRow
+  - expirationDateMasked
+- cvvField
+  - removeCVV
+  - cvv
+  - Чтобы настроить длину CVV кода: cvvField.cvvMinCount || cvvMaxCount
+
+Для отслеживания прогресса вписания вы можете использовать totalProgress & ready
+
+
+#### NFC & Camera чтобы вписать карту
+
+На данный момент находиться в работе
+
+Чтобы убрать скрыть
+hideAddCardViaNFC
+hideAddCardViaCamera
+
+Чтобы хендлить самому
+overrideAddCardViaNFC
+overrideAddCardViaCamera
+
+
+### <a name="EventSource"></a>EventSource
 
 
 ## Запросы
+
+Есть 2 удобных способа выполнения запроса:
+- Через метод класса [VepayBaseRequest](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/Networking/SupportingFiles/VepayBaseRequest.swift#L11)
+
+[func request(
+    sessionHandler: VepaySessionHandler,
+    completion: @escaping @Sendable (Data?, URLResponse?, Error?) -> Void)](#)
+
+- Каждый запрос в SDK соответсвует протоколу [VepayRequest](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/Networking/SupportingFiles/VepayRequestBasis.swift#L11C1-L13C2), в котором есть приятный метод
+
+[request(
+    sessionHandler: VepaySessionHandler,
+    success: @escaping (ResponseType) -> Void,
+    error: @escaping (VepayError) -> Void)](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/Networking/SupportingFiles/VepayRequestBasis.swift#L18C5-L22C6)
+
+Вы можете оверрайднуть параметр [sessionHandler: VepaySessionHandler](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/Networking/SupportingFiles/VepayRequestHandler.swift#L13C1-L21C2)
+<br /> по дефолту используется [VepayDefaultSessionHandler](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/Networking/SupportingFiles/VepayRequestHandler.swift#L27), который является Singleton'ом
 
 
 ### Последоватольность
@@ -118,40 +220,6 @@
 ## Handy Trick
 
 
-### Requests
-
-Есть 2 удобных способа выполнения запроса:
-- Через метод класса [VepayBaseRequest](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/Networking/SupportingFiles/VepayBaseRequest.swift#L11)
-
-[func request(
-    sessionHandler: VepaySessionHandler,
-    completion: @escaping @Sendable (Data?, URLResponse?, Error?) -> Void)](#)
-
-- Каждый запрос в SDK соответсвует протоколу [VepayRequest](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/Networking/SupportingFiles/VepayRequestBasis.swift#L11C1-L13C2), в котором есть приятный метод
-
-[request(
-    sessionHandler: VepaySessionHandler,
-    success: @escaping (ResponseType) -> Void,
-    error: @escaping (VepayError) -> Void)](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/Networking/SupportingFiles/VepayRequestBasis.swift#L18C5-L22C6)
-
-Так же вы можете оверрайднуть параметр [sessionHandler: VepaySessionHandler](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/Networking/SupportingFiles/VepayRequestHandler.swift#L13C1-L21C2)
-<br /> по дефолту используется [VepayDefaultSessionHandler](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/Networking/SupportingFiles/VepayRequestHandler.swift#L27), который является Singleton'ом 
-
-
-### <a name="Vepay3DSController"></a>[Vepay3DSController](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/UI/Vepay3DSController/Vepay3DSController.swift#L10C1-L19C2)
-Это UIViewController с UIWebView во весь bounds
-
-> Для работы с котроллером, предполгается использование его как childController
-> <br />[пример работы с Vepay3DSController](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDKExample/PayController.swift#L96C5-L129C6)
-
-Цикл работы c контроллером:
-1. Инициализация Vepay3DSController()
-2. Настроить [SSE](#SSE), если хотите можете использовать [встроенный SSE](#Работа с SSE)
-3. [настроить показ 3DS](#Показ 3DS)
-
-Так же вы можете вызвать [start](#Start Vepay3DSController), который выполнит 3DS и вернёт настроенный контроллер
-
-
 #### <a name="Start Vepay3DSController"></a>Start
 
 Есть 2 вида старта:
@@ -179,54 +247,6 @@
 > Вы можете посмотреть пример показа, в методе [start](#https://github.com/vepayteam/processing-sdk-swift/blob/b4dc9bb89211e33d6efa899e2ecaae5b8d941c40/VepaySDK/Sources/UI/Vepay3DSController/Vepay3DSController.swift#L85C5-L119C6)
 
 
-### VepayPaymentController
-
-Вы можете переключиться между прогрессивной анимацией и стандартной, присвоив переменной
-dataEntryProgresssionAnimation, по дефолту анимация отключена
-
-> Вы можете получить все значения карты (number, date, cvv) через соответсвующие методы, например getCardNumber(unmasked: Bool) -> Strin
-> 
-> Либо если карта пользователя уже зарегистрирована в системе, вы можете получить настроенную карту, через свойство selectedCard
-
-
-#### Работа со всем UI, включая VepayPaymentController, предполагается как:
-
-
-###### Получение контроллера из бандла
-<br />let payment = VepayPaymentController.loadFromXib()
-
-###### Нужно обязательно вызвать экран!
-<br />_ = payment.view
-
-###### Добавить экран как Child Controller
-<br />addChild(payment)
-<br />view.addSubview(payment.view)
-
-###### Настройка расположения экрана
-<br />payment.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-<br />payment.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-<br />payment.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-<br />payment.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-
-###### Уведомление VepayPaymentController о том что он усыновлён
-<br />payment.didMove(toParent: self)
-
-> Весь UI контроллера находиться в UIScrollView (public scrollView), что позволяет использовать этот экран на всех размерах экранов
-
-
-###### <a name="VepayPaymentControllerDelegate"></a>VepayPaymentControllerDelegate
-
-У VepayPaymentController есть свойство delegate
-
-В протоколе 4 метода,
-
-Главный метод - сообщает когда контроллер готов к оплате
-<br />func paymentController(isReadyToPay: Bool)
-
-Так же вы можете узнать готовность заполняемый данных через методы:
-<br />func cardNumberReadinessChanged(to float: Float)
-<br />func expirationReadinessChanged(to float: Float)
-<br />func cvvReadinessChanged(to float: Float)
 
 ## Запланированные улучшения
 
@@ -237,20 +257,12 @@ dataEntryProgresssionAnimation, по дефолту анимация отклю�
 ### (Скоро) Можно будет отсканировать карту используя камеру
 
 
-### (Скоро) Улучшение кастомизирования UI
-
-
-### (Предполагается) SSE вынеситься в отдельню библиотеку, чтобы можно было использовать её как stand-alone library
-
-
 ### (Сейчас ресёрчиться) Возможность отсканировать карту через NFC
 
 
+## <a name="X-User"></a>Как получить X-User
 
-
-## <a name="User"></a>Как получить X-User
-
-X-User вставляется в header HTTP запроса и является методом авторизации в системе Vepay
+X-User используется в header HTTP запроса и является методом авторизации в системе Vepay
 
 
 ### Для новых клиентов
@@ -265,4 +277,4 @@ X-User вставляется в header HTTP запроса и является 
 
 ### Для клиетов уже работающих с нами
 
-Вы можете обратиться к менеджеру, для получения X-User 
+Вы можете обратиться к менеджеру, для получения X-User
