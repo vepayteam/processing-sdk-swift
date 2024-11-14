@@ -36,7 +36,8 @@ jobs:
       - name: Push to GitHub
         uses: ad-m/github-push-action@master
         with:
-          repository: "https://github.com/vepayteam/processing-sdk-swift.git"
+          repository: vepayteam/processing-sdk-swift
+          github_url: "https://github.com"
           github_token: ${{ secrets.PAT_TOKEN }}
           branch: main
           force: true

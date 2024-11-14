@@ -26,6 +26,8 @@ final class AppearFlowController: UIViewController {
     private let transactionStatus = UILabel()
     let defaultURL = "https://api.appeer.ru"
 
+    private var sseController: Vepay3DSController?
+
     var invoice: Invoice!
 
 }
@@ -58,7 +60,9 @@ extension AppearFlowController {
 
         AppearCreateInvoice(urlBase: urlBase, xUser: xUser, accessToken: accessToken, body: body).request(sessionHandler: networkManager) { [self] invoice in
             self.invoice = invoice
-            requestTransfer()
+            DispatchQueue.main.async { [self] in
+                requestTransfer()
+            }
         } error: { [self] error in
             presentAlert(title: "Appear Invoice Error", body: error.description, showGoToMainScreen: true)
         }
@@ -70,13 +74,26 @@ extension AppearFlowController {
         let transactionID = transactionID.text!
         let accessToken = accessToken.text!
         AppearGetTransfer(urlBase: urlBase, transactionId: transactionID, accessToken: accessToken).request(sessionHandler: networkManager) { [self] transfer in
-            start3DS(confirmUrl: transfer.threeDs?.confirmUrl, attempts: 0)
+            DispatchQueue.main.async { [self] in
+                switch transfer.status {
+                case .need3DS:
+                    start3DS(confirmUrl: transfer.threeDs?.confirmUrl, attempts: 0)
+                case .done, .failed, .invoiceFailed:
+                    presentAlert(title: "Final Status", body: transfer.status.title, showGoToMainScreen: true)
+                case .unknown:
+                    presentAlert(title: "Unknown Status", body: transfer.status.title, showGoToMainScreen: true)
+                default:
+                    sseController = create3DSController(confirmUrl: nil)
+                }
+            }
         } error: { [self] error in
-            presentAlert(title: "Appear Invoice Error", body: error.description, showGoToMainScreen: true)
+            DispatchQueue.main.async { [self] in
+                presentAlert(title: "Appear Invoice Error", body: error.description, showGoToMainScreen: true)
+            }
         }
     }
 
-    private func start3DS(confirmUrl: String?, attempts: Int ) {
+    private func start3DS(confirmUrl: String?, attempts: Int) {
         guard let confirmUrl = confirmUrl else {
             if attempts > 4 {
                 presentAlert(title: "Appear Invoice Error", body: "confirmUrl == nil", showGoToMainScreen: true)
@@ -87,13 +104,20 @@ extension AppearFlowController {
             }
             return
         }
+        
+        let threeDSController = create3DSController(confirmUrl: confirmUrl)
+        navigationController?.pushViewController(threeDSController, animated: true)
+    }
+    
+    /// - Parameter confirmUrl: if not nil will show 3ds. If nill with not show 3ds
+    private func create3DSController(confirmUrl: String?) -> Vepay3DSController {
         let controller = Vepay3DSController()
-        controller.show3DS(url: URL(string: confirmUrl)!)
-
         controller.delegate = self
-        let url = URL(string: "\(self.urlBase.text!)/sse/\(transactionID.text!)")!
-        controller.startSSE(url: url)
-        navigationController?.pushViewController(controller, animated: true)
+        controller.startSSE(url: URL(string: "\(self.urlBase.text!)/sse/\(transactionID.text!)")!)
+        if let confirmUrl = confirmUrl {
+            controller.show3DS(url: URL(string: confirmUrl)!)
+        }
+        return controller
     }
 
 }
@@ -107,31 +131,16 @@ extension AppearFlowController: Vepay3DSControllerDelegate {
         guard let string = string else {
             fatalError("int = \(int == nil ? "nil" : "\(int!)") | string = nil)")
         }
-
-        let title: String
-        var willStop = true
-        switch TransactionStatus(status: string) {
-        case .failed:
-            title = "Failed"
-        case .initiated:
-            title = "Initiated"
+        let willStop: Bool
+        
+        let status = TransactionStatus(status: string)
+        switch status {
+        case .need3DS, .needAction, .done, .failed, .invoiceFailed:
+            willStop = true
+        default:
             willStop = false
-        case .processing:
-            title = "In Progress"
-            willStop = false
-        case .done:
-            title = "Done"
-        case .pending:
-            title = "Pending"
-            willStop = false
-        case .paid:
-            title = "Paid"
-            willStop = false
-        case .invoiceFailed:
-            title = "Invoice Failed"
-        case .unknown(let int, let string):
-            title = "Unknown Status: \(int != nil ? "\(int!)" : string ?? "Empty")"
         }
+        let title = status.title
 
         DispatchQueue.main.async { [self] in
             transactionStatus.text = "\(title)\nSSE \(willStop ? "Stoped" : "Continue")"
@@ -143,7 +152,9 @@ extension AppearFlowController: Vepay3DSControllerDelegate {
     }
     
     func sseClosed() {
-        presentAlert(title: "SSE Closed", body: nil, showGoToMainScreen: true)
+        DispatchQueue.main.async { [self] in
+            requestTransfer()
+        }
     }
 
     private func presentAlert(title: String, body: String?, showGoToMainScreen: Bool) {

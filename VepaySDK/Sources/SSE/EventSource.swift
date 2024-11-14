@@ -11,6 +11,7 @@ import os.log
 #endif
 
 /**
+ Original library https://github.com/launchdarkly/swift-eventsource
  Provides an EventSource client for consuming Server-Sent Events.
 
  See the [Server-Sent Events spec](https://html.spec.whatwg.org/multipage/server-sent-events.html) for more details.
@@ -58,26 +59,24 @@ public class EventSource {
         /// Optional HTTP body to be included in the API request.
         public var body: Data?
         /// Additional HTTP headers to be set on the request
-        public var headers: [String: String] = [:]
+        public var additionalHeaders: [String: String] = [:]
         /// Transform function to allow dynamically configuring the headers on each API request.
         public var headerTransform: HeaderTransform = { $0 }
         /// An initial value for the last-event-id header to be sent on the initial request
         public var lastEventId: String = ""
         
-#if canImport(os)
+        #if canImport(os)
         /// Configure the logger that will be used.
         public var logger: OSLog = OSLog(subsystem: "com.launchdarkly.swift-eventsource", category: "LDEventSource")
-#endif
+        #endif
         
-        /// The minimum amount of time to wait before reconnecting after a failure
-        public var reconnectTime: TimeInterval = 1.0
-        /// The maximum amount of time to wait before reconnecting after a failure
-        public var maxReconnectTime: TimeInterval = 30.0
+        /// Time to wait before reconnecting after a failure. Nill if not reconnect (default)
+        public var reconnectTime: TimeInterval? = nil
         /// The minimum amount of time for an `EventSource` connection to remain open before allowing the connection
         /// backoff to reset.
         public var backoffResetThreshold: TimeInterval = 60.0
-        /// The maximum amount of time between receiving any data before considering the connection to have timed out.
-        public var idleTimeout: TimeInterval = 300.0
+        /// The maximum amount of time between receiving any data before considering the connection to have timed out. Default 120
+        public var idleTimeout: TimeInterval = 120.0
 
         private var _urlSessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default
         /**
@@ -95,7 +94,10 @@ public class EventSource {
             get {
                 // swiftlint:disable:next force_cast
                 let sessionConfig = _urlSessionConfiguration.copy() as! URLSessionConfiguration
-                sessionConfig.httpAdditionalHeaders = ["Content-Type": "text/event-stream", "Cache-Control": "no-cache"]
+                var header = sessionConfig.httpAdditionalHeaders ?? [:]
+                header["Content-Type"] = "text/event-stream"
+                header["Cache-Control"] = "no-cache"
+                sessionConfig.httpAdditionalHeaders = header
                 sessionConfig.timeoutIntervalForRequest = idleTimeout
 
                 #if !os(Linux) && !os(Windows)
@@ -177,7 +179,6 @@ class EventSourceDelegate: NSObject, URLSessionDataDelegate {
 
     private let utf8LineParser: UTF8LineParser = UTF8LineParser()
     private let eventParser: EventParser
-    private let reconnectionTimer: ReconnectionTimer
     private var urlSession: URLSession?
     private var sessionTask: URLSessionDataTask?
 
@@ -194,8 +195,6 @@ class EventSourceDelegate: NSObject, URLSessionDataDelegate {
         self.eventParser = EventParser(handler: config.handler,
                                        initialEventId: config.lastEventId,
                                        initialRetry: config.reconnectTime)
-        self.reconnectionTimer = ReconnectionTimer(maxDelay: config.maxReconnectTime,
-                                                   resetInterval: config.backoffResetThreshold)
     }
 
     func start() {
@@ -244,7 +243,7 @@ class EventSourceDelegate: NSObject, URLSessionDataDelegate {
             urlRequest.setValue(eventParser.getLastEventId(), forHTTPHeaderField: "Last-Event-Id")
         }
         urlRequest.allHTTPHeaderFields = self.config.headerTransform(
-            urlRequest.allHTTPHeaderFields?.merging(self.config.headers) { $1 } ?? self.config.headers
+            urlRequest.allHTTPHeaderFields?.merging(self.config.additionalHeaders) { $1 } ?? self.config.additionalHeaders
         )
         return urlRequest
     }
@@ -271,7 +270,7 @@ class EventSourceDelegate: NSObject, URLSessionDataDelegate {
                            task: URLSessionTask,
                            didCompleteWithError error: Error?) {
         utf8LineParser.closeAndReset()
-        let currentRetry = eventParser.reset()
+        eventParser.reset()
 
         guard readyState != .shutdown
         else { return }
@@ -297,12 +296,6 @@ class EventSourceDelegate: NSObject, URLSessionDataDelegate {
         }
 
         readyState = .closed
-        let sleep = reconnectionTimer.reconnectDelay(baseDelay: currentRetry)
-        // this formatting shenanigans is to workaround String not implementing CVarArg on Swift<5.4 on Linux
-        logger.log(.info, "Waiting %@ seconds before reconnecting...", String(format: "%.3f", sleep))
-        delegateQueue.asyncAfter(deadline: .now() + sleep) { [weak self] in
-            self?.connect()
-        }
     }
 
     // Tells the delegate that the data task received the initial reply (headers) from the server.
@@ -322,7 +315,6 @@ class EventSourceDelegate: NSObject, URLSessionDataDelegate {
         let httpResponse = response as! HTTPURLResponse
         let statusCode = httpResponse.statusCode
         if (200..<300).contains(statusCode) && statusCode != 204 {
-            reconnectionTimer.connectedTime = Date()
             readyState = .open
             config.handler.onOpened()
             completionHandler(.allow)
@@ -340,4 +332,5 @@ class EventSourceDelegate: NSObject, URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         utf8LineParser.append(data).forEach(eventParser.parse)
     }
+
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23089" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23077"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -101,16 +101,16 @@
                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="ia6-nq-60I" userLabel="Pay Methods">
                                                         <rect key="frame" x="0.0" y="48" width="218" height="24"/>
                                                         <subviews>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MastercardSCB" translatesAutoresizingMaskIntoConstraints="NO" id="V2V-al-bQU">
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MastercardSC" translatesAutoresizingMaskIntoConstraints="NO" id="V2V-al-bQU">
                                                                 <rect key="frame" x="0.0" y="0.0" width="46" height="24"/>
                                                             </imageView>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="VerifiedVisaB" translatesAutoresizingMaskIntoConstraints="NO" id="WZa-29-jXj">
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="VerifiedByVisa" translatesAutoresizingMaskIntoConstraints="NO" id="WZa-29-jXj">
                                                                 <rect key="frame" x="62" y="0.0" width="36" height="24"/>
                                                             </imageView>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MIRB" translatesAutoresizingMaskIntoConstraints="NO" id="AUd-j7-6xh">
                                                                 <rect key="frame" x="114" y="0.0" width="40" height="24"/>
                                                             </imageView>
-                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PciDSSB" translatesAutoresizingMaskIntoConstraints="NO" id="Ldf-ar-nfv">
+                                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="PciDSS" translatesAutoresizingMaskIntoConstraints="NO" id="Ldf-ar-nfv">
                                                                 <rect key="frame" x="170" y="0.0" width="48" height="24"/>
                                                             </imageView>
                                                         </subviews>
@@ -165,6 +165,7 @@
                     <connections>
                         <outlet property="arrowToCard" destination="Nlk-9m-tgi" id="fOQ-am-cDn"/>
                         <outlet property="arrowToCardCenter" destination="zc3-LT-rpH" id="ovr-WM-DuJ"/>
+                        <outlet property="bottomStackView" destination="ABQ-Hm-I86" id="u2K-4X-Yug"/>
                         <outlet property="cardSelector" destination="mRE-wX-RTM" id="wrX-dT-j1q"/>
                         <outlet property="cardView" destination="dUu-2c-MIv" id="tmd-I0-hgo"/>
                         <outlet property="remeberCardHolder" destination="ti6-h3-CGl" id="y1h-Aw-Itm"/>
@@ -180,9 +181,9 @@
     <resources>
         <image name="CheckboxEmpty" width="24" height="24"/>
         <image name="MIRB" width="40" height="24"/>
-        <image name="MastercardSCB" width="46" height="24"/>
-        <image name="PciDSSB" width="48" height="24"/>
-        <image name="VerifiedVisaB" width="36" height="24"/>
+        <image name="MastercardSC" width="46" height="24"/>
+        <image name="PciDSS" width="48" height="24"/>
+        <image name="VerifiedByVisa" width="36" height="24"/>
         <image name="cardTopArrow" width="56" height="18"/>
         <namedColor name="Coal">
             <color red="0.13300000131130219" green="0.13300000131130219" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -7,9 +7,12 @@
 
 import UIKit.UIImage
 
+public protocol VepayCardIdentifier {
+    func identifyAndValidate(card: String, completion: @escaping (VepayPaymentService?, Bool) -> ())
+}
 /// Based on
 /// https://github.com/vitkuzmenko/CreditCardValidator/blob/master/Sources/CreditCardValidator/CreditCardValidator.swift
-public struct VepayCreditCardIdentifier {
+public struct VepayBasicCreditCardIdentifier: VepayCardIdentifier {
 
     /// Available credit card types
     private let services: [VepayPaymentService]
@@ -20,10 +23,10 @@ public struct VepayCreditCardIdentifier {
 
     // MARK: - Identify & Validate
 
-    public func identifyAndValidate(card: String) -> (VepayPaymentService?, Bool) {
+    public func identifyAndValidate(card: String, completion: @escaping (VepayPaymentService?, Bool) -> ()) {
         let card = card.numbersOnly()
         let type = identify(card: card)
-        return (type, validate(card: card, type: type))
+        completion(type, validate(card: card, type: type))
     }
 
 
@@ -46,8 +49,8 @@ public struct VepayCreditCardIdentifier {
     /// Only digits.
     /// If type is nill just checks card count > 13
     public func validate(card: String, type: VepayPaymentService?) -> Bool {
-        let isValidLength = type?.validNumberLength.contains(card.count) ?? (card.count > 13)
-        let luhnAlgorithm = type?.usesLuhnAlgorithm ?? false ? luhnAlgorithm(card) : true
+        let isValidLength = type?.validNumberLength?.contains(card.count) ?? (card.count > 13)
+        let luhnAlgorithm = type?.usesLuhnAlgorithm ?? false ? Self.luhnAlgorithm(card) : true
         return isValidLength && luhnAlgorithm
     }
     
@@ -56,7 +59,7 @@ public struct VepayCreditCardIdentifier {
     /// Card Validation
     /// Only digits
     /// https://gist.github.com/Edudjr/1f90b75b13017b5b0aec2be57187d119
-    public func luhnAlgorithm(_ number: String) -> Bool {
+    static public func luhnAlgorithm(_ number: String) -> Bool {
         var sum = 0
         let digitStrings = number.reversed().map { String($0) }
         
@@ -84,38 +87,61 @@ public struct VepayCreditCardIdentifier {
 
 // MARK: - VepayPaymentService
 
-public class VepayPaymentService: Hashable {
+public protocol VepayCardPaymentServiceRepresentable: Equatable {
+    var name: String? { get }
+    var bankLogo: UIImage? { get }
+    var paymentServiceLogo: UIImage? { get }
+    var validateMinDate: Bool? { get }
+    var maxCVV: Int? { get }
+    var usesLuhnAlgorithm: Bool? { get }
+    var validNumberLength: ClosedRange<Int>? { get }
+}
+
+public extension VepayCardPaymentServiceRepresentable {
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.name == rhs.name
+    }
+
+}
+
+// MARK: - VepayPaymentService
+
+public class VepayPaymentService: Hashable, VepayCardPaymentServiceRepresentable {
 
     public init(name: String,
-                icon: UIImage,
+                bankLogo: UIImage? = nil,
+                paymentServiceLogo: UIImage,
                 regex: String,
-                validateDate: Bool = false,
+                validateMinDate: Bool = false,
                 maxCVV: Int = 3,
                 usesLuhnAlgorithm: Bool = true,
                 validNumberLength: ClosedRange<Int> = 16...16) {
         self.name = name
-        self.icon = icon
+        self.bankLogo = bankLogo
+        self.paymentServiceLogo = paymentServiceLogo
 
         self.regex = regex
 
-        self.validateDate = validateDate
+        self.validateMinDate = validateMinDate
         self.maxCVV = maxCVV
 
         self.usesLuhnAlgorithm = usesLuhnAlgorithm
         self.validNumberLength = validNumberLength
     }
-    
 
-    public let name: String
-    public let icon: UIImage
+    public var bankLogo: UIImage?
+    public var paymentServiceLogo: UIImage?
+
+    public let name: String?
 
     public let regex: String
 
-    public let validateDate: Bool
-    public let maxCVV: Int
+    public let validateMinDate: Bool?
+    public let maxCVV: Int?
 
-    public let usesLuhnAlgorithm: Bool
-    public let validNumberLength: ClosedRange<Int>
+    public let usesLuhnAlgorithm: Bool?
+    public let validNumberLength: ClosedRange<Int>?
     /// Card date must be greater or equal to current date
 
     public class var allHardcodedServices: [VepayPaymentService] {
@@ -123,27 +149,27 @@ public class VepayPaymentService: Hashable {
     }
 
     public class var mir: VepayPaymentService {
-        .init(name: "Мир", icon: UIImage(named: "MIR", in: .vepaySDK, compatibleWith: nil)!, regex: "^2[0-9]{6,}$", validateDate: true, validNumberLength: 16...19)
+        .init(name: "Мир", paymentServiceLogo: UIImage(named: "MIR", in: .vepaySDK, compatibleWith: nil)!, regex: "^2[0-9]{6,}$", validateMinDate: false, validNumberLength: 16...19)
     }
 
     public class var masterCard: VepayPaymentService {
-        .init(name: "Master Card", icon: UIImage(named: "Mastercard", in: .vepaySDK, compatibleWith: nil)!, regex: "^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$")
+        .init(name: "Master Card", paymentServiceLogo: UIImage(named: "Mastercard", in: .vepaySDK, compatibleWith: nil)!, regex: "^(?:5[1-5][0-9]{2}|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)[0-9]{12}$")
     }
 
     public class var visa: VepayPaymentService {
-        .init(name: "Visa", icon: UIImage(named: "Visa", in: .vepaySDK, compatibleWith: nil)!, regex: "^4[0-9]{6,}$", validNumberLength: 13...16)
+        .init(name: "Visa", paymentServiceLogo: UIImage(named: "Visa", in: .vepaySDK, compatibleWith: nil)!, regex: "^4[0-9]{6,}$", validNumberLength: 13...16)
     }
 
     public class var americanExpress: VepayPaymentService {
-        .init(name: "American Express", icon: UIImage(named: "AmericanExpress", in: .vepaySDK, compatibleWith: nil)!, regex: "^3[47][0-9]{5,}$", maxCVV: 4, validNumberLength: 15...15)
+        .init(name: "American Express", paymentServiceLogo: UIImage(named: "AmericanExpress", in: .vepaySDK, compatibleWith: nil)!, regex: "^3[47][0-9]{5,}$", maxCVV: 4, validNumberLength: 15...15)
     }
 
     public class var unionPay: VepayPaymentService {
-        .init(name: "Union Pay", icon: UIImage(named: "UnionPay", in: .vepaySDK, compatibleWith: nil)!, regex: "^62[0-5]\\d{13,16}$", usesLuhnAlgorithm: false, validNumberLength: 16...19)
+        .init(name: "Union Pay", paymentServiceLogo: UIImage(named: "UnionPay", in: .vepaySDK, compatibleWith: nil)!, regex: "^62[0-5]\\d{13,16}$", usesLuhnAlgorithm: false, validNumberLength: 16...19)
     }
     
     public class var jcb: VepayPaymentService {
-        .init(name: "JCB", icon: UIImage(named: "JCB", in: .vepaySDK, compatibleWith: nil)!, regex: "^(?:2131|1800|35[0-9]{3})[0-9]{3,}$", validNumberLength: 16...19)
+        .init(name: "JCB", paymentServiceLogo: UIImage(named: "JCB", in: .vepaySDK, compatibleWith: nil)!, regex: "^(?:2131|1800|35[0-9]{3})[0-9]{3,}$", validNumberLength: 16...19)
     }
 
     public func hash(into hasher: inout Hasher) {

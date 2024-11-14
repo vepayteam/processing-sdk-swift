@@ -24,6 +24,9 @@ public final class VepayPaymentController: UIViewController {
 
     @IBOutlet public private(set) weak var cardView: VepayCardView!
 
+    /// StackView with Remeber Card Checkmark & Pay Systems. You can use this stack to insert error messages
+    @IBOutlet public private(set) weak var bottomStackView: UIStackView!
+
     // Remeber Card
     @IBOutlet private weak var remeberCardHolder: UIView!
     @IBOutlet private weak var remeberCheckmark: UIImageView!
@@ -31,12 +34,15 @@ public final class VepayPaymentController: UIViewController {
     public private(set) var cardRemembered = true
 
     /// Hides option to save card
-    public var hideRemberCard: Bool = false {
-        didSet {
-            remeberCardHolder?.isHidden = hideRemberCard
+    public var hideRemberCard: Bool {
+        get {
+            remeberCardHolder?.isHidden ?? false
+        }
+        set {
+            remeberCardHolder?.isHidden = newValue
         }
     }
-    
+
 
     // MARK: - Saved Cards
 
@@ -120,35 +126,8 @@ public final class VepayPaymentController: UIViewController {
         }
     }
 
-
-    // MARK: - Card View Setup Propertys
-
-    /// This property just reference to VepayPaymentController.cardView.\$0.
-    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
-    /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
-    public var removeExpirtionDate: Bool?
-
-    /// This property just reference to VepayPaymentController.cardView.\$0.
-    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
-    /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
-    public var removeCVV: Bool?
-    /// This property just reference to VepayPaymentController.cardView.\$0.
-    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
-    /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
-    public var overrideAddCardViaNFC: Bool?
-    /// This property just reference to VepayPaymentController.cardView.\$0.
-    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
-    /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
-    public var overrideAddCardViaCamera: Bool?
-
-    /// This property just reference to VepayPaymentController.cardView.\$0.
-    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
-    /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
-    public var hideAddCardViaNFC: Bool?
-    /// This property just reference to VepayPaymentController.cardView.\$0.
-    /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
-    /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
-    public var hideAddCardViaCamera: Bool?
+    /// Эта переменная используется только до добавление cardView в контроллер (что происходит после инициализации VepayPaymentController'a). При вызове viewDidLoad, устанавливается конфигурация cardView и значение этой переменной становиться nil
+    public var cardViewPreloadConfiguration: CardViewConfiguration? = nil
 
 }
 
@@ -192,29 +171,27 @@ public extension VepayPaymentController {
             _cvv = nil
         }
 
-        if removeExpirtionDate != nil {
-            cardView.removeExpirtionDate = removeExpirtionDate!
-            removeExpirtionDate = nil
-        }
-        if removeCVV != nil {
-            cardView.removeCVV = removeCVV!
-            removeCVV = nil
-        }
-        if overrideAddCardViaNFC != nil {
-            cardView.overrideAddCardViaNFC = overrideAddCardViaNFC!
-            overrideAddCardViaNFC = nil
-        }
-        if overrideAddCardViaCamera != nil {
-            cardView.overrideAddCardViaCamera = overrideAddCardViaCamera!
-            overrideAddCardViaCamera = nil
-        }
-        if hideAddCardViaNFC != nil {
-            cardView.hideAddCardViaNFC = hideAddCardViaNFC!
-            hideAddCardViaNFC = nil
-        }
-        if hideAddCardViaCamera != nil {
-            cardView.hideAddCardViaCamera = hideAddCardViaCamera!
-            hideAddCardViaCamera = nil
+        if let configuration = cardViewPreloadConfiguration {
+            if configuration.removeExpirtionDate != nil {
+                cardView.removeExpirtionDate = configuration.removeExpirtionDate!
+            }
+            if configuration.removeCVV != nil {
+                cardView.removeCVV = configuration.removeCVV!
+            }
+            if configuration.overrideAddCardViaNFC != nil {
+                cardView.overrideAddCardViaNFC = configuration.overrideAddCardViaNFC!
+            }
+            if configuration.overrideAddCardViaCamera != nil {
+                cardView.overrideAddCardViaCamera = configuration.overrideAddCardViaCamera!
+            }
+            if configuration.hideAddCardViaNFC != nil {
+                cardView.hideAddCardViaNFC = configuration.hideAddCardViaNFC!
+            }
+            if configuration.hideAddCardViaCamera != nil {
+                cardView.hideAddCardViaCamera = configuration.hideAddCardViaCamera!
+            }
+
+            self.cardViewPreloadConfiguration = nil
         }
     }
 
@@ -240,6 +217,52 @@ extension VepayPaymentController {
         let image = "Checkbox" + (remembered ? "Filled" : "Empty")
         UIView.transition(with: remeberCheckmark, duration: 0.16, options: [.curveEaseIn, .allowUserInteraction, .transitionCrossDissolve]) { [weak remeberCheckmark] in
             remeberCheckmark?.image = UIImage(named: image, in: .vepaySDK, compatibleWith: nil)
+        }
+    }
+
+}
+
+
+// MARK: - Card View Configuration
+
+extension VepayPaymentController {
+
+    public struct CardViewConfiguration {
+        /// This property just reference to VepayPaymentController.cardView.\$0.
+        /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+        /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
+        public var removeExpirtionDate: Bool?
+
+        /// This property just reference to VepayPaymentController.cardView.\$0.
+        /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+        /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
+        public var removeCVV: Bool?
+
+        /// This property just reference to VepayPaymentController.cardView.\$0.
+        /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+        /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
+        public var overrideAddCardViaNFC: Bool?
+        /// This property just reference to VepayPaymentController.cardView.\$0.
+        /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+        /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
+        public var overrideAddCardViaCamera: Bool?
+
+        /// This property just reference to VepayPaymentController.cardView.\$0.
+        /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+        /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
+        public var hideAddCardViaNFC: Bool?
+        /// This property just reference to VepayPaymentController.cardView.\$0.
+        /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
+        /// When cardView will be added to controller, use this property in cardView (VepayPaymentController.cardView.\$0),because this property will be inactive and setted to nil
+        public var hideAddCardViaCamera: Bool?
+
+        public init(removeExpirtionDate: Bool? = nil, removeCVV: Bool? = nil, overrideAddCardViaNFC: Bool? = nil, overrideAddCardViaCamera: Bool? = nil, hideAddCardViaNFC: Bool? = nil, hideAddCardViaCamera: Bool? = nil) {
+            self.removeExpirtionDate = removeExpirtionDate
+            self.removeCVV = removeCVV
+            self.overrideAddCardViaNFC = overrideAddCardViaNFC
+            self.overrideAddCardViaCamera = overrideAddCardViaCamera
+            self.hideAddCardViaNFC = hideAddCardViaNFC
+            self.hideAddCardViaCamera = hideAddCardViaCamera
         }
     }
 

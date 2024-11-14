@@ -30,7 +30,6 @@ jobs:
         run: |
           bundle config --local force_ruby_platform true
           bundle install --no-color --jobs 8 --retry 3
-          bundle exec fastlane install_plugins
 
   lint-test-scan:
     if: gitea.ref != 'refs/heads/main'
@@ -48,7 +47,8 @@ jobs:
       - name: Pod Lint
         id: pod-lint
         run: |
-          bundle exec --no-color pod lib lint
+          bundle exec --no-color pod cache clean --all
+          bundle exec --no-color pod lib lint --verbose --analyze
       - name: Code Lint and Coverage
         id: code-lint
         run: |
@@ -84,12 +84,18 @@ jobs:
         env:
           MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-      - name: Deploy Sample App to BrowserStack
-        run: |
-          bundle exec fastlane ios uploadToBrowserStack
-        env:
-          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
-          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+      - name: Deploy Sample App to BrowserStack App Automate
+        uses: ./.gitea/actions/browserstack-app-automate
+        with:
+          username: ${{ secrets.BROWSERSTACK_USERNAME }}
+          access_key: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+          path: ${{ env.IPA_OUTPUT_PATH }}
+      - name: Deploy Sample App to BrowserStack App Live
+        uses: ./.gitea/actions/browserstack-app-live
+        with:
+          username: ${{ secrets.BROWSERSTACK_LIVE_USERNAME }}
+          access_key: ${{ secrets.BROWSERSTACK_LIVE_ACCESS_KEY }}
+          path: ${{ env.IPA_OUTPUT_PATH }}
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:

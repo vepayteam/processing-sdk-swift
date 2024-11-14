@@ -19,8 +19,6 @@ public final class VepayCardView: UIView {
 
     @IBOutlet public private(set) weak var cardNumberField: VepayCardNumberField!
 
-    public var notValidateMIRSystemExpirationDate = true
-
     /// Unmasked, Only numbers
     public var cardNumber: String {
         get {
@@ -113,8 +111,7 @@ public final class VepayCardView: UIView {
         }
         set {
             if newValue {
-                cvvFieldHolder?.removeFromSuperview()
-                cardNumberField.superview!.superview!.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+                cvvFieldHolder?.superview?.removeFromSuperview()
                 updateTotalProgress()
             }
         }
@@ -231,19 +228,21 @@ public final class VepayCardView: UIView {
 
 extension VepayCardView: VepayCardNumberFieldDelegate {
 
-    public func cardChanged(field: VepayCardNumberField, number: String) { }
-    
-    public func cardIdentificationChanged(field: VepayCardNumberField, service: VepayPaymentService?) {
-        expirationDateField?.validateMinDay = service?.validateDate ?? false
-        cvvField?.cvvMaxCount = service?.maxCVV ?? 3
-        paymentMethod.image = service?.icon
+    public func cardChanged(field: VepayCardNumberField, number: String) {
+        delegate?.cardView(number: number)
     }
 
-    public func cardReadinessChanged(field: VepayCardNumberField, isReady: Bool) { }
+    public func cardIdentificationChanged(field: VepayCardNumberField, service: (any VepayCardPaymentServiceRepresentable)?) {
+        expirationDateField?.validateMinDay = service?.validateMinDate ?? false
+        cvvField?.cvvMaxCount = service?.maxCVV ?? 3
+        paymentMethod.image = service?.paymentServiceLogo
+    }
 
     public func cardProgressChanged(field: VepayCardNumberField, progress: CGFloat) {
         updateTotalProgress()
     }
+
+    public func cardReadinessChanged(field: VepayCardNumberField, isReady: Bool) { }
 
 }
 
@@ -430,14 +429,14 @@ public protocol VepayCardViewDelegate: NSObject {
 
     /// - Parameter progress: TotalProgress of writen data. Normolized value: [0...1]
     func cardView(progress: CGFloat)
-    /// - Parameter numberReadiness: Normolized value: [0...1]
-    func cardView(numberReadiness: CGFloat)
-    /// - Parameter expirationReadiness: Normolized value: [0...1]
-    func cardView(expirationReadiness: CGFloat)
-    /// - Parameter cvvFieldReadiness: Normolized value: [0...1]
-    func cardView(cvvFieldReadiness: CGFloat)
+//    /// - Parameter numberReadiness: Normolized value: [0...1]
+//    func cardView(numberReadiness: CGFloat)
+//    /// - Parameter expirationReadiness: Normolized value: [0...1]
+//    func cardView(expirationReadiness: CGFloat)
+//    /// - Parameter cvvFieldReadiness: Normolized value: [0...1]
+//    func cardView(cvvFieldReadiness: CGFloat)
 
-    /// Card number Changed. This method can be used for card identification (BIN checking)
+    /// Card number Changed. You can use this property for card identification (BIN checking)
     func cardView(number: String)
 
     /// Fires only if overrideAddCardViaNFC = true
@@ -450,9 +449,9 @@ public protocol VepayCardViewDelegate: NSObject {
 public extension VepayCardViewDelegate {
 
     func cardView(progress: CGFloat) { }
-    func cardView(numberReadiness: CGFloat) { }
-    func cardView(expirationReadiness: CGFloat) { }
-    func cardView(cvvFieldReadiness: CGFloat) { }
+//    func cardView(numberReadiness: CGFloat) { }
+//    func cardView(expirationReadiness: CGFloat) { }
+//    func cardView(cvvFieldReadiness: CGFloat) { }
 
     func cardView(number: String) { }
 
