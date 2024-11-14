@@ -37,7 +37,7 @@ class EventParser {
 
     func getLastEventId() -> String { lastEventId }
 
-    func reset() -> TimeInterval? {
+    @discardableResult func reset() -> TimeInterval? {
         data = ""
         eventType = ""
         lastEventIdBuffer = nil

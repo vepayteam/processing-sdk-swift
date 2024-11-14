@@ -270,7 +270,7 @@ class EventSourceDelegate: NSObject, URLSessionDataDelegate {
                            task: URLSessionTask,
                            didCompleteWithError error: Error?) {
         utf8LineParser.closeAndReset()
-        let currentRetry = eventParser.reset()
+        eventParser.reset()
 
         guard readyState != .shutdown
         else { return }
