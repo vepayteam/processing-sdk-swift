@@ -29,7 +29,7 @@ extension VepayPaymentController: UICollectionViewDelegateFlowLayout {
             cardNumber = card.number
             expirationDate = card.expire
 
-            paymentIcon = card.paymentSystem?.icon
+            paymentIcon = card.paymentSystem?.paymentServiceLogo
             bankLogo = card.bank?.logo
 //            bankColor = card.bank?.color ?? .coal
         } else if collectionView.cellForItem(at: indexPath)?.isSelected == false {

@@ -23,8 +23,7 @@ public final class VepayExpirationDateField: UIView {
         }
     }
 
-    /// By deafult MM / YY. Mask must contain exactly 4 X
-    public var dateMask = "XX / XX"
+    private let dateMask = "XX / XX"
 
 
     // MARK: - Validation Propertys

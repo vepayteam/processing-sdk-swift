@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23089" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23077"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -29,14 +29,14 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="gDP-cn-Xkb">
-            <rect key="frame" x="0.0" y="0.0" width="342" height="386"/>
+            <rect key="frame" x="0.0" y="0.0" width="342" height="454"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oZx-b2-EVj">
-                    <rect key="frame" x="0.0" y="181.66666666666663" width="342" height="204.33333333333337"/>
+                    <rect key="frame" x="0.0" y="238" width="342" height="216"/>
                     <subviews>
                         <view contentMode="scaleToFill" horizontalCompressionResistancePriority="100" translatesAutoresizingMaskIntoConstraints="NO" id="6us-l3-iGY" userLabel="CVVHolder">
-                            <rect key="frame" x="23.999999999999993" y="80.000000000000028" width="103.33333333333331" height="61"/>
+                            <rect key="frame" x="23.999999999999993" y="80" width="103.33333333333331" height="61"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" text="CVV / CVC" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OFo-C0-e7H">
                                     <rect key="frame" x="16" y="6" width="71.333333333333329" height="17"/>
@@ -64,7 +64,7 @@
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="128" translatesAutoresizingMaskIntoConstraints="NO" id="Zd7-P9-6tT">
-                            <rect key="frame" x="143.33333333333334" y="80.000000000000028" width="89.333333333333343" height="61"/>
+                            <rect key="frame" x="143.33333333333334" y="80" width="89.333333333333343" height="61"/>
                             <string key="text">Три цифры
 с обратной стороны карты</string>
                             <fontDescription key="fontDescription" name="Inter-Regular" family="Inter" pointSize="12"/>
@@ -84,7 +84,7 @@
                     </constraints>
                 </view>
                 <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="9vg-vK-pv0">
-                    <rect key="frame" x="0.0" y="0.0" width="342" height="245.66666666666666"/>
+                    <rect key="frame" x="0.0" y="0.0" width="342" height="302"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DZ0-l7-hQ0" userLabel="Bank And Logo">
                             <rect key="frame" x="24" y="24" width="294" height="32"/>
@@ -150,10 +150,10 @@
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="InH-Pq-3Ju">
-                            <rect key="frame" x="24" y="141" width="294" height="80.666666666666686"/>
+                            <rect key="frame" x="24" y="141" width="294" height="137"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="WxV-5d-JkD">
-                                    <rect key="frame" x="0.0" y="0.0" width="294" height="80.666666666666671"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="294" height="137"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Действует до :" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wqW-Eg-0C8">
                                             <rect key="frame" x="0.0" y="0.0" width="294" height="14.666666666666666"/>
@@ -162,7 +162,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lFk-gY-Bcg">
-                                            <rect key="frame" x="0.0" y="30.666666666666657" width="294" height="50"/>
+                                            <rect key="frame" x="0.0" y="87" width="294" height="50"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c4w-wi-hCO" customClass="VepayExpirationDateField" customModule="VepaySDK" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="60" height="50"/>
@@ -211,6 +211,7 @@
                 <constraint firstItem="9vg-vK-pv0" firstAttribute="top" secondItem="gDP-cn-Xkb" secondAttribute="top" id="Bin-lT-zXb"/>
                 <constraint firstItem="H6Z-fF-5N7" firstAttribute="leading" secondItem="6us-l3-iGY" secondAttribute="leading" id="HU6-gg-3Be"/>
                 <constraint firstItem="9vg-vK-pv0" firstAttribute="leading" secondItem="gDP-cn-Xkb" secondAttribute="leading" id="RFZ-I6-Ewr"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="9vg-vK-pv0" secondAttribute="bottom" id="SR5-qq-aEk"/>
                 <constraint firstItem="oZx-b2-EVj" firstAttribute="top" secondItem="9vg-vK-pv0" secondAttribute="bottom" constant="-64" id="VgH-Vi-4wc"/>
                 <constraint firstAttribute="trailing" secondItem="9vg-vK-pv0" secondAttribute="trailing" id="VmH-MQ-qg7"/>
                 <constraint firstAttribute="bottom" secondItem="oZx-b2-EVj" secondAttribute="bottom" id="Y64-bL-Oea"/>
@@ -218,7 +219,7 @@
                 <constraint firstItem="oZx-b2-EVj" firstAttribute="leading" secondItem="gDP-cn-Xkb" secondAttribute="leading" id="tAt-bJ-8H4"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="270.2290076335878" y="-773.94366197183103"/>
+            <point key="canvasLocation" x="270.2290076335878" y="-797.88732394366207"/>
         </view>
     </objects>
     <resources>
