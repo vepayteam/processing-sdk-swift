@@ -47,7 +47,8 @@ jobs:
       - name: Pod Lint
         id: pod-lint
         run: |
-          bundle exec --no-color pod lib lint
+          bundle exec --no-color pod cache clean --all
+          bundle exec --no-color pod lib lint --verbose --analyze
       - name: Code Lint and Coverage
         id: code-lint
         run: |
