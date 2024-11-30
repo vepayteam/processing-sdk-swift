@@ -127,7 +127,11 @@ public final class VepayPaymentController: UIViewController {
     }
 
     /// Эта переменная используется только до добавление cardView в контроллер (что происходит после инициализации VepayPaymentController'a). При вызове viewDidLoad, устанавливается конфигурация cardView и значение этой переменной становиться nil
-    public var cardViewPreloadConfiguration: CardViewConfiguration? = nil
+    public var cardViewConfiguration: CardViewConfiguration? = nil {
+        didSet {
+            updateCardViewConfiguration()
+        }
+    }
 
 }
 
@@ -170,31 +174,30 @@ public extension VepayPaymentController {
             cardView.cvv = _cvv!
             _cvv = nil
         }
-
-        if let configuration = cardViewPreloadConfiguration {
-            if configuration.removeExpirtionDate != nil {
-                cardView.removeExpirtionDate = configuration.removeExpirtionDate!
-            }
-            if configuration.removeCVV != nil {
-                cardView.removeCVV = configuration.removeCVV!
-            }
-            if configuration.overrideAddCardViaNFC != nil {
-                cardView.overrideAddCardViaNFC = configuration.overrideAddCardViaNFC!
-            }
-            if configuration.overrideAddCardViaCamera != nil {
-                cardView.overrideAddCardViaCamera = configuration.overrideAddCardViaCamera!
-            }
-            if configuration.hideAddCardViaNFC != nil {
-                cardView.hideAddCardViaNFC = configuration.hideAddCardViaNFC!
-            }
-            if configuration.hideAddCardViaCamera != nil {
-                cardView.hideAddCardViaCamera = configuration.hideAddCardViaCamera!
-            }
-
-            self.cardViewPreloadConfiguration = nil
+        updateCardViewConfiguration()
+    }
+    
+    private func updateCardViewConfiguration() {
+        guard let configuration = cardViewConfiguration, cardView != nil else { return }
+        if configuration.removeExpirtionDate != nil {
+            cardView.removeExpirtionDate = configuration.removeExpirtionDate!
+        }
+        if configuration.removeCVV != nil {
+            cardView.removeCVV = configuration.removeCVV!
+        }
+        if configuration.overrideAddCardViaNFC != nil {
+            cardView.overrideAddCardViaNFC = configuration.overrideAddCardViaNFC!
+        }
+        if configuration.overrideAddCardViaCamera != nil {
+            cardView.overrideAddCardViaCamera = configuration.overrideAddCardViaCamera!
+        }
+        if configuration.hideAddCardViaNFC != nil {
+            cardView.hideAddCardViaNFC = configuration.hideAddCardViaNFC!
+        }
+        if configuration.hideAddCardViaCamera != nil {
+            cardView.hideAddCardViaCamera = configuration.hideAddCardViaCamera!
         }
     }
-
 }
 
 
