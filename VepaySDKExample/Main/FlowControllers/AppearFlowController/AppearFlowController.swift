@@ -112,8 +112,9 @@ extension AppearFlowController {
     /// - Parameter confirmUrl: if not nil will show 3ds. If nill with not show 3ds
     private func create3DSController(confirmUrl: String?) -> Vepay3DSController {
         let controller = Vepay3DSController()
-        controller.delegate = self
-        controller.startSSE(url: URL(string: "\(self.urlBase.text!)/sse/\(transactionID.text!)")!)
+        controller.sseHandler.set(sse: URL(string: "\(self.urlBase.text!)/sse/\(transactionID.text!)")!)
+        controller.sseHandler.delegate = self
+        
         if let confirmUrl = confirmUrl {
             controller.show3DS(url: URL(string: confirmUrl)!)
         }
@@ -125,7 +126,7 @@ extension AppearFlowController {
 
 // MARK: - SSE
 
-extension AppearFlowController: Vepay3DSControllerDelegate {
+extension AppearFlowController: VepaySSEHandlerDelegate {
 
     func sseUpdated(int: Int8?, string: String?) -> Bool {
         guard let string = string else {

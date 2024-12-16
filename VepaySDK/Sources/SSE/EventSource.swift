@@ -61,7 +61,7 @@ public class EventSource {
         /// Additional HTTP headers to be set on the request
         public var additionalHeaders: [String: String] = [:]
         /// Transform function to allow dynamically configuring the headers on each API request.
-        public var headerTransform: HeaderTransform = { $0 }
+        public var VepayHeaderTransform: VepayHeaderTransform = { $0 }
         /// An initial value for the last-event-id header to be sent on the initial request
         public var lastEventId: String = ""
         
@@ -121,7 +121,7 @@ public class EventSource {
          The default error handler will always attempt to reconnect on an
          error, unless `EventSource.stop()` is called or the error code is 204.
          */
-        public var connectionErrorHandler: ConnectionErrorHandler = { error in
+        public var connectionErrorHandler: VepayConnectionErrorHandler = { error in
             guard let unsuccessfulResponseError = error as? UnsuccessfulResponseError
             else { return .proceed }
 
@@ -242,7 +242,7 @@ class EventSourceDelegate: NSObject, URLSessionDataDelegate {
         if !eventParser.getLastEventId().isEmpty {
             urlRequest.setValue(eventParser.getLastEventId(), forHTTPHeaderField: "Last-Event-Id")
         }
-        urlRequest.allHTTPHeaderFields = self.config.headerTransform(
+        urlRequest.allHTTPHeaderFields = self.config.VepayHeaderTransform(
             urlRequest.allHTTPHeaderFields?.merging(self.config.additionalHeaders) { $1 } ?? self.config.additionalHeaders
         )
         return urlRequest
@@ -255,8 +255,8 @@ class EventSourceDelegate: NSObject, URLSessionDataDelegate {
         sessionTask = task
     }
 
-    func dispatchError(error: Error) -> ConnectionErrorAction {
-        let action: ConnectionErrorAction = config.connectionErrorHandler(error)
+    func dispatchError(error: Error) -> VepayConnectionErrorAction {
+        let action: VepayConnectionErrorAction = config.connectionErrorHandler(error)
         if action != .shutdown {
             config.handler.onError(error: error)
         }
