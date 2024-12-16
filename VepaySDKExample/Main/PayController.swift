@@ -44,7 +44,7 @@ extension PayController {
         payment.cardNumber = "4917610000000000"
         payment.cvv = "333"
 
-        payment.cardViewConfiguration = .init(removeExpirtionDate: true, removeCVV: true)
+//        payment.cardViewConfiguration = .init(removeExpirtionDate: true, removeCVV: true)
     }
 
     override func viewDidLoad() {
