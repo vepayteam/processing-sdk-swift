@@ -65,7 +65,7 @@ extension VepayFlowController {
         } pending: { [self] in
             presentAlert(title: "Pending", body: nil, showGoToMainScreen: false)
         } redirectingNotNeaded: { [self] in
-            presentAlert(title: "Redirecting Not Neaded", body: nil, showGoToMainScreen: false)
+            presentAlert(title: "Redirecting Not Neaded", body: nil, showGoToMainScreen: true)
         } failure: { [self] error in
             presentAlert(title: "Vepay Invoice Error", body: error.localizedDescription, showGoToMainScreen: false)
         }
