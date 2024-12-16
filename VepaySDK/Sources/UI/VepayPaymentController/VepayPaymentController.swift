@@ -126,7 +126,7 @@ public final class VepayPaymentController: UIViewController {
         }
     }
 
-    /// Эта переменная используется только до добавление cardView в контроллер (что происходит после инициализации VepayPaymentController'a). При вызове viewDidLoad, устанавливается конфигурация cardView и значение этой переменной становиться nil
+    /// Быстрая конфигурация cardView
     public var cardViewConfiguration: CardViewConfiguration? = nil {
         didSet {
             updateCardViewConfiguration()

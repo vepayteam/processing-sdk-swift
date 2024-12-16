@@ -23,17 +23,32 @@ open class VepaySSEHandler: EventHandler {
 
     /// Create and start SSE from url
     /// - Parameters:
-    ///   - url: url for SSE
-    ///   - delegate: if nil, Vepay3DSController will handle events
+    ///   - sse: url for SSE
+    ///   - configure: SSE configuration handler. For additional configuration
+    ///   - connectionErrorHandler: By default. Will shutdown sse on any error
     open func set(sse: URL,
+                  delegate: VepaySSEHandlerDelegate? = nil,
                   configure: (EventSource.Config) -> (EventSource.Config) = { $0 },
                   connectionErrorHandler: @escaping VepayConnectionErrorHandler = { _ in .shutdown },
                   start: Bool = true) {
         var config = EventSource.Config(handler: self, url: sse)
         config.connectionErrorHandler = connectionErrorHandler
         self.sse = EventSource(config: configure(config))
+        self.delegate = delegate
         if start {
             self.sse?.start()
+        }
+    }
+
+    public init(delegate: VepaySSEHandlerDelegate? = nil) {
+        self.delegate = delegate
+    }
+
+    /// Sets sse
+    func set(sse: EventSource?, start: Bool = true) {
+        self.sse = sse
+        if start {
+            sse?.start()
         }
     }
 
