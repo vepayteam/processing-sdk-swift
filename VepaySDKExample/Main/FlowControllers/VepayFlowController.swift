@@ -59,13 +59,13 @@ extension VepayFlowController {
     
     private func handlePay(cardNumber: String, expirationDate: String, cvv: String) {
         Vepay3DSController.paymentAndStart(uuid: invoice.uuid!, form: .init(card: .init(cardNumber: cardNumber, cardHolder: "holder", expires: expirationDate, cvc: cvv), size: view.bounds.size), xUser: xUser.text!, isTest: true, sessionHandler: networkManager) { [self] controller in
-            controller.delegate = self
+            controller.sseHandler.delegate = self
             controller.startSSE(invoiceUUID: invoice.uuid!, isTest: true)
             navigationController?.pushViewController(controller, animated: true)
         } pending: { [self] in
             presentAlert(title: "Pending", body: nil, showGoToMainScreen: false)
         } redirectingNotNeaded: { [self] in
-            presentAlert(title: "Redirecting Not Neaded", body: nil, showGoToMainScreen: false)
+            presentAlert(title: "Redirecting Not Neaded", body: nil, showGoToMainScreen: true)
         } failure: { [self] error in
             presentAlert(title: "Vepay Invoice Error", body: error.localizedDescription, showGoToMainScreen: false)
         }
@@ -75,7 +75,7 @@ extension VepayFlowController {
 
 // MARK: - SSE
 
-extension VepayFlowController: Vepay3DSControllerDelegate {
+extension VepayFlowController: VepaySSEHandlerDelegate {
 
     func sseUpdated(int: Int8?, string: String?) -> Bool {
         guard let int = int else {

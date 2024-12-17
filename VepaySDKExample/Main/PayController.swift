@@ -43,7 +43,8 @@ extension PayController {
         payment.expirationDate = .init(month: 11, year: 25)
         payment.cardNumber = "4917610000000000"
         payment.cvv = "333"
-//        payment.cardViewPreloadConfiguration = .init(removeExpirtionDate: true, removeCVV: true, overrideAddCardViaNFC: true, overrideAddCardViaCamera: true, hideAddCardViaNFC: true, hideAddCardViaCamera: true)
+
+//        payment.cardViewConfiguration = .init(removeExpirtionDate: true, removeCVV: true)
     }
 
     override func viewDidLoad() {
@@ -52,6 +53,9 @@ extension PayController {
         setActionView(animated: false)
         payment.cardView.delegate = self
         cardView(ready: payment.cardView.ready)
+
+//        payment.cardViewConfiguration = .init(removeExpirtionDate: true, removeCVV: true)
+
 //        payment.cardView.hideAddCardViaNFC = true
 //        payment.cardView.hideAddCardViaCamera = true
 //        payment.cardView.removeCVV = false

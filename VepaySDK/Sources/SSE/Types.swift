@@ -4,18 +4,18 @@ import Foundation
  Type for a function that will be notified when the `EventSource` client encounters a connection failure.
 
  This is different from `EventHandler.onError(error:)` in that it will not be called for other kinds of errors; also,
- it has the ability to tell the client to stop reconnecting by returning a `ConnectionErrorAction.shutdown`.
+ it has the ability to tell the client to stop reconnecting by returning a `VepayConnectionErrorAction.shutdown`.
 */
-public typealias ConnectionErrorHandler = (Error) -> ConnectionErrorAction
+public typealias VepayConnectionErrorHandler = (Error) -> VepayConnectionErrorAction
 
 /**
  Type for a function that will take in the current HTTP headers and return a new set of HTTP headers to be used when
  connecting and reconnecting to a stream.
  */
-public typealias HeaderTransform = ([String: String]) -> [String: String]
+public typealias VepayHeaderTransform = ([String: String]) -> [String: String]
 
-/// Potential actions a `ConnectionErrorHandler` can return
-public enum ConnectionErrorAction {
+/// Potential actions a `VepayConnectionErrorHandler` can return
+public enum VepayConnectionErrorAction {
     /**
      Specifies that the error should be logged normally and dispatched to the `EventHandler`. Connection retrying will
      proceed normally if appropriate.
@@ -73,8 +73,8 @@ public protocol EventHandler {
     /**
      This method will be called for all exceptions that occur on the network connection (including an
      `UnsuccessfulResponseError` if the server returns an unexpected HTTP status), but only after the
-     ConnectionErrorHandler (if any) has processed it.  If you need to do anything that affects the state of the
-     connection, use ConnectionErrorHandler.
+     VepayConnectionErrorHandler (if any) has processed it.  If you need to do anything that affects the state of the
+     connection, use VepayConnectionErrorHandler.
 
      - Parameter error: The error received.
      */

@@ -45,7 +45,7 @@ extension CustomFlowController {
 
 // MARK: - SSE
 
-extension CustomFlowController: Vepay3DSControllerDelegate {
+extension CustomFlowController: VepaySSEHandlerDelegate {
 
     func sseUpdated(int: Int8?, string: String?) -> Bool {
         guard let string = string else {
