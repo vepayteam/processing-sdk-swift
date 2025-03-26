@@ -11,8 +11,14 @@ import UIKit
 @IBDesignable
 public final class VepayCardView: UIView {
 
+    
+    // MARK: - Propertys
 
     public weak var delegate: VepayCardViewDelegate?
+
+    private var fields: [VepayCommonTextField] {
+        [cardNumberField, expirationDateField, cvvField].compactMap({ $0 })
+    }
 
 
     // MARK: - Card Number
@@ -22,10 +28,10 @@ public final class VepayCardView: UIView {
     /// Unmasked, Only numbers
     public var cardNumber: String {
         get {
-            cardNumberField.card
+            cardNumberField.cardNumbers
         }
         set {
-            cardNumberField.card = newValue
+            cardNumberField.cardNumbers = newValue
         }
     }
 
@@ -34,10 +40,10 @@ public final class VepayCardView: UIView {
     /// For unmasked use cardNumber
     public var cardMasked: String {
         get {
-            cardNumberField.cardMasked
+            cardNumberField.text
         }
         set {
-            cardNumberField.cardMasked = newValue
+            cardNumberField.text = newValue
         }
     }
 
@@ -45,7 +51,7 @@ public final class VepayCardView: UIView {
     // MARK: - Expriration Date
 
     @IBOutlet public private(set) weak var expirationDateLabel: UILabel?
-    @IBOutlet public private(set) weak var expirationDateField: VepayExpirationDateField?
+    @IBOutlet public private(set) weak var expirationDateField: VepayDateTextField?
 
 
     /// if False removes expirationDateField from SuperView. Can not be undone
@@ -57,13 +63,15 @@ public final class VepayCardView: UIView {
             if newValue {
                 expirationDateLabel?.removeFromSuperview()
                 expirationDateField?.removeFromSuperview()
-                updateTotalProgress()
+
+                expirationDateField = nil
+                updateFieldsReturnKeys()
             }
         }
     }
 
     /// If expirationDateField is removed, this value will be nil
-    public var expirationDate: VepayExpirationDateField.Day? {
+    public var expirationDay: VepayDateTextField.Day? {
         get {
             expirationDateField?.day
         }
@@ -72,36 +80,31 @@ public final class VepayCardView: UIView {
         }
     }
 
-    /// MMYY.
+    /// By deafult MMYY (same as formatter.dateFormat)
     /// Empty if the user has not entered a date yet
     /// If removeExpirtionDate == true, this value will be nil
     /// # Example: 1130
-    public var expirationDateRow: String! {
-        get {
-            expirationDateField?.dayRow
-        }
-        set {
-            expirationDateField?.dayRow = newValue
-        }
+    public var expirationDateNumber: String? {
+        expirationDateField?.dateNumbers
     }
 
     /// MM / YY (same as dateMask).
     /// Empty if the user has not entered a date yet
     /// For unmasked use expirationDate
     /// If expirationDateField is removed, this value will be nil
-    public var expirationDateMasked: String! {
+    public var expirationDate: String? {
         get {
-            expirationDateField?.dayMasked
+            expirationDateField?.text
         }
         set {
-            expirationDateField?.dayMasked = newValue
+            expirationDateField?.text = newValue ?? ""
         }
     }
 
 
     // MARK: - CVV
 
-    @IBOutlet public private(set) weak var cvvField: VepayCVVField?
+    @IBOutlet public private(set) weak var cvvField: VepayCVVTextField?
     @IBOutlet private weak var cvvFieldHolder: UIView?
 
     /// If False removes CVV Field from CardView. Can not be undone
@@ -112,7 +115,8 @@ public final class VepayCardView: UIView {
         set {
             if newValue {
                 cvvFieldHolder?.superview?.removeFromSuperview()
-                updateTotalProgress()
+                cvvField = nil
+                updateFieldsReturnKeys()
             }
         }
     }
@@ -121,10 +125,10 @@ public final class VepayCardView: UIView {
     /// If removeCVV == true, this value will be nil
     public var cvv: String! {
         get {
-            cvvField?.cvv
+            cvvField?.text
         }
         set {
-            cvvField?.cvv = newValue
+            cvvField?.text = newValue
         }
     }
 
@@ -184,23 +188,11 @@ public final class VepayCardView: UIView {
 
     // MARK: - Progress Propretrys
 
-    /// true when totalProgress == 1.
-    /// When changed fires delegate.cardView(ready:)
-    /// # Value is normolized [0...1]
     public private(set) var ready: Bool = false {
         didSet {
             if ready != oldValue {
                 delegate?.cardView(ready: ready)
             }
-        }
-    }
-    
-    /// true when cardNumberProgress == 1 && expirationDateProgress == 1 && cvvProgress == 1
-    /// When changed fires delegate.cardView(progress:)
-    /// # Value is normolized [0...1]
-    public private(set) var totalProgress: CGFloat = .zero {
-        didSet {
-            delegate?.cardView(progress: totalProgress)
         }
     }
 
@@ -224,52 +216,45 @@ public final class VepayCardView: UIView {
 }
 
 
-// MARK: - Card Number Field Delegate
+// MARK: - Main
+
+public extension VepayCardView {
+
+    func updateReady() {
+        self.ready = fields.allSatisfy { $0.ready }
+    }
+
+}
+
+
+// MARK: - CommonTextFieldDelegate
+
+extension VepayCardView: CommonTextFieldDelegate {
+
+    public func textFieldUpdated(_ field: VepayCommonTextField, text: String) { }
+    
+    public func textFieldReadyChanged(_ field: VepayCommonTextField, ready: Bool) {
+        updateReady()
+    }
+
+    public func textFieldShouldReturn(_ field: VepayCommonTextField) -> Bool {
+        if let currentIndex = fields.firstIndex(of: field), fields.indices.contains(currentIndex + 1) {
+            fields[currentIndex + 1].textField.becomeFirstResponder()
+        }
+        return true
+    }
+
+}
+
+
+// MARK: - VepayCardNumberFieldDelegate
 
 extension VepayCardView: VepayCardNumberFieldDelegate {
 
-    public func cardChanged(field: VepayCardNumberField, number: String) {
-        delegate?.cardView(number: number)
-    }
-
-    public func cardIdentificationChanged(field: VepayCardNumberField, service: (any VepayCardPaymentServiceRepresentable)?) {
-        expirationDateField?.validateMinDay = service?.validateMinDate ?? false
-        cvvField?.cvvMaxCount = service?.maxCVV ?? 3
-        paymentMethod.image = service?.paymentServiceLogo
-    }
-
-    public func cardProgressChanged(field: VepayCardNumberField, progress: CGFloat) {
-        updateTotalProgress()
-    }
-
-    public func cardReadinessChanged(field: VepayCardNumberField, isReady: Bool) { }
-
-}
-
-
-// MARK: - Expiration Date Field Delegate
-
-extension VepayCardView: VepayExpirationDateFieldDelegate {
-
-    public func dateLessThenMinDate(field: VepayExpirationDateField, date: VepayExpirationDateField.Day) { }
-
-    public func dateReadinessChanged(field: VepayExpirationDateField, isReady: Bool) { }
-
-    public func dateProgressChanged(field: VepayExpirationDateField, progress: CGFloat) {
-        updateTotalProgress()
-    }
-
-}
-
-
-// MARK: - CVV Field Delegate
-
-extension VepayCardView: VepayCVVFieldDelegate {
-
-    public func cvvReadinessChanged(field: VepayCVVField, isReady: Bool) { }
-
-    public func cvvProgressChanged(field: VepayCVVField, progress: CGFloat) {
-        updateTotalProgress()
+    public func didIdentified(card: String, in textField: VepayCardNumberField, type: VepayCardType?, valid: Bool) {
+        delegate?.cardView(number: card)
+        cvvField?.cvvMaxCount = type?.maxCVV ?? 4
+        paymentMethod.image = type?.paymentServiceLogo
     }
 
 }
@@ -310,43 +295,20 @@ extension VepayCardView {
             }
         }
 
-        if !cardNumberField.cardReady {
-            animate(field: cardNumberField.field, placeholderOrText: cardMasked.isEmpty)
+        if !cardNumberField.ready {
+            animate(field: cardNumberField.textField, placeholderOrText: cardMasked.isEmpty)
             
         }
 
-        if !removeExpirtionDate, !expirationDateField!.dayReady {
-            animate(field: expirationDateField!.field, placeholderOrText: expirationDateField!.dayMasked.isEmpty)
+        if expirationDateField != nil, !expirationDateField!.ready {
+            animate(field: expirationDateField!.textField, placeholderOrText: expirationDateField!.text.isEmpty)
         }
 
-        if !removeCVV, !cvvField!.cvvReady {
-            animate(field: cvvField!.field, placeholderOrText: cvv.isEmpty)
+        if cvvField != nil, !cvvField!.ready {
+            animate(field: cvvField!.textField, placeholderOrText: cvv.isEmpty)
         }
     }
 
-}
-
-
-// MARK: - Total Progress
-
-private extension VepayCardView {
-
-    private func updateTotalProgress() {
-        var score = cardNumberField.progress
-        var max: CGFloat = 1
-        func addIfNeeded(progress: CGFloat!, _ needed: Bool) {
-            if needed {
-                score += progress
-                max += 1
-            }
-        }
-        addIfNeeded(progress: expirationDateField?.progress, !removeExpirtionDate)
-        addIfNeeded(progress: cvvField?.progress, !removeCVV)
-
-        totalProgress = score / max
-        ready = totalProgress == 1
-    }
-    
 }
 
 
@@ -360,15 +322,27 @@ extension VepayCardView {
         view.frame = bounds
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
 
-        cardNumberField.nextField = expirationDateField?.field
         cardNumberField.delegate = self
+        cardNumberField.defaultDelegate = self
 
-        expirationDateField?.nextField = cvvField?.field
-        expirationDateField?.delegate = self
+        expirationDateField?.defaultDelegate = self
 
-        cvvField?.delegate = self
+        cvvField?.defaultDelegate = self
 
+        updateFieldsReturnKeys()
         setupCardShapeView()
+        fields.forEach { $0.isLight = false }
+        
+        expirationDateField?.withGradient = false
+        expirationDateField?.setMinHeight = false
+        cvvField?.withGradient = false
+        cvvField?.setMinHeight = false
+    }
+    
+    private func updateFieldsReturnKeys() {
+        cardNumberField.returnKeyType = expirationDateField == nil && cvvField == nil ? .done : .next
+        expirationDateField?.returnKeyType = cvvField == nil ? .done : .next
+        cvvField?.returnKeyType = .done
     }
 
     private func setupCardShapeView() {
@@ -393,33 +367,6 @@ extension VepayCardView {
 }
 
 
-// MARK: - Support
-
-private extension VepayCardView {
-
-    private func mask(text: String, mask: Substring) -> String {
-        var result = ""
-        var index = text.startIndex
-
-        // Interate
-        for character in mask where index < text.endIndex {
-            if character == "X" {
-                result.append(text[index])
-                index = text.index(after: index)
-            } else {
-                result.append(character)
-            }
-        }
-
-        return result
-    }
-
-    private func getNumbersIn(text: String) -> String {
-        text.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
-    }
-
-}
-
 // MARK: - VepayCardViewDelegate
 
 public protocol VepayCardViewDelegate: NSObject {
@@ -427,17 +374,10 @@ public protocol VepayCardViewDelegate: NSObject {
     /// # Readiness calculated by Card Propertys that are editable
     func cardView(ready: Bool)
 
-    /// - Parameter progress: TotalProgress of writen data. Normolized value: [0...1]
-    func cardView(progress: CGFloat)
-//    /// - Parameter numberReadiness: Normolized value: [0...1]
-//    func cardView(numberReadiness: CGFloat)
-//    /// - Parameter expirationReadiness: Normolized value: [0...1]
-//    func cardView(expirationReadiness: CGFloat)
-//    /// - Parameter cvvFieldReadiness: Normolized value: [0...1]
-//    func cardView(cvvFieldReadiness: CGFloat)
-
     /// Card number Changed. You can use this property for card identification (BIN checking)
     func cardView(number: String)
+    func cardView(expirationDate: String, day: VepayDateTextField.Day?)
+    func cardView(cvv: String)
 
     /// Fires only if overrideAddCardViaNFC = true
     func cardViewDidTapNFC()
@@ -447,13 +387,9 @@ public protocol VepayCardViewDelegate: NSObject {
 }
 
 public extension VepayCardViewDelegate {
-
-    func cardView(progress: CGFloat) { }
-//    func cardView(numberReadiness: CGFloat) { }
-//    func cardView(expirationReadiness: CGFloat) { }
-//    func cardView(cvvFieldReadiness: CGFloat) { }
-
     func cardView(number: String) { }
+    func cardView(expirationDate: String, day: VepayDateTextField.Day?) { }
+    func cardView(cvv: String) { }
 
     func cardViewDidTapNFC() { }
     func cardViewDidTapCamera() { }

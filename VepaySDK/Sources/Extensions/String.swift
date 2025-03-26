@@ -9,8 +9,8 @@ import Foundation.NSString
 
 extension StringProtocol {
 
-    func numbersOnly() -> String {
-        self.replacingOccurrences(of: "[^0-9]", with: "", options: .regularExpression)
+    func onlyNumbers(and: String = "") -> String {
+        self.replacingOccurrences(of: "[^0-9\(and)]", with: "", options: .regularExpression)
     }
 
 }
