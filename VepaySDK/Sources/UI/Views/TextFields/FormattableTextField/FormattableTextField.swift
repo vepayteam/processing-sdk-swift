@@ -18,12 +18,22 @@ public final class VepayFormattableTextField: UITextField {
         didSet {
             if oldValue != fieldReady {
                 if let formatter = formatter as? VepayTextFieldFormatter {
-                    if formatter.isValidGet() != fieldReady {
-                        formatter.isValidSet(fieldReady)
+                    if formatter.isValid != fieldReady {
+                        formatter.isValid = fieldReady
                     }
                 }
                 defaultDelegate?.textFieldReadyChanged(self, ready: fieldReady)
             }
+        }
+    }
+
+    public var bindingFieldReady: Binding<Bool> {
+        get {
+            .init(get: { [weak self] in
+                self?.fieldReady ?? false
+            }, set: { [weak self] newValue in
+                self?.fieldReady = newValue
+            })
         }
     }
 

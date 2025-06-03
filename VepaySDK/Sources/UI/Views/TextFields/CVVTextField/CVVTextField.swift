@@ -18,7 +18,7 @@ public final class VepayCVVTextField: VepayCommonTextField {
     /// By default 3
     public var cvvMinCount: Int = 3 {
         didSet {
-            formatter.minLength = cvvMinCount - 1
+            formatter.minLength = cvvMinCount
         }
     }
 
@@ -27,7 +27,7 @@ public final class VepayCVVTextField: VepayCommonTextField {
     /// America Express can be 4 digits
     public var cvvMaxCount: Int = 3 {
         didSet {
-            formatter.maxLength = cvvMaxCount + 1
+            formatter.maxLength = cvvMaxCount
         }
     }
 
@@ -35,12 +35,9 @@ public final class VepayCVVTextField: VepayCommonTextField {
     // MARK: - Setup
 
     public override func additionalSetup() {
-        let formatter = VepayTextFieldFormatter(for: textField)
-        formatter.allowedCharactersExpression = "[^0-9]"
+        let formatter = VepayTextFieldFormatter(for: textField, allowedSymbols: .numbers, minLength: cvvMinCount, maxLength: cvvMaxCount)
         textField.formatter = formatter
         self.formatter = formatter
-        formatter.minLength = cvvMinCount - 1
-        formatter.maxLength = cvvMaxCount + 1
         
         textField.font = .subHeading
         textField.placeholder = "000"

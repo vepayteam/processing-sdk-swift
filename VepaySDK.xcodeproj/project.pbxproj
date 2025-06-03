@@ -44,9 +44,7 @@
 		4396BEB42D92E3B400C969E6 /* CommonTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4396BEAE2D92E3B400C969E6 /* CommonTextField.swift */; };
 		4396BEBE2D92E3F200C969E6 /* DateTextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4396BEB72D92E3F200C969E6 /* DateTextFormatter.swift */; };
 		4396BEBF2D92E3F200C969E6 /* FormattableTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4396BEBC2D92E3F200C969E6 /* FormattableTextField.swift */; };
-		4396BEC02D92E3F200C969E6 /* PhoneTextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4396BEB92D92E3F200C969E6 /* PhoneTextFormatter.swift */; };
 		4396BEC12D92E3F200C969E6 /* CardNumberFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4396BEB62D92E3F200C969E6 /* CardNumberFormatter.swift */; };
-		4396BEC22D92E3F200C969E6 /* PasswordTextFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4396BEB82D92E3F200C969E6 /* PasswordTextFormatter.swift */; };
 		4396BEC32D92E3F200C969E6 /* TextFieldFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4396BEBA2D92E3F200C969E6 /* TextFieldFormatter.swift */; };
 		4396BEC52D92E73C00C969E6 /* UITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4396BEC42D92E73900C969E6 /* UITextField.swift */; };
 		4396BECA2D93F5C200C969E6 /* CardNumberField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4396BEC92D93F5B800C969E6 /* CardNumberField.swift */; };
@@ -66,6 +64,8 @@
 		43A8BEA92B57EAE8007FEED1 /* VepayBankCardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 430D821D2B56041100BA84EC /* VepayBankCardCell.xib */; };
 		43A8BEAA2B57EAE8007FEED1 /* VepayBankCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 430D821C2B56041100BA84EC /* VepayBankCardCell.swift */; };
 		43C8B06D2B606BC100A4AF4F /* Vepay3DSController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C8B06C2B606BC100A4AF4F /* Vepay3DSController.swift */; };
+		43D6A9ED2DEEE1EB00CCB0AE /* MFOCardGet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D6A9EC2DEEE1EA00CCB0AE /* MFOCardGet.swift */; };
+		43D6A9EF2DEEE2BB00CCB0AE /* VepayCardReg.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D6A9EE2DEEE2BB00CCB0AE /* VepayCardReg.swift */; };
 		43E1060D2B4B47B1001D650B /* VepayInvoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E1060C2B4B47B1001D650B /* VepayInvoice.swift */; };
 		43E106102B4B9C92001D650B /* VepayPayment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E1060F2B4B9C92001D650B /* VepayPayment.swift */; };
 		43E106122B4CB6A2001D650B /* VepayRefund.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43E106112B4CB6A2001D650B /* VepayRefund.swift */; };
@@ -162,8 +162,6 @@
 		4396BEB02D92E3B400C969E6 /* CommonTextField+Overrides.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CommonTextField+Overrides.swift"; sourceTree = "<group>"; };
 		4396BEB62D92E3F200C969E6 /* CardNumberFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNumberFormatter.swift; sourceTree = "<group>"; };
 		4396BEB72D92E3F200C969E6 /* DateTextFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTextFormatter.swift; sourceTree = "<group>"; };
-		4396BEB82D92E3F200C969E6 /* PasswordTextFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordTextFormatter.swift; sourceTree = "<group>"; };
-		4396BEB92D92E3F200C969E6 /* PhoneTextFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneTextFormatter.swift; sourceTree = "<group>"; };
 		4396BEBA2D92E3F200C969E6 /* TextFieldFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormatter.swift; sourceTree = "<group>"; };
 		4396BEBC2D92E3F200C969E6 /* FormattableTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattableTextField.swift; sourceTree = "<group>"; };
 		4396BEC42D92E73900C969E6 /* UITextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextField.swift; sourceTree = "<group>"; };
@@ -174,6 +172,8 @@
 		4396BED82D94231200C969E6 /* CVVTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVTextField.swift; sourceTree = "<group>"; };
 		439CA3242B643864000A6D63 /* VepayInvoiceRefundGet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VepayInvoiceRefundGet.swift; sourceTree = "<group>"; };
 		43C8B06C2B606BC100A4AF4F /* Vepay3DSController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vepay3DSController.swift; sourceTree = "<group>"; };
+		43D6A9EC2DEEE1EA00CCB0AE /* MFOCardGet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MFOCardGet.swift; sourceTree = "<group>"; };
+		43D6A9EE2DEEE2BB00CCB0AE /* VepayCardReg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VepayCardReg.swift; sourceTree = "<group>"; };
 		43E1060C2B4B47B1001D650B /* VepayInvoice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VepayInvoice.swift; sourceTree = "<group>"; };
 		43E1060F2B4B9C92001D650B /* VepayPayment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VepayPayment.swift; sourceTree = "<group>"; };
 		43E106112B4CB6A2001D650B /* VepayRefund.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VepayRefund.swift; sourceTree = "<group>"; };
@@ -446,8 +446,6 @@
 		4396BEBB2D92E3F200C969E6 /* Formatter */ = {
 			isa = PBXGroup;
 			children = (
-				4396BEB82D92E3F200C969E6 /* PasswordTextFormatter.swift */,
-				4396BEB92D92E3F200C969E6 /* PhoneTextFormatter.swift */,
 				4396BEBA2D92E3F200C969E6 /* TextFieldFormatter.swift */,
 			);
 			path = Formatter;
@@ -510,6 +508,15 @@
 			path = H2H;
 			sourceTree = "<group>";
 		};
+		43D6A9EB2DEEE1CE00CCB0AE /* MFO */ = {
+			isa = PBXGroup;
+			children = (
+				43D6A9EC2DEEE1EA00CCB0AE /* MFOCardGet.swift */,
+				43D6A9EE2DEEE2BB00CCB0AE /* VepayCardReg.swift */,
+			);
+			path = MFO;
+			sourceTree = "<group>";
+		};
 		43E1060B2B4B4609001D650B /* SupportingFiles */ = {
 			isa = PBXGroup;
 			children = (
@@ -534,6 +541,7 @@
 		43E106142B4CBD91001D650B /* Requests */ = {
 			isa = PBXGroup;
 			children = (
+				43D6A9EB2DEEE1CE00CCB0AE /* MFO */,
 				43E1063C2B4DD6A4001D650B /* H2H */,
 			);
 			path = Requests;
@@ -712,6 +720,7 @@
 			files = (
 				43E1061F2B4CD38A001D650B /* VepayInvoiceGetPayment.swift in Sources */,
 				43338C5E2B3D300F0063BD3F /* VepayError.swift in Sources */,
+				43D6A9ED2DEEE1EB00CCB0AE /* MFOCardGet.swift in Sources */,
 				4396BECC2D93F77E00C969E6 /* CardNumberIdentifier.swift in Sources */,
 				43EE2A932C98A6DF006ED2C4 /* VepayBank.swift in Sources */,
 				434161A92B5EE1FF000672B2 /* VepayPaymentCard.swift in Sources */,
@@ -742,16 +751,15 @@
 				4392D2922CFBAC9C0076F523 /* VepaySSEHandler.swift in Sources */,
 				4396BEBE2D92E3F200C969E6 /* DateTextFormatter.swift in Sources */,
 				4396BEBF2D92E3F200C969E6 /* FormattableTextField.swift in Sources */,
-				4396BEC02D92E3F200C969E6 /* PhoneTextFormatter.swift in Sources */,
 				4396BEC12D92E3F200C969E6 /* CardNumberFormatter.swift in Sources */,
 				4396BEC52D92E73C00C969E6 /* UITextField.swift in Sources */,
-				4396BEC22D92E3F200C969E6 /* PasswordTextFormatter.swift in Sources */,
 				4396BEC32D92E3F200C969E6 /* TextFieldFormatter.swift in Sources */,
 				43EE2A8A2C982D4C006ED2C4 /* String.swift in Sources */,
 				43A8BEA72B57EADF007FEED1 /* VepayPaymentController+MFO.swift in Sources */,
 				43338C602B3D300F0063BD3F /* VepayBaseRequest.swift in Sources */,
 				43E1061D2B4CD1D8001D650B /* VepayInvoicePayment.swift in Sources */,
 				43E106122B4CB6A2001D650B /* VepayRefund.swift in Sources */,
+				43D6A9EF2DEEE2BB00CCB0AE /* VepayCardReg.swift in Sources */,
 				43EE2A762C95FA34006ED2C4 /* UTF8LineParser.swift in Sources */,
 				43EE2A772C95FA34006ED2C4 /* EventSource.swift in Sources */,
 				4396BED12D93F7C200C969E6 /* DateTextField.swift in Sources */,
@@ -954,7 +962,7 @@
 				INFOPLIST_FILE = VepaySDK/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -989,7 +997,7 @@
 				INFOPLIST_FILE = VepaySDK/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

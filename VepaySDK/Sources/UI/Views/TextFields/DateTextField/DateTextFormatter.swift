@@ -30,6 +30,7 @@ public final class VepayDateTextFormatter: VepayTextFieldFormatter {
             _willSet(dateFormat: newValue)
         }
     }
+
     private func _willSet(dateFormat: String) {
         dateFormatter.dateFormat = dateFormat
         textMask = dateFormat.replacingOccurrences(of: spacingCharacters, with: "X", options: .regularExpression)
@@ -38,25 +39,20 @@ public final class VepayDateTextFormatter: VepayTextFieldFormatter {
 
     // MARK: - Init
 
-    public init(dateFormatter: DateFormatter = DateFormatter(), dateFormat: String? = nil, isValidGet: @escaping () -> (Bool), isValidSet: @escaping (Bool) -> ()) {
-        self.dateFormatter = dateFormatter
-        super.init(isValidGet: isValidGet, isValidSet: isValidSet)
-        _willSet(dateFormat: dateFormat ?? self.dateFormat)
-    }
-    
-    public convenience init(dateFormatter: DateFormatter = DateFormatter(), dateFormat: String? = nil, for textField: VepayFormattableTextField) {
-        self.init(dateFormatter: dateFormatter, dateFormat: dateFormat) { [weak textField] in
-            textField?.fieldReady ?? false
-        } isValidSet: { [weak textField] in
-            textField?.fieldReady = $0
-        }
-
-    }
-
-    public override init(isValidGet: @escaping () -> (Bool), isValidSet: @escaping (Bool) -> (), allowedCharactersExpression: String? = nil, notCountingCharacters: String? = nil, minLength: Int = 1, maxLength: Int = 255) {
+    public override init(isValid: Binding<Bool>, allowedCharactersExpression: String? = nil, notCountingCharacters: String? = nil, minLength: Int = .zero, maxLength: Int = 255) {
         dateFormatter = DateFormatter()
         dateFormatter.dateFormat = dateFormat
-        super.init(isValidGet: isValidGet, isValidSet: isValidSet)
+        super.init(isValid: isValid)
+    }
+
+    public init(isValid: Binding<Bool>, dateFormatter: DateFormatter = DateFormatter(), dateFormat: String? = nil) {
+        self.dateFormatter = dateFormatter
+        super.init(isValid: isValid)
+        _willSet(dateFormat: dateFormat ?? self.dateFormat)
+    }
+
+    public convenience init(for textField: VepayFormattableTextField, dateFormatter: DateFormatter = DateFormatter(), dateFormat: String? = nil) {
+        self.init(isValid: textField.bindingFieldReady, dateFormatter: dateFormatter, dateFormat: dateFormat)
     }
 
 
@@ -79,16 +75,16 @@ public final class VepayDateTextFormatter: VepayTextFieldFormatter {
     }
     
     public override func validate(text: String) {
-        let current = isValidGet()
+        let current = isValid
         guard let date = date(from: text) else {
             if current {
-                isValidSet(false)
+                isValid = false
             }
             return
         }
         let new = (minDate == nil ? true : date > minDate) && (maxDate == nil ? true : date < maxDate)
         if current != new {
-            isValidSet(new)
+            isValid = new
         }
 //        day > 0 && day <= 31
 //        month > 0 && month <= 12

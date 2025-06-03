@@ -43,9 +43,7 @@ public final class VepayCardNumberFormatter: VepayTextFieldFormatter {
         identifier.identifyAndValidate(number: number) { [weak self] type, valid in
             guard let self else { return }
 
-            if isValidGet() != valid {
-                isValidSet(valid)
-            }
+            self.isValid = valid
             delegate?.didIdentified(card: number, type: type, valid: valid)
         }
     }

@@ -12,60 +12,57 @@ open class VepayTextFieldFormatter: VepayFormattableTextFieldFormatter {
 
     // MARK: - Propertys
 
-    public var minLength: Int
-    public var maxLength: Int
+    /// including (if minLenght = 0, true will be returned if text.count > 1)
+    var minLength: Int
+    /// including (if maxLength = 255, true will be returned if text.count <= 255)
+    var maxLength: Int
 
-    public var allowedCharactersExpression: String?
-    public var notCountingCharacters: String?
+    var allowedCharactersExpression: String?
+    var notCountingCharacters: String?
 
-//    @Binding var isValid: Bool
-    private(set) var isValidGet: () -> (Bool)
-    private(set) var isValidSet: (Bool) -> ()
+    @Binding var isValid: Bool
 
 
     // MARK: - Init
 
     /// - Parameters:
-    ///   - minLength: not including (if minLenght = 0, true will be returned if text.count >= 1)
-    ///   - maxLength: not including (if maxLength = 255, true will be returned if text.count < 255)
-    public init(isValidGet: @escaping () -> (Bool), isValidSet: @escaping (Bool) -> (),
+    ///   - minLength: including (minLenght => 0)
+    ///   - maxLength: including (maxLength = 255)
+    public init(isValid: Binding<Bool>,
          allowedCharactersExpression: String? = nil,
          notCountingCharacters: String? = nil,
-         minLength: Int = 1, maxLength: Int = 255) {
-//        self._isValid = isValid
-        self.isValidGet = isValidGet
-        self.isValidSet = isValidSet
-        
+         minLength: Int = .zero, maxLength: Int = 255) {
+        self._isValid = isValid
         self.allowedCharactersExpression = allowedCharactersExpression
         self.notCountingCharacters = notCountingCharacters
         self.minLength = minLength
         self.maxLength = maxLength
     }
 
-    public convenience init(for textField: VepayFormattableTextField) {
-        self.init { [weak textField] in
-            textField?.fieldReady ?? false
-        } isValidSet: { [weak textField] in
-            textField?.fieldReady = $0
-        }
+    /// - Parameters:
+    ///   - minLength: including (minLenght => 0)
+    ///   - maxLength: including (maxLength = 255)
+    public convenience init(isValid: Binding<Bool>,
+                     allowedSymbols: RegexSymbols?,
+                     notCountingCharacters: RegexSymbols? = nil,
+                     minLength: Int = .zero, maxLength: Int = 255) {
+        self.init(isValid: isValid, allowedCharactersExpression: allowedSymbols?.regex, notCountingCharacters: notCountingCharacters?.regex)
     }
 
-//    /// - Parameters:
-//    ///   - minLength: not including (if minLenght = 0, true will be returned if text.count > 1)
-//    ///   - maxLength: not including (if maxLength = 255, true will be returned if text.count < 255)
-//    convenience init(isValid: Binding<Bool>,
-//                     allowedSymbols: RegexSymbols,
-//                     notCountingCharacters: RegexSymbols,
-//                     minLength: Int = .zero, maxLength: Int = 255) {
-//        self.init(isValid: isValid, allowedCharactersExpression: allowedSymbols.regex, notCountingCharacters: notCountingCharacters.regex)
-//    }
-    
+    /// - Parameters:
+    ///   - minLength: including (minLenght => 0)
+    ///   - maxLength: including (maxLength <= 255)
+    public convenience init(for textField: VepayFormattableTextField, allowedSymbols: RegexSymbols? = nil, notCountingCharacters: RegexSymbols? = nil, minLength: Int = .zero, maxLength: Int = 255) {
+        self.init(isValid: textField.bindingFieldReady, allowedSymbols: allowedSymbols, notCountingCharacters: notCountingCharacters, minLength: minLength, maxLength: maxLength)
+    }
+
+
     // MARK: - FormattableTextFieldFormatter
-    
+
     public func getSpacingCharactersCount(in text: String) -> Int {
         .zero
     }
-    
+
     public func getSpacingCharatersCount(in text: String, start: Int, lenght: Int) -> Int {
         guard start > -1, lenght + start > -1 else { return .zero }
         if let start = text.index(text.startIndex, offsetBy: start, limitedBy: text.endIndex), let end = text.index(start, offsetBy: lenght, limitedBy: text.endIndex) {
@@ -92,15 +89,12 @@ open class VepayTextFieldFormatter: VepayFormattableTextFieldFormatter {
 
     public func validate(text: String) {
         let count = (notCountingCharacters != nil ? text.replacingOccurrences(of: notCountingCharacters!, with: "") : text).count
-        let new = count > minLength && count < maxLength
-        if isValidGet() != new {
-            isValidSet(new)
-        }
+        isValid = count >= minLength && count <= maxLength
     }
 
     public func getIfValidated(text: String) -> String? {
         let text = formatAndValidate(text: text)
-        return isValidGet() ? text : nil
+        return isValid ? text : nil
     }
     
 }
@@ -147,6 +141,7 @@ public extension VepayTextFieldFormatter {
 
 }
 
+
 // MARK: - FormattableTextFieldFormatter
 
 public protocol VepayFormattableTextFieldFormatter {
@@ -157,4 +152,11 @@ public protocol VepayFormattableTextFieldFormatter {
 
     func getSpacingCharactersCount(in text: String) -> Int
     func getSpacingCharatersCount(in text: String, start: Int, lenght: Int) -> Int
+}
+
+
+// MARK: - VepayFormattableTextFieldFormatterTextPreparator
+
+public protocol VepayFormattableTextFieldFormatterTextPreparator {
+    func changeCharacter(in text: String, range: NSRange, replacementString: String) -> String?
 }
