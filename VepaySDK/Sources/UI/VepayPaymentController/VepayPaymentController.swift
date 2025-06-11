@@ -92,24 +92,27 @@ public final class VepayPaymentController: UIViewController {
     }
 
 
-    private var _expirationDate: VepayExpirationDateField.Day?
+    private var _expirationDay: VepayDateTextField.Day?
     /// This property just reference to VepayPaymentController.cardView.\$0.
     /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
-    public var expirationDate: VepayExpirationDateField.Day? {
+    public var expirationDay: VepayDateTextField.Day? {
         get {
-            _expirationDate ?? cardView?.expirationDate
+            _expirationDay ?? cardView?.expirationDay
         }
         set {
             if cardView == nil {
-                _expirationDate = newValue
+                _expirationDay = newValue
             } else {
-                cardView.expirationDate = newValue
+                _expirationDay = nil
+                cardView.expirationDay = newValue
             }
         }
     }
-    public var expirationDateRow: String {
-        cardView?.expirationDateRow ?? ""
+    /// By deafult MMYY (same as formatter.dateFormat) Empty if the user has not entered a date yet If removeExpirtionDate == true, this value will be nil
+    public var expirationDateNumber: String {
+        cardView?.expirationDateNumber ?? ""
     }
+
     private var _cvv: String?
     /// This property just reference to VepayPaymentController.cardView.\$0.
     /// When creating this controller by programmaticly cardView not instantly inited, in order to avoid fatal error for first time settuping, you can use this property
@@ -122,6 +125,7 @@ public final class VepayPaymentController: UIViewController {
                 _cvv = newValue
             } else {
                 cardView.cvv = newValue
+                _cvv = nil
             }
         }
     }
@@ -166,9 +170,9 @@ public extension VepayPaymentController {
             cardView.cardNumber = _cardNumber!
             _cardNumber = nil
         }
-        if _expirationDate != nil {
-            cardView.expirationDate = _expirationDate!
-            _expirationDate = nil
+        if _expirationDay != nil {
+            cardView.expirationDay = _expirationDay!
+            _expirationDay = nil
         }
         if _cvv != nil {
             cardView.cvv = _cvv!

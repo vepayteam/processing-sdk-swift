@@ -47,7 +47,7 @@ extension VepayPaymentController: UICollectionViewDelegateFlowLayout {
 
         cardView.cardNumber = cardNumber
         if expirationDate.count > 3 {
-            cardView.expirationDate = .init(month: Int8(expirationDate.prefix(2))!, year: Int8(expirationDate.suffix(2))!)
+            cardView.expirationDay = .init(month: Int(expirationDate.prefix(2))!, year: Int(expirationDate.suffix(2))!)
         }
         cardView.cvv = ""
         cardView.paymentMethod?.image = paymentIcon

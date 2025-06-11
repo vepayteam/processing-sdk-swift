@@ -40,7 +40,7 @@ extension PayController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         payment = segue.destination as? VepayPaymentController
-        payment.expirationDate = .init(month: 11, year: 25)
+        payment.expirationDay = .init(day: 2, month: 11, year: 25)
         payment.cardNumber = "4917610000000000"
         payment.cvv = "333"
 
@@ -114,7 +114,7 @@ extension PayController {
             loader.frame = view.bounds
             loader.startAnimating()
             self.loader = loader
-            handlePay(payment.cardNumber, payment.expirationDateRow, payment.cvv)
+            handlePay(payment.cardNumber, payment.expirationDateNumber, payment.cvv)
         }
     }
 

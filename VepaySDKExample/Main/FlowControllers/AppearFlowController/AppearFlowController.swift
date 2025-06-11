@@ -42,6 +42,7 @@ extension AppearFlowController {
             return
         }
         UserDefaults.standard.set(xUser.text, forKey: "XUserAppear")
+        UserDefaults.standard.set(transactionID.text, forKey: "VepayTransactionID")
         UserDefaults.standard.set(accessToken.text, forKey: "AcessTokenAppear")
         UserDefaults.standard.set(urlBase.text, forKey: "UrlBase")
         let pay = PayController.fromStoryboard()
@@ -185,6 +186,7 @@ extension AppearFlowController {
         urlBase.text = UserDefaults.standard.string(forKey: "UrlBase") ?? defaultURL
         xUser.text = UserDefaults.standard.string(forKey: "XUserAppear")
         accessToken.text = UserDefaults.standard.string(forKey: "AcessTokenAppear")
+        transactionID.text = UserDefaults.standard.string(forKey: "VepayTransactionID")
         urlBase.font = .subHeading
         transactionID.font = .subHeading
         paste.titleLabel?.font = .bodyLarge

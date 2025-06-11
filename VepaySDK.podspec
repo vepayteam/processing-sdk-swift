@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
     :file => "LICENSE"
   }
 
-  s.ios.deployment_target = '12.0'
+  s.ios.deployment_target = '13.0'
   s.swift_versions = '5.0'
 
   s.resources = [
